@@ -1,0 +1,82 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*
+secrets/
+**/secrets/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# JS
+node_modules/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Databases / runtime state
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+runtime/
+state/
+logs/
+*.log
+
+# Models / checkpoints
+models/
+checkpoints/
+weights/
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.onnx
+*.gguf
+*.bin
+
+# Generated media / large artifacts
+artifacts/
+renders/
+outputs/
+cache/
+tmp/
+temp/
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.wav
+*.flac
+*.zip
+*.7z
+*.tar
+*.gz
+
+# ComfyUI runtime payloads
+ComfyUI/models/
+ComfyUI/input/
+ComfyUI/output/
+ComfyUI/temp/
+
+# Local HAL data
+VY_VAULT/
+hal_incremental.db*
