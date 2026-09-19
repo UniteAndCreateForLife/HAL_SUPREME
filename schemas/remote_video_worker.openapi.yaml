@@ -1,0 +1,34 @@
+openapi: 3.0.3
+info:
+  title: HAL Video Worker
+  version: 1.0.0
+paths:
+  /v1/health:
+    get:
+      responses:
+        "200": {description: Worker health}
+  /v1/capabilities:
+    get:
+      responses:
+        "200": {description: Renderer capabilities}
+  /v1/render:
+    post:
+      description: Submit a synchronous canary render. Production workers may implement this over a durable internal queue.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [task_id, shot_id, prompt, width, height, fps, frames, seed]
+              properties:
+                task_id: {type: string}
+                shot_id: {type: string}
+                prompt: {type: string}
+                width: {type: integer}
+                height: {type: integer}
+                fps: {type: number}
+                frames: {type: integer}
+                seed: {type: integer}
+      responses:
+        "200": {description: Render result}
