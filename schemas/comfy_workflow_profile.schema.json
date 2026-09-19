@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hal.comfy-workflow-profile.v1",
+  "title": "HAL ComfyUI Workflow Profile",
+  "type": "object",
+  "required": ["profile_id", "workflow_path", "bindings"],
+  "properties": {
+    "profile_id": {"type": "string", "minLength": 1},
+    "model_family": {"type": "string"},
+    "workflow_path": {"type": "string", "minLength": 1},
+    "bindings": {
+      "type": "object",
+      "required": ["prompt_node"],
+      "properties": {
+        "prompt_node": {"type": "string"},
+        "prompt_field": {"type": "string", "default": "text"},
+        "seed_node": {"type": ["string", "null"]},
+        "seed_field": {"type": "string", "default": "seed"},
+        "width_node": {"type": ["string", "null"]},
+        "width_field": {"type": "string", "default": "width"},
+        "height_node": {"type": ["string", "null"]},
+        "height_field": {"type": "string", "default": "height"},
+        "frames_node": {"type": ["string", "null"]},
+        "frames_field": {"type": "string", "default": "length"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
