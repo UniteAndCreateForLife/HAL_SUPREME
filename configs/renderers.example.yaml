@@ -1,0 +1,19 @@
+version: 1
+renderers:
+  - id: comfyui_wan
+    enabled: false
+    endpoint: http://127.0.0.1:8188
+    role: moving_world
+  - id: ltx
+    enabled: false
+    endpoint: null
+    role: moving_world
+  - id: reality_stage
+    enabled: true
+    role: deterministic_fallback
+
+policy:
+  require_motion_evidence: true
+  require_provenance: true
+  fail_closed_on_identity_mismatch: true
+  fail_closed_on_missing_voice_authorization: true
