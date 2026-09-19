@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hal.renderer-capability.v1",
+  "title": "HAL Renderer Capability",
+  "type": "object",
+  "required": ["renderer_id", "provider_id", "model_id", "health", "capabilities"],
+  "properties": {
+    "renderer_id": {"type": "string", "minLength": 1},
+    "provider_id": {"type": "string", "minLength": 1},
+    "model_id": {"type": "string", "minLength": 1},
+    "model_version": {"type": ["string", "null"]},
+    "health": {"enum": ["healthy", "degraded", "offline", "unknown"]},
+    "capabilities": {
+      "type": "object",
+      "properties": {
+        "text_to_video": {"type": "boolean"},
+        "image_to_video": {"type": "boolean"},
+        "video_to_video": {"type": "boolean"},
+        "reference_identity": {"type": "boolean"},
+        "control_video": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "max_width": {"type": ["integer", "null"], "minimum": 1},
+    "max_height": {"type": ["integer", "null"], "minimum": 1},
+    "max_frames": {"type": ["integer", "null"], "minimum": 1},
+    "fps": {"type": ["number", "null"], "exclusiveMinimum": 0}
+  },
+  "additionalProperties": true
+}
