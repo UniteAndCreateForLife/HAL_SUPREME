@@ -37,9 +37,49 @@ class ModelLicenseRecord:
 
 
 MODEL_LICENSES: dict[str, ModelLicenseRecord] = {
+    # Clean permissive video generators.
+    "kandinsky-5-video-pro": ModelLicenseRecord(
+        model_id="kandinsky-5-video-pro",
+        role="high_quality_hd_text_image_to_video",
+        code_license="MIT",
+        weights_license="MIT",
+        repository="https://github.com/kandinskylab/kandinsky-5",
+        note="19B HD T2V/I2V lane; use on large-memory workers.",
+    ),
+    "kandinsky-5-video-lite": ModelLicenseRecord(
+        model_id="kandinsky-5-video-lite",
+        role="lightweight_text_image_to_video",
+        code_license="MIT",
+        weights_license="MIT",
+        repository="https://github.com/kandinskylab/kandinsky-5",
+        note="2B T2V/I2V lane; useful as a secondary local renderer.",
+    ),
+    "step-video-t2v": ModelLicenseRecord(
+        model_id="step-video-t2v",
+        role="large_text_to_video_fallback",
+        code_license="MIT",
+        weights_license="MIT",
+        repository="https://github.com/stepfun-ai/Step-Video-T2V",
+        note="30B/204-frame fallback for large-memory workers.",
+    ),
     "wan2.2-ti2v-5b": ModelLicenseRecord(
         model_id="wan2.2-ti2v-5b",
         role="photoreal_text_image_to_video",
+        code_license="Apache-2.0",
+        weights_license="Apache-2.0",
+        repository="https://github.com/Wan-Video/Wan2.2",
+        note="Default local lane; quantized GGUF/offload variants can target low-VRAM workers.",
+    ),
+    "wan2.2-t2v-a14b": ModelLicenseRecord(
+        model_id="wan2.2-t2v-a14b",
+        role="high_quality_text_to_video",
+        code_license="Apache-2.0",
+        weights_license="Apache-2.0",
+        repository="https://github.com/Wan-Video/Wan2.2",
+    ),
+    "wan2.2-i2v-a14b": ModelLicenseRecord(
+        model_id="wan2.2-i2v-a14b",
+        role="high_quality_image_to_video",
         code_license="Apache-2.0",
         weights_license="Apache-2.0",
         repository="https://github.com/Wan-Video/Wan2.2",
@@ -72,6 +112,8 @@ MODEL_LICENSES: dict[str, ModelLicenseRecord] = {
         weights_license="Apache-2.0",
         repository="https://github.com/MeiGen-AI/MultiTalk",
     ),
+
+    # Music / authorized voice.
     "ace-step-1.5-xl-sft": ModelLicenseRecord(
         model_id="ace-step-1.5-xl-sft",
         role="full_song_music_and_vocals",
@@ -94,7 +136,49 @@ MODEL_LICENSES: dict[str, ModelLicenseRecord] = {
         repository="https://github.com/Plachtaa/seed-vc",
         note="Use only with an authorized/enrolled voice identity.",
     ),
-    # Deliberately tracked but blocked in strict mode.
+
+    # Frontier/open-weight candidates deliberately quarantined from strict mode.
+    "magi-2-preview": ModelLicenseRecord(
+        model_id="magi-2-preview",
+        role="frontier_unified_audio_video_1080p",
+        code_license="Apache-2.0",
+        weights_license="Apache-2.0",
+        repository="https://github.com/SandAI-org/MAGI-2-preview",
+        enabled_in_strict_mode=False,
+        note=(
+            "Frontier candidate. Upstream package declares Apache-2.0, but the released "
+            "checkpoint tree includes a Stable Audio Open component whose upstream model "
+            "uses the Stability AI Community License. Keep quarantined until dependency "
+            "license provenance is audited or the component is replaced."
+        ),
+    ),
+    "minimax-h3": ModelLicenseRecord(
+        model_id="minimax-h3",
+        role="frontier_open_weight_audio_video",
+        code_license="MiniMax-H3-Community",
+        weights_license="MiniMax-H3-Community",
+        repository="https://huggingface.co/MiniMaxAI/MiniMax-H3",
+        enabled_in_strict_mode=False,
+        note="Community license excludes the United States, EU, UK and South Korea.",
+    ),
+    "skyreels-v3": ModelLicenseRecord(
+        model_id="skyreels-v3",
+        role="reference_video_extension_talking_avatar",
+        code_license="Skywork-Community",
+        weights_license="Skywork-Community",
+        repository="https://github.com/SkyworkAI/SkyReels-V3",
+        enabled_in_strict_mode=False,
+        note="Commercial-capable community license, but not OSI/permissive open source.",
+    ),
+    "hunyuan-video-1.5": ModelLicenseRecord(
+        model_id="hunyuan-video-1.5",
+        role="lightweight_high_quality_t2v_i2v",
+        code_license="Tencent-Hunyuan-Community",
+        weights_license="Tencent-Hunyuan-Community",
+        repository="https://github.com/Tencent-Hunyuan/HunyuanVideo-1.5",
+        enabled_in_strict_mode=False,
+        note="Tencent community license; not accepted by HAL strict-open-source profile.",
+    ),
     "ltx-2": ModelLicenseRecord(
         model_id="ltx-2",
         role="audio_video_generation",
@@ -103,6 +187,15 @@ MODEL_LICENSES: dict[str, ModelLicenseRecord] = {
         repository="https://github.com/Lightricks/LTX-2",
         enabled_in_strict_mode=False,
         note="Source-available/community license; not accepted by HAL strict-open-source profile.",
+    ),
+    "ltx-2.5": ModelLicenseRecord(
+        model_id="ltx-2.5",
+        role="audio_video_generation",
+        code_license="LTX-Community",
+        weights_license="LTX-Community",
+        repository="https://github.com/Lightricks/LTX-2",
+        enabled_in_strict_mode=False,
+        note="Open weights but community license; not accepted by HAL strict-open-source profile.",
     ),
     "mmaudio": ModelLicenseRecord(
         model_id="mmaudio",
