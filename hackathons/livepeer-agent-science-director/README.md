@@ -2,6 +2,8 @@
 
 **Hackathon target:** Atumera Livepeer Agent Hackathon 2026 — **Track 1: Livepeer Agent Builder**.
 
+**Live production demo:** https://hal-science-director-production.up.railway.app
+
 HAL Science Director is a steerable scientific-media workflow for producing scientific visuals that can critique themselves before a human accepts them. Livepeer Agent is central to the complete loop:
 
 1. **Science shot planning** — Livepeer `gemini-text` converts the operator brief into an explicit observable claim, camera/environment plan, exclusions, accuracy guardrails, and render prompt.
