@@ -1,0 +1,72 @@
+# HAL Nightmare Studio v3 — strict open-source production profile
+profile: nightmare_studio_v3_open_source
+
+policy:
+  strict_open_source: true
+  paid_apis_allowed: false
+  source_available_community_licenses_allowed: false
+  noncommercial_weights_allowed: false
+
+master:
+  duration_seconds: 360
+  width: 1920
+  height: 1080
+  fps: 24
+  audio_sample_rate: 48000
+  shot_target_seconds: 5
+
+music:
+  primary_model: ace-step-1.5-xl-sft
+  fallback_model: heartmula-oss-3b-happy-new-year
+  structure:
+    core_section_seconds: 180
+    use_complete_for_extensions: true
+    use_repaint_for_transitions: true
+  target:
+    integrated_lufs: -10
+    true_peak_dbtp: -1
+  direction:
+    - dark_midtempo_bass
+    - idm_glitch_rhythm
+    - granular_vocal_processing
+    - cinematic_sub_bass
+    - original_sound_design
+  artist_imitation: false
+
+voice:
+  self_voice_model: seed-vc
+  require_authorization_receipt: true
+  generic_tts_may_impersonate_enrolled_voice: false
+
+video:
+  world_model: wan2.2-ti2v-5b
+  performance_model: wan2.2-s2v-14b
+  gesture_model: wan2.2-animate-14b
+  longform_sync_model: infinitetalk
+  multiperson_model: multitalk
+  reusable_3d:
+    blender: true
+    godot: true
+  continuity:
+    reuse_canonical_characters: true
+    reuse_rigs: true
+    reuse_sets: true
+    reuse_props: true
+    reuse_materials: true
+    reuse_camera_profiles: true
+    do_not_reuse_flattened_rendered_footage: true
+
+post:
+  ffmpeg_master: true
+  preserve_48khz_audio: true
+  timestamped_outputs: true
+  never_overwrite_verified_master: true
+
+qc:
+  require_full_decode: true
+  require_real_temporal_motion: true
+  require_audio_present: true
+  require_exact_duration: true
+  require_resolution_match: true
+  require_sha256: true
+  require_model_license_receipt: true
