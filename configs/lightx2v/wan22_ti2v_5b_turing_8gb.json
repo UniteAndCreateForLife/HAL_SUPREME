@@ -16,8 +16,6 @@
   "t5_cpu_offload": true,
   "vae_cpu_offload": true,
   "vae_offload_cache": true,
-  "dit_quant_scheme": "int8",
-  "t5_quant_scheme": "int8",
   "clean_cuda_cache": true,
   "rope_chunk": true,
   "rope_chunk_size": 100,
