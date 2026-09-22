@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import { LivepeerMcpClient, collectToolText, extractMediaUrl } from "../lib/livepeer.mjs";
 import { buildPlannerPrompt, buildRenderPrompt, normalizeBrief, parsePlannerJson } from "../lib/prompts.mjs";
+import { judgeScienceArtifact } from "../lib/judge.mjs";
 
 const livepeer = new LivepeerMcpClient({ endpoint: process.env.LIVEPEER_MCP_URL || "https://agent.livepeer.org/api/mcp" });
 const brief = normalizeBrief({
@@ -31,6 +32,8 @@ const media = await livepeer.runCapability({
 const outputUrl = extractMediaUrl(media);
 if (!outputUrl) throw new Error("Smoke test completed without a media URL.");
 
+const scienceReview = await judgeScienceArtifact({ livepeer, outputUrl, brief, plan, capability: process.env.LIVEPEER_TEXT_CAPABILITY || "gemini-text" });
+
 const response = await fetch(outputUrl);
 if (!response.ok) throw new Error(`Rendered media could not be downloaded: HTTP ${response.status}`);
 const bytes = new Uint8Array(await response.arrayBuffer());
@@ -47,6 +50,7 @@ const receipt = {
   observableClaim: plan.observable_claim,
   accuracyGuardrails: plan.accuracy_guardrails,
   outputUrl,
+  scienceReview,
   bytes: bytes.byteLength
 };
 await fs.writeFile("artifacts/livepeer-smoke-receipt.json", JSON.stringify(receipt, null, 2));
