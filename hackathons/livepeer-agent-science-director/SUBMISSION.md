@@ -1,26 +1,55 @@
-# Hackathon submission working draft
+# Hackathon submission package
 
 ## Project
 HAL Science Director
 
+## Track
+**Track 1 — Livepeer Agent Builder**
+
 ## One-line pitch
-A steerable scientific-media director that uses Livepeer Agent to plan an observable scientific claim, generate the media, expose the exact accuracy guardrails, and learn from a human correction on the next attempt.
+HAL Science Director uses Livepeer Agent to plan a scientific claim, generate the media, independently inspect the rendered artifact for visible scientific errors, and turn those errors into the next correction.
 
-## Working path to demonstrate
-1. Enter a scientific concept.
-2. Generate an image or short video.
-3. Inspect the Livepeer-generated plan and accuracy guardrails.
-4. Add one scientific correction.
-5. Refine and show that the next plan/render prompt incorporates the correction.
-6. Open the provenance ledger to show capabilities and hash for each attempt.
+## Demonstrated path
+1. Enter a scientific concept and explicit accuracy constraints.
+2. Livepeer `gemini-text` creates the observable claim, guardrails, exclusions, and production prompt.
+3. Livepeer `flux-schnell` or the configured video capability renders the artifact.
+4. A separate Livepeer multimodal `gemini-text` call judges the actual artifact by `source_url`.
+5. The UI exposes score, verdict, visible issues, and a suggested correction.
+6. The operator can load that correction into the refinement field and generate the next attempt.
+7. The provenance ledger records the capabilities, prompts, review result, output reference, and SHA-256 receipt.
 
-## Livepeer centrality
-The app sends the scientific planning step to the Livepeer Agent MCP using a text capability and sends the rendering step through the same MCP using Livepeer media capabilities. Video completion is tracked through Livepeer's async media-job polling tool.
+## Verified evidence
+- GitHub Actions: 8/8 automated tests passing.
+- Syntax checks passing on server, Livepeer adapter, planner, judge, and browser client.
+- Real keyless Livepeer planner call: passing.
+- Real keyless Livepeer image generation: passing.
+- Real Livepeer multimodal visual-science review: passing.
+- Real rendered artifact and JSON receipt preserved by CI.
+- Latest Saturn example: **6/10, revise**; the judge correctly identified excessive apparent ring thickness, weak major divisions, and insufficient density/banding detail.
+- 1920×1080 H.264 submission demo rendered from the real artifact and verified results.
+
+## Public code
+Repository:
+https://github.com/UniteAndCreateForLife/HAL_SUPREME/tree/hackathon/livepeer-science-director/hackathons/livepeer-agent-science-director
+
+Review surface:
+https://github.com/UniteAndCreateForLife/HAL_SUPREME/pull/4
+
+Website:
+https://halsupreme.com
+
+## Official form fields
+- Email: uniteandcreateforlife@gmail.com
+- Access code: **pending organizer email**
+- Track: **Track 1 — Livepeer Agent Builder**
+- Repository URL: use the public code URL above
+- Demo video URL: **pending public upload/share URL**
+- Website: https://halsupreme.com
 
 ## Remaining before final submission
-- Register the participant/team through Atumera's official registration path.
-- Run at least one real keyless or bearer-backed image generation end-to-end.
-- Run one short video generation if budget/latency permits.
-- Capture a short demo video showing generate → review → correct → regenerate.
-- Deploy the app or provide reproducible local run instructions.
-- Fill the official submission form before 24 Sep 2026 23:59 Europe/Athens.
+- Receive the organizer-issued six-digit access code.
+- Put the completed demo MP4 at a public/shareable URL.
+- Enter the completed fields in Atumera's official submission form before **24 Sep 2026 23:59 Europe/Athens**.
+- Preserve the submission confirmation/receipt.
+
+Registration/outreach email has already been sent to the organizer. Do not claim final submission until the form confirmation is received.
