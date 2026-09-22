@@ -64,14 +64,14 @@ function stableKey(...parts) {
 
 function decodeTransportEscapes(value) {
   let source = String(value || "").trim();
-  if (source.includes('\\\"') && /\\\\[nrt]/.test(source)) {
+  if (source.includes('\\"') && /\\[nrt]/.test(source)) {
     source = source
-      .replace(/\\\\r\\\\n/g, "\n")
-      .replace(/\\\\n/g, "\n")
-      .replace(/\\\\r/g, "\n")
-      .replace(/\\\\t/g, "\t")
-      .replace(/\\\\\"/g, '"')
-      .replace(/\\\\\\\\/g, "\\");
+      .replace(/\\r\\n/g, "\n")
+      .replace(/\\n/g, "\n")
+      .replace(/\\r/g, "\n")
+      .replace(/\\t/g, "\t")
+      .replace(/\\"/g, '"')
+      .replace(/\\\\/g, "\\");
   }
   if (source.startsWith('"') && source.endsWith('"')) {
     try {
