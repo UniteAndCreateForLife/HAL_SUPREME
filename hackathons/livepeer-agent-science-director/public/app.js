@@ -79,6 +79,7 @@ function renderResult(run) {
       <div><b>Livepeer visual science review</b><strong>${review.score ?? "—"}/10 · ${escapeHtml(review.verdict || "unavailable")}</strong></div>
       <p>${escapeHtml(review.feedback || "Review unavailable for this attempt.")}</p>
       ${(review.visibleIssues || []).length ? `<ul>${review.visibleIssues.map((issue) => `<li>${escapeHtml(issue)}</li>`).join("")}</ul>` : ""}
+      ${review.uncertainty ? `<p><b>Reviewer uncertainty.</b> ${escapeHtml(review.uncertainty)}</p>` : ""}
       ${review.suggestedCorrection ? `<button type="button" class="use-correction" id="use-correction">Use judge correction</button>` : ""}
     </section>
     <details><summary>Exact render prompt</summary><p>${escapeHtml(run.renderPrompt)}</p></details>`;
@@ -96,7 +97,7 @@ async function refreshLedger() {
     <article class="receipt">
       <div><b>${escapeHtml(run.plan.title)}</b><span>${new Date(run.finishedAt).toLocaleTimeString()}</span></div>
       <p>${escapeHtml(run.brief.concept)}</p>
-      <code>${escapeHtml(run.livepeer.textCapability)} → ${escapeHtml(run.livepeer.mediaCapability)}</code>
+      <code>${escapeHtml(run.livepeer.textCapability)} → ${escapeHtml(run.livepeer.mediaCapability)} → ${escapeHtml(run.livepeer.judgeCapability || run.livepeer.textCapability)}</code>
       <code>sha256:${escapeHtml(run.provenanceHash.slice(0, 24))}…</code>
     </article>`).join("") : `<p class="muted">No attempts yet.</p>`;
 }
