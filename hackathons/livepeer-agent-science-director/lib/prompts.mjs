@@ -49,7 +49,8 @@ export function buildRenderPrompt(plan, brief) {
 }
 
 export function parsePlannerJson(text) {
-  const source = String(text || "").trim();
+  const raw = String(text || "").trim();
+  const source = decodeTransportEscapes(raw);
   const fenced = source.match(/```(?:json)?\s*([\s\S]*?)```/i)?.[1];
   const candidate = fenced || source;
   const start = candidate.indexOf("{");
@@ -60,13 +61,38 @@ export function parsePlannerJson(text) {
     title: clean(parsed.title, 160) || "Untitled science shot",
     observable_claim: clean(parsed.observable_claim, 500),
     visual_subject: clean(parsed.visual_subject, 500),
-    camera: clean(parsed.camera, 300),
-    environment: clean(parsed.environment, 300),
-    motion: clean(parsed.motion, 300),
+    camera: cleanValue(parsed.camera, 500),
+    environment: cleanValue(parsed.environment, 500),
+    motion: cleanValue(parsed.motion, 500),
     exclusions: normalizeList(parsed.exclusions),
     accuracy_guardrails: normalizeList(parsed.accuracy_guardrails),
     render_prompt: clean(parsed.render_prompt, 2400) || clean(parsed.visual_subject, 500)
   };
+}
+
+function decodeTransportEscapes(value) {
+  let source = String(value || "").trim();
+
+  // Some Livepeer text capabilities return JSON object text inside an escaped
+  // transport string, e.g. {\n  \"title\": ...}. Decode that one layer
+  // without altering normal JSON returned directly by the capability.
+  if (source.includes('\\"') && /\\[nrt]/.test(source)) {
+    source = source
+      .replace(/\\r\\n/g, "\n")
+      .replace(/\\n/g, "\n")
+      .replace(/\\r/g, "\n")
+      .replace(/\\t/g, "\t")
+      .replace(/\\"/g, '"')
+      .replace(/\\\\/g, "\\");
+  }
+
+  if (source.startsWith('"') && source.endsWith('"')) {
+    try {
+      const decoded = JSON.parse(source);
+      if (typeof decoded === "string") source = decoded.trim();
+    } catch {}
+  }
+  return source;
 }
 
 function normalizeList(value) {
@@ -77,6 +103,13 @@ function normalizeList(value) {
 
 function list(value) {
   return normalizeList(value).join("; ");
+}
+
+function cleanValue(value, max) {
+  if (value && typeof value === "object") {
+    try { return clean(JSON.stringify(value), max); } catch {}
+  }
+  return clean(value, max);
 }
 
 function clean(value, max) {
