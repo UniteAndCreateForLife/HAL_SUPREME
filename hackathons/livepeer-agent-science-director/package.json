@@ -1,0 +1,17 @@
+{
+  "name": "hal-livepeer-science-director",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "HAL Science Director: a steerable scientific-media workflow powered by Livepeer Agent.",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node --watch server.mjs",
+    "test": "node --test",
+    "check": "node --check server.mjs && node --check lib/livepeer.mjs && node --check lib/prompts.mjs && node --check public/app.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "Apache-2.0"
+}
