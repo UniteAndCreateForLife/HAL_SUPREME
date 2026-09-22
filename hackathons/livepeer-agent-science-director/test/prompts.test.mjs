@@ -23,3 +23,11 @@ test("parses fenced planner JSON and builds a constrained render prompt", () => 
   assert.match(prompt, /field lines are illustrative/);
   assert.match(prompt, /fake labels/);
 });
+
+test("parses Livepeer planner JSON returned with transport escapes", () => {
+  const escaped = String.raw`{\n  \"title\": \"Saturn rings\",\n  \"observable_claim\": \"A and B rings are visually distinct\",\n  \"visual_subject\": \"Saturn\",\n  \"camera\": {\"angle\": \"oblique\"},\n  \"environment\": {\"background\": \"space\"},\n  \"motion\": {\"subject_motion\": \"static\"},\n  \"exclusions\": [\"fake labels\"],\n  \"accuracy_guardrails\": [\"preserve ring gaps\"],\n  \"render_prompt\": \"Photoreal Saturn rings\"\n}`;
+  const plan = parsePlannerJson(escaped);
+  assert.equal(plan.title, "Saturn rings");
+  assert.equal(plan.exclusions[0], "fake labels");
+  assert.match(plan.camera, /oblique/);
+});
