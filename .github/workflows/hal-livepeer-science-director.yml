@@ -1,0 +1,30 @@
+name: HAL Livepeer Science Director
+
+on:
+  push:
+    branches:
+      - hackathon/livepeer-science-director
+    paths:
+      - "hackathons/livepeer-agent-science-director/**"
+      - ".github/workflows/hal-livepeer-science-director.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hackathons/livepeer-agent-science-director
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Unit and syntax checks
+        run: |
+          npm test
+          npm run check
+      - name: Real Livepeer keyless smoke test
+        env:
+          LIVEPEER_MCP_URL: https://agent.livepeer.org/api/mcp
+        run: node test/livepeer.smoke.mjs
