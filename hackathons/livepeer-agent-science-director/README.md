@@ -4,6 +4,8 @@
 
 **Live production demo:** https://hal-science-director-production.up.railway.app
 
+**Submission video:** https://hal-science-director-production.up.railway.app/HAL_SCIENCE_DIRECTOR_SUBMISSION_DEMO.mp4
+
 HAL Science Director is a steerable scientific-media workflow for producing scientific visuals that can critique themselves before a human accepts them. Livepeer Agent is central to the complete loop:
 
 1. **Science shot planning** — Livepeer `gemini-text` converts the operator brief into an explicit observable claim, camera/environment plan, exclusions, accuracy guardrails, and render prompt.
@@ -47,7 +49,7 @@ Public CI additionally performs a **real keyless Livepeer smoke test**:
 
 `gemini-text planner → flux-schnell render → gemini-text visual science judge`
 
-The workflow preserves the real rendered JPEG and JSON receipt as a GitHub Actions artifact. The latest verified run passed **8/8 tests**, syntax checks, real planning, real rendering, real multimodal review, and evidence upload.
+The workflow preserves the real rendered JPEG and JSON receipt as a GitHub Actions artifact. The latest verified run passed **9/9 tests**, syntax checks, real planning, real rendering, real multimodal review, and evidence upload.
 
 ## Architecture
 
