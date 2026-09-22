@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#090a0d" />
+  <title>HAL Science Director · Livepeer Agent</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">HAL SUPREME × LIVEPEER AGENT</p>
+        <h1>Science Director</h1>
+        <p class="lede">Turn a scientific concept into a reviewable media shot, then correct the science and iterate without losing the production intent.</p>
+      </div>
+      <div class="status" id="status"><span></span> checking Livepeer</div>
+    </header>
+
+    <section class="grid">
+      <form class="panel controls" id="director-form">
+        <div class="panel-title"><b>01</b><span>DIRECT</span></div>
+        <label>Scientific concept
+          <textarea id="concept" required>Show how a solar coronal mass ejection propagates through space and interacts with Earth's magnetosphere.</textarea>
+        </label>
+        <div class="row">
+          <label>Media
+            <select id="mediaType"><option value="image">Image</option><option value="video">Video</option></select>
+          </label>
+          <label>Aspect
+            <select id="aspectRatio"><option>16:9</option><option>9:16</option><option>1:1</option></select>
+          </label>
+          <label id="durationWrap">Seconds
+            <input id="durationSeconds" type="number" min="3" max="12" value="6" />
+          </label>
+        </div>
+        <label>Audience
+          <input id="audience" value="curious general audience" />
+        </label>
+        <label>Visual style
+          <input id="style" value="cinematic photoreal scientific visualization" />
+        </label>
+        <label>Accuracy constraints
+          <textarea id="accuracyNotes" placeholder="Facts or visual constraints the model must not violate.">Do not show the CME physically striking Earth like a solid object. Represent the magnetosphere as a field interaction, not a glass shield.</textarea>
+        </label>
+        <button type="submit" id="generate">Generate with Livepeer Agent</button>
+        <p class="fineprint">Livepeer handles the planning and media generation. This app stores no API key in the browser.</p>
+      </form>
+
+      <section class="panel output">
+        <div class="panel-title"><b>02</b><span>REVIEW</span></div>
+        <div id="stage" class="stage empty">
+          <div class="reticle"></div>
+          <p>Generated media appears here.</p>
+        </div>
+        <div id="plan" class="plan hidden"></div>
+        <form id="refine-form" class="refine hidden">
+          <label>Scientific correction / director feedback
+            <textarea id="feedback" placeholder="Example: the bow shock should be upstream of the magnetopause; reduce the aurora intensity before impact."></textarea>
+          </label>
+          <button type="submit" class="secondary">Refine this attempt</button>
+        </form>
+      </section>
+    </section>
+
+    <section class="panel ledger">
+      <div class="panel-title"><b>03</b><span>PROVENANCE</span></div>
+      <div id="ledger"><p class="muted">No attempts yet. Each run records the scientific plan, exact render prompt, Livepeer capabilities used, output URL, and a provenance hash.</p></div>
+    </section>
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
