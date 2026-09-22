@@ -1,117 +1,166 @@
-# Nightmare Studio v3 — Strict Open-Source Long-Form Production
+# Nightmare Studio v3 — Open Video Frontier Fabric
 
-Status: implementation target for HAL SUPREME
-Verified model/license research date: 2026-09-21
+Status: active implementation target for HAL SUPREME
+Research refresh: 2026-09-21
 
-## Objective
+## Goal
 
-Upgrade the existing 48-second Nightmare Studio prototype into a local-first production system for approximately 4-6 minute music videos with genuine temporal motion, realistic human performance, reusable 3D assets, full songs with vocals, and deterministic QC.
+Build the strongest practical open video production system available to HAL rather than treating one foundation model as the entire studio.
 
-The strict profile prohibits paid generation APIs and also prohibits weights whose licenses are merely source-available, community-only, or non-commercial.
+"Better than Sora" is a system-level target. Current public preference measurements show that newer models can outrank Sora 2 on particular leaderboards, but the highest-ranked open-weight candidates do not all have licenses or hardware requirements compatible with HAL. The strict production profile therefore separates:
 
-## Default open stack
+1. clean permissive production models;
+2. local low-VRAM execution;
+3. large-GPU hero-shot execution; and
+4. frontier candidates that remain quarantined until their full dependency/license chain is acceptable.
 
-### Music and vocals
+## Strict production stack
 
-1. ACE-Step 1.5 XL SFT — primary full-song generator.
-   - MIT project license.
-   - Supports lyrics, vocals, reference audio, remix, repaint, complete/extension workflows, BPM/key/time-signature metadata, and long target durations.
-   - Treat 2-4 minute generations as the stable unit. Longer masters should be assembled with Complete/Repaint continuity rather than relying on a single monolithic generation.
+### World and cinematic generation
 
-2. HeartMuLa OSS 3B Happy New Year + HeartCodec — A/B fallback.
-   - Apache-2.0 code and public model weights.
-   - Use for alternate lyric delivery, arrangement candidates, or recovery when ACE-Step is unavailable.
+**Kandinsky 5 Video Pro**
+- MIT.
+- 19B HD text-to-video and image-to-video lane.
+- Default high-memory hero/world renderer.
 
-3. Seed-VC — authorized self-voice conversion lane.
-   - GPL-3.0.
-   - Supports zero-shot speech and singing voice conversion from a short reference, plus fine-tuning.
-   - This lane must remain behind HAL's voice authorization/provenance gate.
+**Kandinsky 5 Video Lite**
+- MIT.
+- 2B lightweight T2V/I2V lane.
+- Secondary renderer where memory is constrained.
 
-## Video and performance
+**Wan2.2**
+- Apache-2.0.
+- TI2V-5B is the main low-VRAM-compatible world lane after quantization/offload.
+- T2V-A14B / I2V-A14B are higher-capacity specialist lanes.
+- S2V-14B is the audio-driven performance lane.
+- Animate-14B is the gesture/expression/character-animation lane.
 
-1. Wan2.2 TI2V 5B — primary photoreal world/shot generator.
-   - Apache-2.0 repository/model family.
-   - 720p/24fps consumer-GPU-oriented base lane; upscale/master later rather than fabricating still-frame motion.
+**Step-Video-T2V**
+- MIT.
+- Large 30B fallback for high-memory workers.
+- Not a local 8 GB model.
 
-2. Wan2.2 S2V 14B — audio-driven cinematic performance lane.
-   - Use on vocal/performance shots where mouth, face, body, and scene response must follow audio.
+### Long performance and character continuity
 
-3. Wan2.2 Animate 14B — gesture/expression and character replacement lane.
-   - Use recorded or canonical motion references to preserve believable body mechanics and facial expression.
+**InfiniteTalk**
+- Apache-2.0.
+- Long-form audio-driven face/body performance.
 
-4. InfiniteTalk — long-form audio-driven video lane.
-   - Apache-2.0.
-   - Use when performance continuity must run longer than a normal generative shot.
+**MultiTalk**
+- Apache-2.0.
+- Multi-person audio-driven sequences.
 
-5. MultiTalk — multi-person singing/conversation lane.
-   - Apache-2.0.
-   - Use only when a shot contains multiple independently driven performers.
+**Blender + Godot**
+- Persistent characters, sets, props, instruments, geometry, rigs, cameras, materials, lights and motion blocking.
+- Generative outputs are new shots; flattened old video is not treated as the reusable asset.
 
-## Reusable 3D continuity layer
+## Local 8 GB HAL lane
 
-Generative video is not the sole source of geometry. Blender and Godot remain the deterministic continuity layer for canonical characters, sets, props, instruments, cameras, lighting rigs, materials, masks, depth references, and motion blocking.
+HAL's low-VRAM worker does not pretend full-precision frontier models fit into GPU memory.
 
-The rule is: manufacture reusable assets and rigs once, then render new shots from them. Do not treat a previously flattened MP4 as the reusable asset.
+The local route is:
 
-## Long-form construction
+WAN TI2V-5B quantized -> LightX2V / ComfyUI-GGUF -> block/phase CPU offload -> short 480p/720p verified shots -> temporal QC -> upscale/interpolation -> 1080p/24 master.
 
-Default master target:
+Rules:
+- one heavy video job at a time;
+- prefer Q4/Q5-class Wan TI2V-5B for ordinary shots;
+- use distilled/few-step Wan pipelines where compatible;
+- use host RAM for offload;
+- use the persistent 3D stage to manufacture composition, pose, identity and camera references;
+- invoke S2V/Animate/InfiniteTalk only for shots that actually need those specialist capabilities.
+
+This route optimizes usable final quality per byte of VRAM instead of selecting a model from leaderboard rank alone.
+
+## Large-GPU lane
+
+When a >=48 GB worker is available:
+- Kandinsky 5 Video Pro becomes the primary world/hero renderer.
+- Wan2.2 A14B remains available for alternate candidates.
+- Wan2.2 S2V/Animate remain the performance specialists.
+- InfiniteTalk remains the long-sync specialist.
+- render multiple candidates for hero shots and select by QC/human review.
+
+On a frontier cluster, Step-Video-T2V is added as another permissive candidate.
+
+## Frontier candidates under quarantine
+
+### MAGI-2 Preview
+
+MAGI-2 Preview is a major frontier candidate: unified audio/video generation, 1080p refinement, 114B MoE architecture and very strong current public preference results.
+
+Its repository declares Apache-2.0, but the released checkpoint package contains a Stable Audio Open component whose upstream model uses the Stability AI Community License. HAL therefore does not call the complete released package strictly permissive until the dependency is license-audited or replaced.
+
+It is also far outside the local-machine envelope: the official configuration is hundreds of gigabytes and targets an eight-Hopper-GPU cluster.
+
+### MiniMax H3
+
+The public model is high-performing, but its current community license excludes deployment in the United States and several other regions. It is therefore disabled for this HAL deployment.
+
+### SkyReels V3, HunyuanVideo 1.5, LTX-2.x
+
+These are useful open-weight/source-available systems, but their current model terms are community licenses rather than HAL's strict permissive/copyleft profile. They remain optional research lanes, not strict production dependencies.
+
+### MMAudio
+
+The code is MIT but released checkpoints are non-commercial. It remains blocked.
+
+## Audio/music stack
+
+- ACE-Step 1.5 XL SFT: primary MIT full-song/vocal engine.
+- HeartMuLa OSS 3B + HeartCodec: Apache-2.0 alternate.
+- Seed-VC: GPL-3.0 authorized self-voice singing conversion.
+- 48 kHz final master.
+- Original generated/procedural/user-owned or appropriately licensed foley and samples.
+
+## Six-minute construction
+
+Default master:
 - 360 seconds
 - 1920x1080 delivery
 - 24 fps
 - 48 kHz audio
-- approximately 5-second generative shot units
+- ~5 second independently accepted shot units
 
-A six-minute master therefore contains roughly 72 independently verifiable moving shots. HAL can re-render one failed shot without invalidating the other 71.
+Approximately 72 shot units make one six-minute film. Failed shots are replaced individually rather than forcing a complete regeneration.
 
-Music is planned in <=180-second stable sections. The first section is generated normally; later sections use completion/repaint logic to preserve key, vocal identity, arrangement vocabulary, and transitions. The final master is assembled only after loudness, true-peak, decode, duration, motion, sync, and hash verification.
+The music master is created first. HAL then derives:
+- section boundaries;
+- beat/transient map;
+- vocal phrase map;
+- intensity curve;
+- gesture cues;
+- camera/edit cues.
 
-## Sound design
+Every video renderer receives the same authoritative timeline.
 
-The target is original dark midtempo bass / IDM / glitch production, not direct imitation of a named living artist. Sound design should emphasize:
-- sub-bass fundamentals and controlled harmonics
-- asymmetrical glitch percussion
-- granular vocal fragments
-- industrial/transient impacts
-- synthetic choir or spectral pads
-- instrument gestures tied to visible movement
-- intentional silence and dynamic contrast
-- multi-band sidechain and transient control
+## Quality strategy
 
-Where strict licensing matters, prefer generated material, procedural synthesis, user-owned recordings, and CC0/appropriately licensed foley. Do not silently import non-commercial checkpoints or copyrighted reference audio.
+A single model is not expected to win every shot type.
 
-## License gate
+HAL should outperform a single-model workflow through:
+- persistent 3D identity and world continuity;
+- model routing by shot purpose;
+- multiple candidate generation for important shots;
+- audio-driven face/body performance;
+- deterministic beat/gesture linkage;
+- shot-level motion and decode QC;
+- continuity-aware edit selection;
+- temporal interpolation and restoration only after genuine motion exists;
+- final audio/video mastering after assembly.
 
-`renderers/open_source_policy.py` is authoritative for the strict profile.
+No benchmark claim is promoted to "better than Sora" unless HAL itself passes an A/B evaluation on the same prompts, duration, resolution and human-review procedure.
 
-Currently blocked by design:
-- LTX-2: current LTX-2.x model family uses a Lightricks Community License rather than an OSI-style permissive/copyleft model license.
-- MMAudio checkpoints: code is MIT but published checkpoints are CC-BY-NC-4.0, so they are not suitable for a strict reusable/commercial production profile.
+## Release gates
 
-A new model is not allowed merely because its GitHub repository is public. HAL requires both code and the actual weights used for rendering to pass the license gate.
-
-## Quality bar
-
-"Commercial-model quality" is an engineering target, not a claim. No open model should be labeled "Suno 6 quality" or "feature-film quality" without an actual A/B evaluation.
-
-Nightmare Studio v3 should improve quality through ensemble production:
-1. generate multiple music candidates;
-2. select by measurable audio QC plus human review;
-3. use dedicated performance/gesture lanes instead of text-to-video for every shot;
-4. keep persistent characters and sets;
-5. re-render only rejected shots;
-6. master at the end rather than overprocessing each generation;
-7. record exact models, hashes, seeds, prompts, references, and licenses in the handoff receipt.
-
-## Required v3 release gates
-
-A release is accepted only when:
-- every active model passes strict-open-source policy;
-- the full MP4 decodes;
-- video contains temporal motion rather than still duplication;
-- audio is present for the full intended program;
-- duration and dimensions match the project contract;
-- voice identity, when used, has an authorization receipt;
-- each shot has provenance and its source assets can be traced;
-- the final artifact has SHA-256;
-- no paid API call or public upload occurred unless separately authorized.
+A production cannot be marked accepted unless:
+- all strict-profile code and weight licenses pass;
+- dependency licenses are traced;
+- every shot has model/seed/prompt/reference provenance;
+- real temporal motion is measured;
+- full MP4 decode passes;
+- intended duration, frame rate and resolution match;
+- audio spans the intended program;
+- authorized voice use has an authorization receipt;
+- final master receives a SHA-256;
+- no paid API or public upload was used without explicit authorization.
