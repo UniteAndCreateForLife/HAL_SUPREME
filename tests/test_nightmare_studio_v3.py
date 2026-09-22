@@ -1,5 +1,6 @@
 import unittest
 
+from renderers.frontier_fabric import HardwareProfile, plan_strict_video_fabric
 from renderers.longform import LongFormProductionProfile, plan_long_form
 from renderers.open_source_policy import (
     require_strict_open_source,
@@ -14,13 +15,44 @@ class OpenSourcePolicyTests(unittest.TestCase):
         self.assertEqual(len(records), len(profile.model_ids()))
         self.assertTrue(all(record.is_strict_open_source for record in records))
 
-    def test_ltx2_is_blocked_in_strict_mode(self):
-        with self.assertRaises(ValueError):
-            require_strict_open_source("ltx-2")
+    def test_clean_frontier_models_pass(self):
+        for model_id in (
+            "kandinsky-5-video-pro",
+            "kandinsky-5-video-lite",
+            "step-video-t2v",
+            "wan2.2-ti2v-5b",
+        ):
+            self.assertTrue(require_strict_open_source(model_id).is_strict_open_source)
 
-    def test_noncommercial_checkpoint_is_blocked(self):
+    def test_community_or_dependency_review_models_are_blocked(self):
+        for model_id in (
+            "ltx-2",
+            "ltx-2.5",
+            "minimax-h3",
+            "skyreels-v3",
+            "hunyuan-video-1.5",
+            "magi-2-preview",
+            "mmaudio",
+        ):
+            with self.assertRaises(ValueError):
+                require_strict_open_source(model_id)
+
+
+class FrontierFabricTests(unittest.TestCase):
+    def test_known_8gb_class_machine_gets_offloaded_local_plan(self):
+        plan = plan_strict_video_fabric(HardwareProfile(vram_gb=8, ram_gb=64))
+        self.assertEqual(plan.tier, "local_8gb")
+        self.assertEqual(plan.primary_world_model, "wan2.2-ti2v-5b")
+        self.assertIn("LightX2V", plan.inference_engine)
+
+    def test_large_gpu_promotes_kandinsky_pro(self):
+        plan = plan_strict_video_fabric(HardwareProfile(vram_gb=64, ram_gb=128))
+        self.assertEqual(plan.tier, "large_gpu")
+        self.assertEqual(plan.primary_world_model, "kandinsky-5-video-pro")
+
+    def test_tiny_host_ram_is_rejected_for_low_vram_offload(self):
         with self.assertRaises(ValueError):
-            require_strict_open_source("mmaudio")
+            plan_strict_video_fabric(HardwareProfile(vram_gb=8, ram_gb=16))
 
 
 class LongFormPlannerTests(unittest.TestCase):
