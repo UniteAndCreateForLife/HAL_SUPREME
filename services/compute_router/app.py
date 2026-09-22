@@ -21,6 +21,21 @@ PROVIDERS = {
         "kind": "private-worker",
         "capabilities": ["audio", "video", "comfyui"],
     },
+    "livepeer_creative": {
+        "enabled": os.getenv("HAL_PROVIDER_LIVEPEER_CREATIVE_ENABLED", "false").lower() == "true",
+        "kind": "remote-media-worker",
+        "endpoint": os.getenv(
+            "LIVEPEER_CREATIVE_MCP_URL",
+            "https://agent.livepeer.org/api/mcp/creative",
+        ),
+        "capabilities": [
+            "image",
+            "video",
+            "audio",
+            "creative_project",
+            "media_finishing",
+        ],
+    },
 }
 
 def snapshot() -> dict[str, Any]:
