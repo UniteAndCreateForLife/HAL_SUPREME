@@ -4,15 +4,19 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import crypto from "node:crypto";
 import { LivepeerMcpClient, collectToolText, extractMediaUrl } from "./lib/livepeer.mjs";
-import { normalizeBrief, buildPlannerPrompt, buildRenderPrompt, parsePlannerJson } from "./lib/prompts.mjs";
+import { normalizeBrief, buildPlannerPrompt, buildFallbackPlan, buildRenderPrompt, parsePlannerJson } from "./lib/prompts.mjs";
 import { judgeScienceArtifact } from "./lib/judge.mjs";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(root, "public");
 const port = Number(process.env.PORT || 8787);
 
-const livepeer = new LivepeerMcpClient({
+const livepeerText = new LivepeerMcpClient({
   endpoint: process.env.LIVEPEER_MCP_URL || "https://agent.livepeer.org/api/mcp",
+  bearer: process.env.LIVEPEER_MCP_BEARER || ""
+});
+const livepeerCreative = new LivepeerMcpClient({
+  endpoint: process.env.LIVEPEER_CREATIVE_MCP_URL || "https://agent.livepeer.org/api/mcp/creative",
   bearer: process.env.LIVEPEER_MCP_BEARER || ""
 });
 
@@ -58,40 +62,49 @@ async function direct(input) {
   const brief = normalizeBrief(input);
   const startedAt = new Date().toISOString();
   const textCapability = process.env.LIVEPEER_TEXT_CAPABILITY || "gemini-text";
-  const plannerPayload = await livepeer.runCapability({
-    capability: textCapability,
-    prompt: buildPlannerPrompt(brief),
-    timeout: 90,
-    async: false,
-    idempotencyKey: stableKey("plan", JSON.stringify(brief))
-  });
-  const plannerText = collectToolText(plannerPayload);
-  const plan = parsePlannerJson(plannerText);
-  const renderPrompt = buildRenderPrompt(plan, brief);
 
+  let plan;
+  let plannerMode = "livepeer-text";
+  let plannerWarning = "";
+  try {
+    const plannerPayload = await livepeerText.runCapability({
+      capability: textCapability,
+      prompt: buildPlannerPrompt(brief),
+      timeout: 90,
+      async: false,
+      idempotencyKey: stableKey("plan", JSON.stringify(brief))
+    });
+    plan = parsePlannerJson(collectToolText(plannerPayload));
+  } catch (error) {
+    plannerMode = "degraded-local";
+    plannerWarning = sanitize(error);
+    plan = buildFallbackPlan(brief);
+  }
+
+  const renderPrompt = buildRenderPrompt(plan, brief);
   const isVideo = brief.mediaType === "video";
   const capability = isVideo
-    ? (process.env.LIVEPEER_VIDEO_CAPABILITY || "pixverse-t2v")
+    ? (process.env.LIVEPEER_VIDEO_CAPABILITY || "kling-o3-t2v")
     : (process.env.LIVEPEER_IMAGE_CAPABILITY || "flux-schnell");
   const timeout = isVideo
     ? Number(process.env.LIVEPEER_VIDEO_TIMEOUT_SECONDS || 600)
-    : Number(process.env.LIVEPEER_IMAGE_TIMEOUT_SECONDS || 60);
-  const mediaPayload = await livepeer.runCapability({
-    capability,
+    : Number(process.env.LIVEPEER_IMAGE_TIMEOUT_SECONDS || 90);
+
+  const mediaPayload = await livepeerCreative.createMedia({
     prompt: renderPrompt,
-    inputs: isVideo
-      ? { duration: brief.durationSeconds, aspect_ratio: brief.aspectRatio }
-      : { aspect_ratio: brief.aspectRatio },
-    timeout,
-    async: isVideo,
-    idempotencyKey: stableKey("render", `${capability}:${renderPrompt}`)
+    mediaType: brief.mediaType,
+    aspectRatio: brief.aspectRatio,
+    durationSeconds: brief.durationSeconds,
+    modelOverride: capability,
+    maxCostUsd: isVideo ? 2.5 : 0.25,
+    timeout
   });
   const outputUrl = extractMediaUrl(mediaPayload);
   if (!outputUrl) throw new Error("Livepeer completed the media step without an output URL.");
 
   let scienceReview;
   try {
-    scienceReview = await judgeScienceArtifact({ livepeer, outputUrl, brief, plan, capability: textCapability });
+    scienceReview = await judgeScienceArtifact({ livepeer: livepeerText, outputUrl, brief, plan, capability: textCapability });
   } catch (error) {
     scienceReview = {
       score: null,
@@ -110,7 +123,15 @@ async function direct(input) {
     brief,
     plan,
     renderPrompt,
-    livepeer: { textCapability, mediaCapability: capability, judgeCapability: textCapability, outputUrl },
+    livepeer: {
+      textCapability,
+      mediaCapability: capability,
+      judgeCapability: textCapability,
+      outputUrl,
+      plannerMode,
+      plannerWarning,
+      mediaSurface: "creative-mcp"
+    },
     scienceReview,
     provenanceHash: crypto.createHash("sha256").update(JSON.stringify({ brief, plan, capability, outputUrl, scienceReview })).digest("hex")
   };

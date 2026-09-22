@@ -46,6 +46,23 @@ export class LivepeerMcpClient {
     return this.waitForMediaJob(jobId, timeout);
   }
 
+  async createMedia({ prompt, mediaType = "image", aspectRatio = "16:9", durationSeconds, modelOverride, maxCostUsd, timeout = 600 }) {
+    const args = {
+      action: "generate",
+      prompt,
+      aspect_ratio: aspectRatio,
+      persist: false,
+      session_id: "hal_science_director",
+      ...(modelOverride ? { model_override: modelOverride } : {}),
+      ...(maxCostUsd ? { max_cost_usd: maxCostUsd } : {}),
+      ...(mediaType === "video" && durationSeconds ? { duration: durationSeconds } : {})
+    };
+    const payload = await this.callTool("create_media", args);
+    const jobId = extractJobId(payload);
+    if (!jobId) return payload;
+    return this.waitForMediaJob(jobId, timeout);
+  }
+
   async waitForMediaJob(jobId, timeoutSeconds = 600) {
     const deadline = Date.now() + timeoutSeconds * 1000;
     while (Date.now() < deadline) {

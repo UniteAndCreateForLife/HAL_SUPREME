@@ -70,8 +70,10 @@ function renderResult(run) {
   planBox.classList.remove("hidden");
   const review = run.scienceReview || {};
   const reviewClass = review.verdict === "pass" ? "pass" : review.verdict === "revise" ? "revise" : "unavailable";
+  const degradedPlanner = run.livepeer?.plannerMode === "degraded-local";
   planBox.innerHTML = `
     <h2>${escapeHtml(run.plan.title)}</h2>
+    ${degradedPlanner ? `<p class="degraded-note"><b>Planner degraded mode.</b> Livepeer text planning is temporarily unavailable; this run used the transparent local fallback plan while Livepeer Creative still generated the artifact. Scientific review remains fail-closed if unavailable.</p>` : ""}
     <p><b>Observable claim.</b> ${escapeHtml(run.plan.observable_claim || "—")}</p>
     <p><b>Camera.</b> ${escapeHtml(run.plan.camera || "—")}</p>
     <p><b>Accuracy guardrails.</b> ${escapeHtml((run.plan.accuracy_guardrails || []).join(" · ") || "—")}</p>

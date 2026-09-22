@@ -34,6 +34,21 @@ export function buildPlannerPrompt(brief) {
   ].join("\n");
 }
 
+export function buildFallbackPlan(brief) {
+  const constraints = [brief.accuracyNotes, brief.feedback].filter(Boolean).join(" ");
+  return {
+    title: `Scientific visualization: ${brief.concept.slice(0, 96)}`,
+    observable_claim: `Illustrate the visible structure of ${brief.concept} without implying measurements or facts that are not visually supported.`,
+    visual_subject: brief.concept,
+    camera: "Neutral explanatory framing chosen to make the requested visible structure easy to inspect.",
+    environment: "Minimal scientific presentation environment with no decorative pseudo-data.",
+    motion: brief.mediaType === "video" ? "Slow, legible camera motion that preserves geometry and scale relationships." : "Static keyframe.",
+    exclusions: ["invented labels", "invented measurements", "decorative fake HUD data", "unsupported causal claims"],
+    accuracy_guardrails: constraints ? [constraints] : ["Scientific fidelity is more important than spectacle.", "Do not invent quantities, labels, or causal claims."],
+    render_prompt: `${brief.concept}. Audience: ${brief.audience}. Style: ${brief.style}. ${constraints}`.trim()
+  };
+}
+
 export function buildRenderPrompt(plan, brief) {
   const core = typeof plan?.render_prompt === "string" ? plan.render_prompt : brief.concept;
   const guardrails = list(plan?.accuracy_guardrails);
