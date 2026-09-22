@@ -111,7 +111,7 @@ async function direct(input) {
     mediaFallback = "verified-demo-video";
     mediaWarning = message;
     const publicBase = process.env.PUBLIC_BASE_URL || "https://hal-science-director-production.up.railway.app";
-    outputUrl = `${publicBase.replace(/\/$/, "")}/HAL_SCIENCE_DIRECTOR_SUBMISSION_DEMO.mp4`;
+    outputUrl = `${publicBase.replace(/\/$/, "")}/HAL_SCIENCE_DIRECTOR_JUDGE_DEMO_V2.mp4`;
   }
 
   let scienceReview;

@@ -6,6 +6,8 @@
 
 **Submission video:** https://hal-science-director-production.up.railway.app/HAL_SCIENCE_DIRECTOR_SUBMISSION_DEMO.mp4
 
+**Enhanced judge demo:** https://hal-science-director-production.up.railway.app/HAL_SCIENCE_DIRECTOR_JUDGE_DEMO_V2.mp4
+
 HAL Science Director is a steerable scientific-media workflow for producing scientific visuals that can critique themselves before a human accepts them. Livepeer Agent is central to the complete loop:
 
 1. **Science shot planning** — Livepeer `gemini-text` converts the operator brief into an explicit observable claim, camera/environment plan, exclusions, accuracy guardrails, and render prompt.
@@ -21,6 +23,8 @@ This follows HAL SUPREME's production doctrine: generation is not acceptance. AI
 Most generative-media demos optimize primarily for spectacle. Science Director optimizes for **reviewable scientific communication**. It makes the intended claim explicit, separates illustrative abstractions from literal science, exposes constraints, evaluates the actual pixels after rendering, and turns visible failures into the next production instruction.
 
 A real CI run demonstrated the value of that gate: the Livepeer renderer produced a dramatic Saturn-rings image, while the independent Livepeer reviewer scored it **6/10 — revise** because the rings appeared too thick, major divisions were insufficiently defined, and density banding was weak. The system generated a specific correction rather than silently passing the artifact.
+
+The enhanced 25-second judge demo uses five HQ motion scenes generated through Livepeer Agent Creative MCP with a keyframe-then-animate strategy. Local deterministic ffmpeg finishing and a neutral non-user TTS narration were used only after Livepeer's keyless demo budget store temporarily became unavailable during the server-side finishing step. The receipt at `public/HAL_SCIENCE_DIRECTOR_JUDGE_DEMO_V2.receipt.json` records the disclosure, SHA-256, capability, and quoted generation cost.
 
 ## Run
 
@@ -56,6 +60,10 @@ The workflow preserves the real rendered JPEG and JSON receipt as a GitHub Actio
 Browser → HAL server → Livepeer Agent MCP → `gemini-text` planner → Livepeer media render → `gemini-text` visual science judge → browser review → operator correction → next Livepeer-planned attempt.
 
 The integration deliberately uses Livepeer Agent for planning, generation, and artifact review rather than calling a media vendor directly. Livepeer Agent is therefore part of the product's control loop, not a cosmetic API wrapper.
+
+## Operational resilience
+
+The public demo fails closed instead of fabricating results when a Livepeer text/review plane is temporarily unavailable. If the public keyless deployment cannot start a fresh media job, the UI explicitly marks degraded mode, shows the verified judge demo, and leaves the new science review as unavailable rather than inventing a score. Authenticated/local Livepeer generation remains a separate worker path.
 
 ## Security / privacy
 

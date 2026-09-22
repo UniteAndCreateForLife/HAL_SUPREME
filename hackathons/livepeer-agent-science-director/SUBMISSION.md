@@ -28,6 +28,10 @@ HAL Science Director uses Livepeer Agent to plan a scientific claim, generate th
 - Latest Saturn example: **6/10, revise**; the judge correctly identified excessive apparent ring thickness, weak major divisions, and insufficient density/banding detail.
 - 1920×1080 H.264 submission demo rendered from the real artifact and verified results.
 - Credential-free public video route: https://hal-science-director-production.up.railway.app/HAL_SCIENCE_DIRECTOR_SUBMISSION_DEMO.mp4
+- Enhanced 25-second judge demo: five HQ Livepeer Agent motion scenes, keyframe-then-animate, deterministic titles, neutral narration, and an explicit provenance/cost receipt.
+- Enhanced demo route: https://hal-science-director-production.up.railway.app/HAL_SCIENCE_DIRECTOR_JUDGE_DEMO_V2.mp4
+- Enhanced demo SHA-256: `62050dc0eaeafac6807fc07769558359eaf79b7c21263512c12aa38bbc029531`.
+- Public judge path is resilient to temporary keyless MCP budget-store outages: it shows a verified recorded demo and marks the fresh review unavailable instead of returning 500 or inventing a score.
 
 ## Live demo
 https://hal-science-director-production.up.railway.app
@@ -42,18 +46,17 @@ https://github.com/UniteAndCreateForLife/HAL_SUPREME/pull/4
 Website:
 https://halsupreme.com
 
-## Official form fields
+## Official form record
 - Email: uniteandcreateforlife@gmail.com
-- Access code: **pending organizer email**
+- Access code: supplied privately by the organizer and intentionally not stored in Git.
 - Track: **Track 1 — Livepeer Agent Builder**
 - Repository URL: use the public code URL above
-- Demo video URL: https://hal-science-director-production.up.railway.app/HAL_SCIENCE_DIRECTOR_SUBMISSION_DEMO.mp4
+- Original form demo video: https://hal-science-director-production.up.railway.app/HAL_SCIENCE_DIRECTOR_SUBMISSION_DEMO.mp4
+- Enhanced supplemental judge demo: https://hal-science-director-production.up.railway.app/HAL_SCIENCE_DIRECTOR_JUDGE_DEMO_V2.mp4
 - Live application: https://hal-science-director-production.up.railway.app
 - Website: https://halsupreme.com
 
-## Remaining before final submission
-- Receive the organizer-issued six-digit access code.
-- Enter the completed fields in Atumera's official submission form before **24 Sep 2026 23:59 Europe/Athens**.
-- Preserve the submission confirmation/receipt.
+## Submission status
+The user reports that the official Atumera form was submitted on **22 Sep 2026**. Preserve any confirmation/receipt outside the public repository. The enhanced judge demo was produced before the deadline as supplemental evidence; it does not alter or expose the private access code.
 
-Registration/outreach email has already been sent to the organizer. Do not claim final submission until the form confirmation is received.
+Registration/outreach and fallback submission records have also been sent to the organizer.
