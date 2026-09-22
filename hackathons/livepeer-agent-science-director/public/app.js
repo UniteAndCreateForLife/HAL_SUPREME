@@ -61,7 +61,7 @@ function collectBrief() {
 
 function renderResult(run) {
   const url = run.livepeer.outputUrl;
-  const isVideo = run.brief.mediaType === "video";
+  const isVideo = run.brief.mediaType === "video" || run.livepeer?.mediaFallback === "verified-demo-video";
   stage.className = "stage ready";
   stage.innerHTML = isVideo
     ? `<video src="${escapeAttr(url)}" controls autoplay loop muted playsinline></video>`
@@ -71,9 +71,11 @@ function renderResult(run) {
   const review = run.scienceReview || {};
   const reviewClass = review.verdict === "pass" ? "pass" : review.verdict === "revise" ? "revise" : "unavailable";
   const degradedPlanner = run.livepeer?.plannerMode === "degraded-local";
+  const degradedMedia = run.livepeer?.mediaFallback === "verified-demo-video";
   planBox.innerHTML = `
     <h2>${escapeHtml(run.plan.title)}</h2>
-    ${degradedPlanner ? `<p class="degraded-note"><b>Planner degraded mode.</b> Livepeer text planning is temporarily unavailable; this run used the transparent local fallback plan while Livepeer Creative still generated the artifact. Scientific review remains fail-closed if unavailable.</p>` : ""}
+    ${degradedPlanner ? `<p class="degraded-note"><b>Planner degraded mode.</b> Livepeer text planning is temporarily unavailable; this run used the transparent local fallback plan. Scientific review remains fail-closed if unavailable.</p>` : ""}
+    ${degradedMedia ? `<p class="degraded-note"><b>Public generation temporarily unavailable.</b> This deployment is showing the verified recorded submission demo instead of claiming a fresh render. No new science score is asserted for this brief.</p>` : ""}
     <p><b>Observable claim.</b> ${escapeHtml(run.plan.observable_claim || "—")}</p>
     <p><b>Camera.</b> ${escapeHtml(run.plan.camera || "—")}</p>
     <p><b>Accuracy guardrails.</b> ${escapeHtml((run.plan.accuracy_guardrails || []).join(" · ") || "—")}</p>

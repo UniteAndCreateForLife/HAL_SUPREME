@@ -90,30 +90,53 @@ async function direct(input) {
     ? Number(process.env.LIVEPEER_VIDEO_TIMEOUT_SECONDS || 600)
     : Number(process.env.LIVEPEER_IMAGE_TIMEOUT_SECONDS || 90);
 
-  const mediaPayload = await livepeerCreative.createMedia({
-    prompt: renderPrompt,
-    mediaType: brief.mediaType,
-    aspectRatio: brief.aspectRatio,
-    durationSeconds: brief.durationSeconds,
-    modelOverride: capability,
-    maxCostUsd: isVideo ? 2.5 : 0.25,
-    timeout
-  });
-  const outputUrl = extractMediaUrl(mediaPayload);
-  if (!outputUrl) throw new Error("Livepeer completed the media step without an output URL.");
+  let outputUrl = "";
+  let mediaFallback = "";
+  let mediaWarning = "";
+  try {
+    const mediaPayload = await livepeerCreative.createMedia({
+      prompt: renderPrompt,
+      mediaType: brief.mediaType,
+      aspectRatio: brief.aspectRatio,
+      durationSeconds: brief.durationSeconds,
+      modelOverride: capability,
+      maxCostUsd: isVideo ? 2.5 : 0.25,
+      timeout
+    });
+    outputUrl = extractMediaUrl(mediaPayload);
+    if (!outputUrl) throw new Error("Livepeer completed the media step without an output URL.");
+  } catch (error) {
+    const message = sanitize(error);
+    if (!/demo budget store unavailable|demo_budget_exhausted/i.test(message)) throw error;
+    mediaFallback = "verified-demo-video";
+    mediaWarning = message;
+    const publicBase = process.env.PUBLIC_BASE_URL || "https://hal-science-director-production.up.railway.app";
+    outputUrl = `${publicBase.replace(/\/$/, "")}/HAL_SCIENCE_DIRECTOR_SUBMISSION_DEMO.mp4`;
+  }
 
   let scienceReview;
-  try {
-    scienceReview = await judgeScienceArtifact({ livepeer: livepeerText, outputUrl, brief, plan, capability: textCapability });
-  } catch (error) {
+  if (mediaFallback) {
     scienceReview = {
       score: null,
       verdict: "unavailable",
-      feedback: sanitize(error),
+      feedback: "Live generation is temporarily unavailable on this public keyless deployment, so the verified recorded submission demo is shown instead.",
       visibleIssues: [],
       suggestedCorrection: "",
-      uncertainty: "Visual review did not complete; treat the generated artifact as unverified rather than scientifically validated."
+      uncertainty: "No new artifact was generated or judged in this degraded run; do not treat the recorded demo as a review of the current brief."
     };
+  } else {
+    try {
+      scienceReview = await judgeScienceArtifact({ livepeer: livepeerText, outputUrl, brief, plan, capability: textCapability });
+    } catch (error) {
+      scienceReview = {
+        score: null,
+        verdict: "unavailable",
+        feedback: sanitize(error),
+        visibleIssues: [],
+        suggestedCorrection: "",
+        uncertainty: "Visual review did not complete; treat the generated artifact as unverified rather than scientifically validated."
+      };
+    }
   }
 
   const run = {
@@ -130,7 +153,9 @@ async function direct(input) {
       outputUrl,
       plannerMode,
       plannerWarning,
-      mediaSurface: "creative-mcp"
+      mediaSurface: "creative-mcp",
+      mediaFallback,
+      mediaWarning
     },
     scienceReview,
     provenanceHash: crypto.createHash("sha256").update(JSON.stringify({ brief, plan, capability, outputUrl, scienceReview })).digest("hex")
