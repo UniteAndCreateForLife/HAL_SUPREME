@@ -93,7 +93,14 @@ async function direct(input) {
   try {
     scienceReview = await judgeScienceArtifact({ livepeer, outputUrl, brief, plan, capability: textCapability });
   } catch (error) {
-    scienceReview = {\n      score: null,\n      verdict: "unavailable",\n      feedback: sanitize(error),\n      visibleIssues: [],\n      suggestedCorrection: "",\n      uncertainty: "Visual review did not complete; treat the generated artifact as unverified rather than scientifically validated."\n    };
+    scienceReview = {
+      score: null,
+      verdict: "unavailable",
+      feedback: sanitize(error),
+      visibleIssues: [],
+      suggestedCorrection: "",
+      uncertainty: "Visual review did not complete; treat the generated artifact as unverified rather than scientifically validated."
+    };
   }
 
   const run = {
