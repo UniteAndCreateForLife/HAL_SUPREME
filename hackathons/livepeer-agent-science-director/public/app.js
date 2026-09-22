@@ -68,12 +68,24 @@ function renderResult(run) {
     : `<img src="${escapeAttr(url)}" alt="Generated scientific visualization" />`;
 
   planBox.classList.remove("hidden");
+  const review = run.scienceReview || {};
+  const reviewClass = review.verdict === "pass" ? "pass" : review.verdict === "revise" ? "revise" : "unavailable";
   planBox.innerHTML = `
     <h2>${escapeHtml(run.plan.title)}</h2>
     <p><b>Observable claim.</b> ${escapeHtml(run.plan.observable_claim || "—")}</p>
     <p><b>Camera.</b> ${escapeHtml(run.plan.camera || "—")}</p>
     <p><b>Accuracy guardrails.</b> ${escapeHtml((run.plan.accuracy_guardrails || []).join(" · ") || "—")}</p>
+    <section class="science-review ${reviewClass}">
+      <div><b>Livepeer visual science review</b><strong>${review.score ?? "—"}/10 · ${escapeHtml(review.verdict || "unavailable")}</strong></div>
+      <p>${escapeHtml(review.feedback || "Review unavailable for this attempt.")}</p>
+      ${(review.visibleIssues || []).length ? `<ul>${review.visibleIssues.map((issue) => `<li>${escapeHtml(issue)}</li>`).join("")}</ul>` : ""}
+      ${review.suggestedCorrection ? `<button type="button" class="use-correction" id="use-correction">Use judge correction</button>` : ""}
+    </section>
     <details><summary>Exact render prompt</summary><p>${escapeHtml(run.renderPrompt)}</p></details>`;
+  document.querySelector("#use-correction")?.addEventListener("click", () => {
+    document.querySelector("#feedback").value = review.suggestedCorrection || "";
+    document.querySelector("#feedback").focus();
+  });
   refineForm.classList.remove("hidden");
 }
 
