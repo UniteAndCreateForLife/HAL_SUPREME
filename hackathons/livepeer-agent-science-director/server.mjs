@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import crypto from "node:crypto";
 import { LivepeerMcpClient, collectToolText, extractMediaUrl } from "./lib/livepeer.mjs";
 import { normalizeBrief, buildPlannerPrompt, buildRenderPrompt, parsePlannerJson } from "./lib/prompts.mjs";
+import { judgeScienceArtifact } from "./lib/judge.mjs";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(root, "public");
@@ -88,6 +89,13 @@ async function direct(input) {
   const outputUrl = extractMediaUrl(mediaPayload);
   if (!outputUrl) throw new Error("Livepeer completed the media step without an output URL.");
 
+  let scienceReview;
+  try {
+    scienceReview = await judgeScienceArtifact({ livepeer, outputUrl, brief, plan, capability: textCapability });
+  } catch (error) {
+    scienceReview = { score: null, verdict: "unavailable", feedback: sanitize(error), visibleIssues: [], suggestedCorrection: "" };
+  }
+
   const run = {
     id: `run_${crypto.randomUUID().slice(0, 12)}`,
     startedAt,
@@ -95,8 +103,9 @@ async function direct(input) {
     brief,
     plan,
     renderPrompt,
-    livepeer: { textCapability, mediaCapability: capability, outputUrl },
-    provenanceHash: crypto.createHash("sha256").update(JSON.stringify({ brief, plan, capability, outputUrl })).digest("hex")
+    livepeer: { textCapability, mediaCapability: capability, judgeCapability: textCapability, outputUrl },
+    scienceReview,
+    provenanceHash: crypto.createHash("sha256").update(JSON.stringify({ brief, plan, capability, outputUrl, scienceReview })).digest("hex")
   };
   recentRuns.unshift(run);
   recentRuns.splice(20);
