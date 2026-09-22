@@ -27,6 +27,7 @@ HAL Science Director uses Livepeer Agent to plan a scientific claim, generate th
 - Real rendered artifact and JSON receipt preserved by CI.
 - Latest Saturn example: **6/10, revise**; the judge correctly identified excessive apparent ring thickness, weak major divisions, and insufficient density/banding detail.
 - 1920×1080 H.264 submission demo rendered from the real artifact and verified results.
+- Credential-free public video route: https://hal-science-director-production.up.railway.app/HAL_SCIENCE_DIRECTOR_SUBMISSION_DEMO.mp4
 
 ## Live demo
 https://hal-science-director-production.up.railway.app
@@ -46,13 +47,12 @@ https://halsupreme.com
 - Access code: **pending organizer email**
 - Track: **Track 1 — Livepeer Agent Builder**
 - Repository URL: use the public code URL above
-- Demo video URL: **completed MP4; organizer delivery by email is available, public video-host URL still pending**
+- Demo video URL: https://hal-science-director-production.up.railway.app/HAL_SCIENCE_DIRECTOR_SUBMISSION_DEMO.mp4
 - Live application: https://hal-science-director-production.up.railway.app
 - Website: https://halsupreme.com
 
 ## Remaining before final submission
 - Receive the organizer-issued six-digit access code.
-- Obtain a public/shareable video-host URL for the completed demo MP4 (the live application itself is already public).
 - Enter the completed fields in Atumera's official submission form before **24 Sep 2026 23:59 Europe/Athens**.
 - Preserve the submission confirmation/receipt.
 
