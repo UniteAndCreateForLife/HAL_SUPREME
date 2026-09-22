@@ -166,5 +166,6 @@ function mime(file) {
   if (file.endsWith(".js")) return "text/javascript; charset=utf-8";
   if (file.endsWith(".css")) return "text/css; charset=utf-8";
   if (file.endsWith(".svg")) return "image/svg+xml";
+  if (file.endsWith(".mp4")) return "video/mp4";
   return "application/octet-stream";
 }
