@@ -1,3 +1,4 @@
+import fs from "node:fs/promises";
 import { LivepeerMcpClient, collectToolText, extractMediaUrl } from "../lib/livepeer.mjs";
 import { buildPlannerPrompt, buildRenderPrompt, normalizeBrief, parsePlannerJson } from "../lib/prompts.mjs";
 
@@ -17,8 +18,10 @@ const planner = await livepeer.runCapability({
   idempotencyKey: `hal_ci_plan_${Date.now()}`
 });
 const plan = parsePlannerJson(collectToolText(planner));
+
+const mediaCapability = process.env.LIVEPEER_IMAGE_CAPABILITY || "flux-schnell";
 const media = await livepeer.runCapability({
-  capability: process.env.LIVEPEER_IMAGE_CAPABILITY || "flux-schnell",
+  capability: mediaCapability,
   prompt: buildRenderPrompt(plan, brief),
   inputs: { aspect_ratio: brief.aspectRatio },
   timeout: 90,
@@ -27,4 +30,25 @@ const media = await livepeer.runCapability({
 });
 const outputUrl = extractMediaUrl(media);
 if (!outputUrl) throw new Error("Smoke test completed without a media URL.");
-console.log(JSON.stringify({ ok: true, title: plan.title, outputUrl }, null, 2));
+
+const response = await fetch(outputUrl);
+if (!response.ok) throw new Error(`Rendered media could not be downloaded: HTTP ${response.status}`);
+const bytes = new Uint8Array(await response.arrayBuffer());
+
+await fs.mkdir("artifacts", { recursive: true });
+await fs.writeFile("artifacts/livepeer-smoke.jpg", bytes);
+
+const receipt = {
+  ok: true,
+  generatedAt: new Date().toISOString(),
+  plannerCapability: process.env.LIVEPEER_TEXT_CAPABILITY || "gemini-text",
+  mediaCapability,
+  title: plan.title,
+  observableClaim: plan.observable_claim,
+  accuracyGuardrails: plan.accuracy_guardrails,
+  outputUrl,
+  bytes: bytes.byteLength
+};
+await fs.writeFile("artifacts/livepeer-smoke-receipt.json", JSON.stringify(receipt, null, 2));
+
+console.log(JSON.stringify(receipt, null, 2));
