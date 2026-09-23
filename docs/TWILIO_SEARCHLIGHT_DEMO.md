@@ -43,3 +43,18 @@ python -m services.twilio_searchlight_demo.rehearsal --output <receipt.json>
 ```
 
 The generated receipt is bound to the current Git commit and explicitly records `live_twilio_account_verified=false` and `external_twilio_api_call=false`. It is development evidence only and must not be described as the required live Twilio-integrated Searchlight demo.
+
+## Judge-readiness packet
+
+The official Searchlight guidance asks for one clear end-to-end story, an obvious AI decision moment, an unmistakable Twilio role, a lightweight architecture explanation, impact, and a credible path to production. The current official page also requires a Twilio account and a working functional Twilio-integrated demo before application submission.
+
+Generate a source-bound packet from a passing rehearsal receipt:
+
+```bash
+python -m services.twilio_searchlight_demo.judge_packet \
+  --rehearsal <rehearsal-receipt.json> \
+  --json-output <judge-packet.json> \
+  --markdown-output <judge-packet.md>
+```
+
+The packet fails closed on a stale source SHA, a failing rehearsal, non-minimized HAL payload evidence, or any rehearsal receipt that tries to promote itself into live-account, submission, award, credit, payment, or spend evidence. It maps the technical evidence to the published judging criteria while leaving market claims, startup/account eligibility, live Twilio verification, and final submission as explicit human/account gates.
