@@ -52,8 +52,12 @@ class LivepeerCreativeClient:
         client_name: str = "hal-supreme-livepeer-creative",
         client_version: str = "0.1.0",
     ) -> None:
-        self.endpoint = (endpoint or os.getenv("LIVEPEER_CREATIVE_MCP_URL") or DEFAULT_ENDPOINT).strip()
-        self.bearer = bearer if bearer is not None else os.getenv("LIVEPEER_MCP_BEARER", "")
+        self.endpoint = (
+            endpoint or os.getenv("LIVEPEER_CREATIVE_MCP_URL") or DEFAULT_ENDPOINT
+        ).strip()
+        self.bearer = (
+            bearer if bearer is not None else os.getenv("LIVEPEER_MCP_BEARER", "")
+        )
         self.transport = transport or _http_transport
         self.client_name = client_name
         self.client_version = client_version
@@ -69,7 +73,10 @@ class LivepeerCreativeClient:
             {
                 "protocolVersion": PROTOCOL_VERSION,
                 "capabilities": {},
-                "clientInfo": {"name": self.client_name, "version": self.client_version},
+                "clientInfo": {
+                    "name": self.client_name,
+                    "version": self.client_version,
+                },
             },
         )
         if payload.get("error"):
@@ -100,7 +107,9 @@ class LivepeerCreativeClient:
             tools[name] = ToolDefinition(
                 name=name,
                 description=str(item.get("description", "")).strip(),
-                input_schema=item.get("inputSchema") if isinstance(item.get("inputSchema"), dict) else {},
+                input_schema=item.get("inputSchema")
+                if isinstance(item.get("inputSchema"), dict)
+                else {},
             )
         self._tools = tools
         return list(tools.values())
@@ -111,13 +120,17 @@ class LivepeerCreativeClient:
             raise McpError(f"Livepeer creative tool not found: {name}")
         return tools[name]
 
-    def call_tool(self, name: str, arguments: dict[str, Any] | None = None) -> dict[str, Any]:
+    def call_tool(
+        self, name: str, arguments: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         self.initialize()
         # Discover first so callers fail before spending credits on a typo.
         self.get_tool(name)
         payload = self._rpc("tools/call", {"name": name, "arguments": arguments or {}})
         if payload.get("error") or payload.get("result", {}).get("isError"):
-            detail = payload.get("error") or _collect_text(payload) or "unknown tool error"
+            detail = (
+                payload.get("error") or _collect_text(payload) or "unknown tool error"
+            )
             raise McpError(f"{name} failed: {_safe(detail)}")
         return payload
 
@@ -140,16 +153,23 @@ class LivepeerCreativeClient:
             if response.status in {401, 403}:
                 hint = " Authentication is required; connect Livepeer in an MCP-capable client or supply an authorized bearer/session."
             raise McpError(
-                f"Livepeer MCP HTTP {response.status}: {_safe(response.body[:500])}.{hint}".rstrip(".")
+                f"Livepeer MCP HTTP {response.status}: {_safe(response.body[:500])}.{hint}".rstrip(
+                    "."
+                )
             )
         return _parse_rpc_body(response.body, request_id=request_id)
 
     def _notify(self, method: str, params: dict[str, Any]) -> None:
-        body = json.dumps({"jsonrpc": "2.0", "method": method, "params": params}, separators=(",", ":"))
+        body = json.dumps(
+            {"jsonrpc": "2.0", "method": method, "params": params},
+            separators=(",", ":"),
+        )
         response = self.transport(self.endpoint, self._headers(), body)
         self._capture_session(response.headers)
         if response.status < 200 or response.status >= 300:
-            raise McpError(f"Livepeer MCP notification HTTP {response.status}: {_safe(response.body[:300])}")
+            raise McpError(
+                f"Livepeer MCP notification HTTP {response.status}: {_safe(response.body[:300])}"
+            )
 
     def _headers(self) -> dict[str, str]:
         headers = {
@@ -170,8 +190,12 @@ class LivepeerCreativeClient:
                 return
 
 
-def _http_transport(endpoint: str, headers: dict[str, str], body: str) -> TransportResponse:
-    req = urlrequest.Request(endpoint, data=body.encode("utf-8"), headers=headers, method="POST")
+def _http_transport(
+    endpoint: str, headers: dict[str, str], body: str
+) -> TransportResponse:
+    req = urlrequest.Request(
+        endpoint, data=body.encode("utf-8"), headers=headers, method="POST"
+    )
     try:
         with urlrequest.urlopen(req, timeout=120) as resp:
             return TransportResponse(

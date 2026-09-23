@@ -10,23 +10,34 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from integrations.livepeer_creative import LivepeerCreativeClient, McpError
+from integrations.livepeer_creative import LivepeerCreativeClient, McpError  # noqa: E402
 
 
 def parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(description="HAL operator CLI for Livepeer Agent Creative MCP.")
+    p = argparse.ArgumentParser(
+        description="HAL operator CLI for Livepeer Agent Creative MCP."
+    )
     p.add_argument("--endpoint", help="Override LIVEPEER_CREATIVE_MCP_URL.")
     sub = p.add_subparsers(dest="command", required=True)
 
-    sub.add_parser("doctor", help="Initialize MCP and report discovered creative tools without generating media.")
+    sub.add_parser(
+        "doctor",
+        help="Initialize MCP and report discovered creative tools without generating media.",
+    )
     sub.add_parser("tools", help="List creative MCP tool names.")
 
     schema = sub.add_parser("schema", help="Print one tool's runtime input schema.")
     schema.add_argument("tool")
 
-    call = sub.add_parser("call", help="Call an exact discovered tool. This may consume Livepeer balance.")
+    call = sub.add_parser(
+        "call", help="Call an exact discovered tool. This may consume Livepeer balance."
+    )
     call.add_argument("tool")
-    call.add_argument("--args-json", default="{}", help="JSON object matching the runtime tool schema.")
+    call.add_argument(
+        "--args-json",
+        default="{}",
+        help="JSON object matching the runtime tool schema.",
+    )
     call.add_argument(
         "--confirm-spend",
         action="store_true",
@@ -44,16 +55,25 @@ def main() -> int:
             tools = client.list_tools(refresh=True)
             names = sorted(tool.name for tool in tools)
             likely_creation = [
-                name for name in names
-                if any(token in name.lower() for token in ("create", "generate", "render", "media", "project"))
+                name
+                for name in names
+                if any(
+                    token in name.lower()
+                    for token in ("create", "generate", "render", "media", "project")
+                )
             ]
-            print(json.dumps({
-                "ok": True,
-                "endpoint": client.endpoint,
-                "auth_mode": client.auth_mode(),
-                "tool_count": len(names),
-                "likely_creation_tools": likely_creation[:40],
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "ok": True,
+                        "endpoint": client.endpoint,
+                        "auth_mode": client.auth_mode(),
+                        "tool_count": len(names),
+                        "likely_creation_tools": likely_creation[:40],
+                    },
+                    indent=2,
+                )
+            )
             return 0
 
         if args.command == "tools":
@@ -62,11 +82,16 @@ def main() -> int:
 
         if args.command == "schema":
             tool = client.get_tool(args.tool)
-            print(json.dumps({
-                "name": tool.name,
-                "description": tool.description,
-                "inputSchema": tool.input_schema,
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "name": tool.name,
+                        "description": tool.description,
+                        "inputSchema": tool.input_schema,
+                    },
+                    indent=2,
+                )
+            )
             return 0
 
         if args.command == "call":
