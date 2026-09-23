@@ -19,10 +19,18 @@ Required environment variable names:
 - `TWILIO_AUTH_TOKEN`
 - `HAL_TWILIO_WEBHOOK_URL` — the exact public URL configured in Twilio
 - `HAL_SEARCHLIGHT_DECISION_URL` — the existing HAL decision service endpoint
+- `HAL_SEARCHLIGHT_RECEIPT_DIR` — optional writable directory for privacy-minimized successful-interaction receipts
+- `HAL_SEARCHLIGHT_SOURCE_SHA` — exact 40-character deployed Git SHA; required when receipt capture is enabled
 
 No Twilio credential was detected in the automation environment and no external Twilio API request was made during this milestone. Dependencies were installed only in this worktree's ignored `.venv`; no global/system package was installed.
 
 The health endpoint explicitly reports `live_twilio_account_verified=false`. That stays false until an authorized operator verifies the account and performs a real end-to-end Twilio interaction.
+
+## Interaction receipt capture
+
+When `HAL_SEARCHLIGHT_RECEIPT_DIR` and an exact deployed `HAL_SEARCHLIGHT_SOURCE_SHA` are configured, each successful signature-validated webhook can write an atomic JSON receipt named only by the existing hashed message reference. The receipt records source SHA, decision id, elapsed time, and hashes of the configured HTTPS webhook URL and returned TwiML. It does **not** record phone numbers, message bodies, auth tokens, or the raw webhook URL.
+
+Receipt creation is fail-closed on an invalid source SHA, a non-success event, or a non-HTTPS configured webhook. A receipt is technical transport evidence only; it does not prove Twilio account ownership, program eligibility, application submission, honoree selection, credits, award, or payment. Those states remain false/human-gated until independently evidenced.
 
 ## Live-demo gate
 

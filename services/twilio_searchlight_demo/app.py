@@ -5,10 +5,15 @@ import json
 import os
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 from urllib import parse, request
 
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
+
+from services.twilio_searchlight_demo.interaction_receipt import (
+    write_interaction_receipt,
+)
 
 HOST = "0.0.0.0"
 PORT = int(os.getenv("PORT", "8091"))
@@ -116,6 +121,12 @@ class Handler(BaseHTTPRequestHandler):
                     "health": "healthy",
                     "signature_validation": "twilio_sdk",
                     "live_twilio_account_verified": False,
+                    "receipt_capture_configured": bool(
+                        os.getenv("HAL_SEARCHLIGHT_RECEIPT_DIR", "").strip()
+                    ),
+                    "source_sha_configured": bool(
+                        os.getenv("HAL_SEARCHLIGHT_SOURCE_SHA", "").strip()
+                    ),
                 },
                 sort_keys=True,
             )
@@ -167,6 +178,20 @@ class Handler(BaseHTTPRequestHandler):
                 503,
                 build_twiml("HAL is temporarily unavailable. Please retry."),
             )
+        if status == 200:
+            receipt_dir = os.getenv("HAL_SEARCHLIGHT_RECEIPT_DIR", "").strip()
+            source_sha = os.getenv("HAL_SEARCHLIGHT_SOURCE_SHA", "").strip()
+            if receipt_dir:
+                event = dict(event)
+                try:
+                    receipt_path = write_interaction_receipt(
+                        Path(receipt_dir), event, source_sha, webhook_url, body
+                    )
+                    event["receipt_status"] = "written"
+                    event["receipt_file"] = receipt_path.name
+                except Exception as exc:
+                    event["receipt_status"] = "error"
+                    event["receipt_error_type"] = type(exc).__name__
         print(json.dumps(event, sort_keys=True))
         self._send(status, body, "text/xml")
 

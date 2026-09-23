@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import tempfile
 import threading
 import unittest
+from pathlib import Path
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib import parse, request
 from unittest.mock import patch
@@ -55,18 +57,31 @@ class TwilioSearchlightHttpTests(unittest.TestCase):
                 },
                 method="POST",
             )
-            with patch.dict(
-                "os.environ",
-                {
-                    "TWILIO_AUTH_TOKEN": auth_token,
-                    "HAL_TWILIO_WEBHOOK_URL": signed_url,
-                    "HAL_SEARCHLIGHT_DECISION_URL": decision_url,
-                },
-                clear=False,
+            with (
+                tempfile.TemporaryDirectory() as receipt_dir,
+                patch.dict(
+                    "os.environ",
+                    {
+                        "TWILIO_AUTH_TOKEN": auth_token,
+                        "HAL_TWILIO_WEBHOOK_URL": signed_url,
+                        "HAL_SEARCHLIGHT_DECISION_URL": decision_url,
+                        "HAL_SEARCHLIGHT_RECEIPT_DIR": receipt_dir,
+                        "HAL_SEARCHLIGHT_SOURCE_SHA": "f" * 40,
+                    },
+                    clear=False,
+                ),
             ):
                 with request.urlopen(req, timeout=3) as response:
                     twiml = response.read().decode("utf-8")
                     self.assertEqual(response.status, 200)
+                receipts = list(Path(receipt_dir).glob("interaction-*.json"))
+                self.assertEqual(len(receipts), 1)
+                receipt = json.loads(receipts[0].read_text(encoding="utf-8"))
+                self.assertEqual(receipt["source_sha"], "f" * 40)
+                self.assertEqual(
+                    receipt["interaction"]["signature_validation"], "twilio_sdk"
+                )
+                self.assertFalse(receipt["privacy"]["message_body_recorded"])
             self.assertIn("HAL end-to-end reply.", twiml)
             self.assertEqual(decision.last_payload["channel"], "twilio_sms")
             self.assertEqual(decision.last_payload["message_sid"], "SMHTTP123")

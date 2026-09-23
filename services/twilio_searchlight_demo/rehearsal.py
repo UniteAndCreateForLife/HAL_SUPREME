@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import http.client
 import importlib.metadata
 import json
 import os
@@ -60,20 +61,34 @@ def current_source_sha() -> str:
     ).strip()
 
 
-def _http_post_raw(
-    url: str, payload: bytes, content_type: str, signature: str = "invalid"
-) -> tuple[int, str]:
-    req = request.Request(
-        url,
-        data=payload,
-        headers={"Content-Type": content_type, "X-Twilio-Signature": signature},
-        method="POST",
-    )
+def _http_post_unsupported_header(url: str) -> tuple[int, str]:
+    parsed = parse.urlsplit(url)
+    connection = http.client.HTTPConnection(parsed.hostname, parsed.port, timeout=3)
     try:
-        with request.urlopen(req, timeout=3) as response:
-            return response.status, response.read().decode("utf-8")
-    except error.HTTPError as exc:
-        return exc.code, exc.read().decode("utf-8")
+        connection.putrequest("POST", parsed.path or "/")
+        connection.putheader("Content-Type", "application/json")
+        connection.putheader("X-Twilio-Signature", "invalid")
+        connection.putheader("Content-Length", "0")
+        connection.endheaders()
+        response = connection.getresponse()
+        return response.status, response.read().decode("utf-8")
+    finally:
+        connection.close()
+
+
+def _http_post_oversized_header(url: str) -> tuple[int, str]:
+    parsed = parse.urlsplit(url)
+    connection = http.client.HTTPConnection(parsed.hostname, parsed.port, timeout=3)
+    try:
+        connection.putrequest("POST", parsed.path or "/")
+        connection.putheader("Content-Type", "application/x-www-form-urlencoded")
+        connection.putheader("X-Twilio-Signature", "invalid")
+        connection.putheader("Content-Length", str(MAX_FORM_BYTES + 1))
+        connection.endheaders()
+        response = connection.getresponse()
+        return response.status, response.read().decode("utf-8")
+    finally:
+        connection.close()
 
 
 def _http_post(url: str, form: dict[str, str], signature: str) -> tuple[int, str]:
@@ -135,14 +150,10 @@ def run_rehearsal(source_sha: str | None = None) -> dict[str, object]:
             calls_after_valid = decision.call_count
             invalid_status, invalid_twiml = _http_post(local_url, form, "invalid")
             calls_after_invalid = decision.call_count
-            unsupported_status, unsupported_twiml = _http_post_raw(
-                local_url, b"{}", "application/json"
+            unsupported_status, unsupported_twiml = _http_post_unsupported_header(
+                local_url
             )
-            oversized_status, oversized_twiml = _http_post_raw(
-                local_url,
-                b"x" * (MAX_FORM_BYTES + 1),
-                "application/x-www-form-urlencoded",
-            )
+            oversized_status, oversized_twiml = _http_post_oversized_header(local_url)
             calls_after_envelope_rejections = decision.call_count
 
         forwarded = dict(decision.last_payload or {})
