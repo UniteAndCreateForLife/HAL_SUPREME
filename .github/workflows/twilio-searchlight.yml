@@ -16,12 +16,17 @@ on:
 permissions:
   contents: read
 
+env:
+  SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
 jobs:
   evidence:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -51,7 +56,7 @@ jobs:
             --markdown-output evidence/twilio-searchlight-ci/judge-packet.md
       - name: Verify fail-closed evidence boundary
         env:
-          EXPECTED_SHA: ${{ github.sha }}
+          EXPECTED_SHA: ${{ env.SOURCE_SHA }}
         run: |
           python - <<'PY'
           import json, os, pathlib
@@ -69,7 +74,7 @@ jobs:
       - name: Upload source-bound evidence
         uses: actions/upload-artifact@v4
         with:
-          name: twilio-searchlight-${{ github.sha }}
+          name: twilio-searchlight-${{ env.SOURCE_SHA }}
           path: evidence/twilio-searchlight-ci/
           if-no-files-found: error
           retention-days: 30
