@@ -9,12 +9,23 @@ class ComputeRouterProviderTests(unittest.TestCase):
     def test_new_remote_providers_default_disabled_and_not_zero_spend_ready(self):
         with patch.dict(os.environ, {}, clear=True):
             providers = build_providers()
-        for name in ("huggingface", "openrouter_free", "github_actions", "cloudflare_workers_ai", "nvidia_nim", "modal", "livepeer_creative", "lightning_ai"):
+        for name in (
+            "huggingface",
+            "openrouter_free",
+            "github_actions",
+            "cloudflare_workers_ai",
+            "nvidia_nim",
+            "modal",
+            "livepeer_creative",
+            "lightning_ai",
+        ):
             self.assertFalse(providers[name]["enabled"])
             self.assertTrue(providers[name]["requires_zero_spend_ready"])
             self.assertFalse(providers[name]["zero_spend_ready"])
 
-    def test_enabled_remote_provider_still_fails_closed_without_zero_spend_readiness(self):
+    def test_enabled_remote_provider_still_fails_closed_without_zero_spend_readiness(
+        self,
+    ):
         with patch.dict(
             os.environ,
             {
@@ -102,8 +113,9 @@ class ComputeRouterProviderTests(unittest.TestCase):
         self.assertIsNotNone(route)
         self.assertEqual(route["provider"], "local_hal")
 
-
-    def test_verified_free_inference_priority_prefers_openrouter_then_cloudflare_then_nvidia(self):
+    def test_verified_free_inference_priority_prefers_openrouter_then_cloudflare_then_nvidia(
+        self,
+    ):
         with patch.dict(
             os.environ,
             {
@@ -119,7 +131,9 @@ class ComputeRouterProviderTests(unittest.TestCase):
             route = choose_route("inference", build_providers())
         self.assertIsNotNone(route)
         self.assertEqual(route["provider"], "openrouter_free")
-        self.assertEqual(route["fallbacks"][:2], ["cloudflare_workers_ai", "nvidia_nim"])
+        self.assertEqual(
+            route["fallbacks"][:2], ["cloudflare_workers_ai", "nvidia_nim"]
+        )
         self.assertEqual(route["budget_policy"], "free_models_only")
 
     def test_huggingface_is_fail_closed_until_zero_spend_ready(self):

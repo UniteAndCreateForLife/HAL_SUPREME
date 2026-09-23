@@ -27,16 +27,25 @@ def build_providers() -> dict[str, dict[str, Any]]:
             "priority": 60,
             "budget_policy": "zero_gpu_or_verified_free_only",
             "requires_zero_spend_ready": True,
-            "zero_spend_ready": env_enabled("HAL_PROVIDER_HUGGINGFACE_ZERO_SPEND_READY"),
+            "zero_spend_ready": env_enabled(
+                "HAL_PROVIDER_HUGGINGFACE_ZERO_SPEND_READY"
+            ),
         },
         "openrouter_free": {
             "enabled": env_enabled("HAL_PROVIDER_OPENROUTER_FREE_ENABLED"),
             "kind": "hosted-free-inference",
-            "capabilities": ["inference", "coding", "classification", "agent_microtask"],
+            "capabilities": [
+                "inference",
+                "coding",
+                "classification",
+                "agent_microtask",
+            ],
             "priority": 10,
             "budget_policy": "free_models_only",
             "requires_zero_spend_ready": True,
-            "zero_spend_ready": env_enabled("HAL_PROVIDER_OPENROUTER_FREE_ZERO_SPEND_READY"),
+            "zero_spend_ready": env_enabled(
+                "HAL_PROVIDER_OPENROUTER_FREE_ZERO_SPEND_READY"
+            ),
         },
         "github_actions": {
             "enabled": env_enabled("HAL_PROVIDER_GITHUB_ACTIONS_ENABLED"),
@@ -45,7 +54,9 @@ def build_providers() -> dict[str, dict[str, Any]]:
             "priority": 15,
             "budget_policy": "public_standard_runners_only",
             "requires_zero_spend_ready": True,
-            "zero_spend_ready": env_enabled("HAL_PROVIDER_GITHUB_ACTIONS_ZERO_SPEND_READY"),
+            "zero_spend_ready": env_enabled(
+                "HAL_PROVIDER_GITHUB_ACTIONS_ZERO_SPEND_READY"
+            ),
         },
         "cloudflare_workers_ai": {
             "enabled": env_enabled("HAL_PROVIDER_CLOUDFLARE_ENABLED"),
@@ -92,11 +103,19 @@ def build_providers() -> dict[str, dict[str, Any]]:
         "livepeer_creative": {
             "enabled": env_enabled("HAL_PROVIDER_LIVEPEER_CREATIVE_ENABLED"),
             "kind": "remote-media-worker",
-            "capabilities": ["image_generation", "video", "audio", "media", "media_finishing"],
+            "capabilities": [
+                "image_generation",
+                "video",
+                "audio",
+                "media",
+                "media_finishing",
+            ],
             "priority": 45,
             "budget_policy": "registered_hacker_balance_only",
             "requires_zero_spend_ready": True,
-            "zero_spend_ready": env_enabled("HAL_PROVIDER_LIVEPEER_CREATIVE_ZERO_SPEND_READY"),
+            "zero_spend_ready": env_enabled(
+                "HAL_PROVIDER_LIVEPEER_CREATIVE_ZERO_SPEND_READY"
+            ),
         },
         "lightning_ai": {
             "enabled": env_enabled("HAL_PROVIDER_LIGHTNING_AI_ENABLED"),
@@ -112,7 +131,9 @@ def build_providers() -> dict[str, dict[str, Any]]:
             "priority": 50,
             "budget_policy": "verified_free_credit_only",
             "requires_zero_spend_ready": True,
-            "zero_spend_ready": env_enabled("HAL_PROVIDER_LIGHTNING_AI_ZERO_SPEND_READY"),
+            "zero_spend_ready": env_enabled(
+                "HAL_PROVIDER_LIGHTNING_AI_ZERO_SPEND_READY"
+            ),
         },
         "local_hal": {
             "enabled": env_enabled("HAL_PROVIDER_LOCAL_ENABLED"),
@@ -124,7 +145,9 @@ def build_providers() -> dict[str, dict[str, Any]]:
     }
 
 
-def choose_route(capability: str, providers: dict[str, dict[str, Any]] | None = None) -> dict[str, Any] | None:
+def choose_route(
+    capability: str, providers: dict[str, dict[str, Any]] | None = None
+) -> dict[str, Any] | None:
     """Choose an enabled capability only when any zero-spend gate is satisfied."""
     inventory = providers if providers is not None else build_providers()
     eligible = sorted(
