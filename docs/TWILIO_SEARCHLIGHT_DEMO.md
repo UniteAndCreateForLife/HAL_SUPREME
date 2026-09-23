@@ -33,3 +33,13 @@ Before representing this as a working Twilio product demo, an authorized human/o
 5. review the resulting one- or two-scenario demo before using it in the Searchlight application.
 
 Startup funding, applicant age, representation authority, account ownership, and final application declarations are human-only attestations. This code does not infer or submit them.
+
+## Source-bound local rehearsal
+
+Before a live Twilio account is connected, run the local rehearsal to prove the bridge accepts a correctly signed Twilio webhook, forwards only the minimized HAL payload, returns TwiML, and rejects an invalid signature without invoking HAL:
+
+```bash
+python -m services.twilio_searchlight_demo.rehearsal --output <receipt.json>
+```
+
+The generated receipt is bound to the current Git commit and explicitly records `live_twilio_account_verified=false` and `external_twilio_api_call=false`. It is development evidence only and must not be described as the required live Twilio-integrated Searchlight demo.
