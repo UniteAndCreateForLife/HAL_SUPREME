@@ -55,6 +55,9 @@ jobs:
             --json-output evidence/twilio-searchlight-ci/judge-packet.json \
             --markdown-output evidence/twilio-searchlight-ci/judge-packet.md \
             --html-output evidence/twilio-searchlight-ci/judge-demo.html
+          python -m services.twilio_searchlight_demo.submission_gate
+            --judge-packet evidence/twilio-searchlight-ci/judge-packet.json
+            --output evidence/twilio-searchlight-ci/submission-readiness.json
       - name: Verify fail-closed evidence boundary
         env:
           EXPECTED_SHA: ${{ env.SOURCE_SHA }}
@@ -64,9 +67,15 @@ jobs:
           root = pathlib.Path('evidence/twilio-searchlight-ci')
           rehearsal = json.loads((root / 'rehearsal-receipt.json').read_text())
           packet = json.loads((root / 'judge-packet.json').read_text())
+          readiness = json.loads((root / 'submission-readiness.json').read_text())
           assert rehearsal['source_sha'] == os.environ['EXPECTED_SHA']
           assert packet['source_sha'] == os.environ['EXPECTED_SHA']
+          assert readiness['source_sha'] == os.environ['EXPECTED_SHA']
           assert rehearsal['passed'] is True
+          assert readiness['machine_evidence_ready'] is False
+          assert readiness['application_ready'] is False
+          assert readiness['submission_state'] == 'not_submitted'
+          assert 'genuine_signed_twilio_interaction_receipt_missing' in readiness['blockers']
           for key, value in packet['boundaries'].items():
               assert value is False, (key, value)
           PY
