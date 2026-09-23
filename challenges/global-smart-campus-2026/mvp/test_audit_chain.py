@@ -29,6 +29,7 @@ class AuditChainTests(unittest.TestCase):
         self.assertTrue(verify_chain(chain))
         self.assertEqual(chain[1]["previous_event_sha256"], chain[0]["event_sha256"])
         self.assertEqual(chain[1]["report_sha256"], self.bundle["receipt"]["report_sha256"])
+        self.assertEqual(chain[0]["tenant_id"], "demo-campus")
 
     def test_tampering_breaks_chain(self):
         chain = []
@@ -51,6 +52,49 @@ class AuditChainTests(unittest.TestCase):
                 receipt=self.bundle["receipt"],
                 event_type="REVIEW_REJECTED",
                 actor_role="analyst",
+            )
+
+    def test_cross_tenant_review_is_rejected(self):
+        with self.assertRaisesRegex(PermissionError, "cross-tenant access denied"):
+            append_event(
+                [],
+                report=self.bundle["report"],
+                receipt=self.bundle["receipt"],
+                event_type="REVIEW_APPROVED",
+                actor_role="reviewer",
+                tenant_id="north-campus",
+                resource_tenant_id="south-campus",
+            )
+
+    def test_existing_chain_cannot_switch_tenant_scope(self):
+        chain = []
+        append_event(
+            chain,
+            report=self.bundle["report"],
+            receipt=self.bundle["receipt"],
+            event_type="REVIEW_OPENED",
+            actor_role="analyst",
+            tenant_id="north-campus",
+        )
+        with self.assertRaisesRegex(PermissionError, "tenant scope mismatch"):
+            append_event(
+                chain,
+                report=self.bundle["report"],
+                receipt=self.bundle["receipt"],
+                event_type="REVIEW_NOTE",
+                actor_role="auditor",
+                tenant_id="south-campus",
+            )
+
+    def test_invalid_tenant_id_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "invalid tenant_id"):
+            append_event(
+                [],
+                report=self.bundle["report"],
+                receipt=self.bundle["receipt"],
+                event_type="REVIEW_NOTE",
+                actor_role="auditor",
+                tenant_id="../other-campus",
             )
 
     def test_invalid_report_receipt_is_rejected(self):
