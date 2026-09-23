@@ -9,7 +9,7 @@ class ComputeRouterProviderTests(unittest.TestCase):
     def test_new_remote_providers_default_disabled_and_not_zero_spend_ready(self):
         with patch.dict(os.environ, {}, clear=True):
             providers = build_providers()
-        for name in ("cloudflare_workers_ai", "modal"):
+        for name in ("huggingface", "openrouter_free", "github_actions", "cloudflare_workers_ai", "nvidia_nim", "modal", "livepeer_creative", "lightning_ai"):
             self.assertFalse(providers[name]["enabled"])
             self.assertTrue(providers[name]["requires_zero_spend_ready"])
             self.assertFalse(providers[name]["zero_spend_ready"])
@@ -101,6 +101,62 @@ class ComputeRouterProviderTests(unittest.TestCase):
             route = choose_route("video", build_providers())
         self.assertIsNotNone(route)
         self.assertEqual(route["provider"], "local_hal")
+
+
+    def test_verified_free_inference_priority_prefers_openrouter_then_cloudflare_then_nvidia(self):
+        with patch.dict(
+            os.environ,
+            {
+                "HAL_PROVIDER_OPENROUTER_FREE_ENABLED": "true",
+                "HAL_PROVIDER_OPENROUTER_FREE_ZERO_SPEND_READY": "true",
+                "HAL_PROVIDER_CLOUDFLARE_ENABLED": "true",
+                "HAL_PROVIDER_CLOUDFLARE_ZERO_SPEND_READY": "true",
+                "HAL_PROVIDER_NVIDIA_NIM_ENABLED": "true",
+                "HAL_PROVIDER_NVIDIA_NIM_ZERO_SPEND_READY": "true",
+            },
+            clear=True,
+        ):
+            route = choose_route("inference", build_providers())
+        self.assertIsNotNone(route)
+        self.assertEqual(route["provider"], "openrouter_free")
+        self.assertEqual(route["fallbacks"][:2], ["cloudflare_workers_ai", "nvidia_nim"])
+        self.assertEqual(route["budget_policy"], "free_models_only")
+
+    def test_huggingface_is_fail_closed_until_zero_spend_ready(self):
+        with patch.dict(
+            os.environ,
+            {"HAL_PROVIDER_HUGGINGFACE_ENABLED": "true"},
+            clear=True,
+        ):
+            self.assertIsNone(choose_route("inference", build_providers()))
+
+    def test_ci_compute_routes_only_through_explicit_free_standard_runner_gate(self):
+        with patch.dict(
+            os.environ,
+            {
+                "HAL_PROVIDER_GITHUB_ACTIONS_ENABLED": "true",
+                "HAL_PROVIDER_GITHUB_ACTIONS_ZERO_SPEND_READY": "true",
+            },
+            clear=True,
+        ):
+            route = choose_route("test", build_providers())
+        self.assertIsNotNone(route)
+        self.assertEqual(route["provider"], "github_actions")
+        self.assertEqual(route["budget_policy"], "public_standard_runners_only")
+
+    def test_livepeer_media_route_requires_registered_balance_admission(self):
+        with patch.dict(
+            os.environ,
+            {
+                "HAL_PROVIDER_LIVEPEER_CREATIVE_ENABLED": "true",
+                "HAL_PROVIDER_LIVEPEER_CREATIVE_ZERO_SPEND_READY": "true",
+            },
+            clear=True,
+        ):
+            route = choose_route("video", build_providers())
+        self.assertIsNotNone(route)
+        self.assertEqual(route["provider"], "livepeer_creative")
+        self.assertEqual(route["budget_policy"], "registered_hacker_balance_only")
 
     def test_fail_closed_when_provider_is_disabled(self):
         providers = {
