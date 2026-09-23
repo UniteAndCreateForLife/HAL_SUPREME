@@ -55,9 +55,7 @@ jobs:
             --json-output evidence/twilio-searchlight-ci/judge-packet.json \
             --markdown-output evidence/twilio-searchlight-ci/judge-packet.md \
             --html-output evidence/twilio-searchlight-ci/judge-demo.html
-          python -m services.twilio_searchlight_demo.submission_gate
-            --judge-packet evidence/twilio-searchlight-ci/judge-packet.json
-            --output evidence/twilio-searchlight-ci/submission-readiness.json
+          python -m services.twilio_searchlight_demo.submission_gate --judge-packet evidence/twilio-searchlight-ci/judge-packet.json --output evidence/twilio-searchlight-ci/submission-readiness.json
       - name: Verify fail-closed evidence boundary
         env:
           EXPECTED_SHA: ${{ env.SOURCE_SHA }}
