@@ -12,6 +12,8 @@ Safe event logs contain a hashed message reference, decision identifier, elapsed
 
 The HTTP envelope also fails closed before HAL is invoked: only `application/x-www-form-urlencoded` requests are accepted, request bodies are capped at 16 KiB, malformed/empty lengths are rejected, unsupported content types return HTTP 415, and oversized bodies return HTTP 413.
 
+Twilio may retry a webhook when a response is delayed or interrupted. The bridge keeps a bounded ten-minute, process-local cache keyed only by SHA-256 digests of `MessageSid` and body. An identical retry reuses the verified TwiML response without invoking HAL twice; concurrent duplicates wait for the first result. Reuse of a `MessageSid` with different content fails closed with HTTP 409. Failed HAL calls are not cached, and the cache does not retain the raw MessageSid, request body, phone number, or auth token. This limits duplicate inference and provider cost within one process; multi-replica or restart-safe idempotency still requires a reviewed shared store.
+
 ## Configuration boundary
 
 Required environment variable names:

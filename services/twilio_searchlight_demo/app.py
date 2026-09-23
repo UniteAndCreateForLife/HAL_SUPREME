@@ -17,6 +17,11 @@ from services.twilio_searchlight_demo.interaction_receipt import (
 from services.twilio_searchlight_demo.operator_adapter import (
     call_operator_conversation,
 )
+from services.twilio_searchlight_demo.replay_guard import (
+    ReplayConflict,
+    ReplayGuard,
+    ReplayWaitTimeout,
+)
 
 HOST = "127.0.0.1"
 PORT = int(os.getenv("PORT", "8091"))
@@ -67,6 +72,7 @@ def process_incoming(
     signature: str,
     auth_token: str,
     decision_url: str,
+    replay_guard: ReplayGuard | None = None,
 ) -> tuple[int, str, dict[str, str]]:
     if not validate_twilio_request(webhook_url, form, signature, auth_token):
         return 403, build_twiml("Request rejected."), {"status": "invalid_signature"}
@@ -78,20 +84,45 @@ def process_incoming(
             build_twiml("MessageSid and Body are required."),
             {"status": "invalid_form"},
         )
-    started = time.perf_counter()
-    decision = call_hal_decision(decision_url, message_sid, body)
-    elapsed_ms = (time.perf_counter() - started) * 1000
-    event = {
-        "status": "ok",
-        "message_ref": hashlib.sha256(message_sid.encode()).hexdigest()[:12],
-        "decision_id": decision["decision_id"],
-        "elapsed_ms": f"{elapsed_ms:.1f}",
-    }
-    return 200, build_twiml(decision["reply"]), event
+
+    def invoke_hal() -> tuple[str, dict[str, str]]:
+        started = time.perf_counter()
+        decision = call_hal_decision(decision_url, message_sid, body)
+        elapsed_ms = (time.perf_counter() - started) * 1000
+        event = {
+            "status": "ok",
+            "message_ref": hashlib.sha256(message_sid.encode()).hexdigest()[:12],
+            "decision_id": decision["decision_id"],
+            "elapsed_ms": f"{elapsed_ms:.1f}",
+            "delivery_status": "new",
+        }
+        return build_twiml(decision["reply"]), event
+
+    try:
+        if replay_guard is None:
+            twiml, event = invoke_hal()
+            replayed = False
+        else:
+            (twiml, event), replayed = replay_guard.run_once(
+                message_sid, body, invoke_hal
+            )
+    except ReplayConflict:
+        return 409, build_twiml("Request rejected."), {"status": "replay_conflict"}
+    except ReplayWaitTimeout:
+        return (
+            503,
+            build_twiml("HAL is temporarily unavailable. Please retry."),
+            {"status": "replay_wait_timeout"},
+        )
+    if replayed:
+        event = dict(event)
+        event["delivery_status"] = "cached_retry"
+    return 200, twiml, event
 
 
 class Handler(BaseHTTPRequestHandler):
     server_version = "HALTwilioSearchlight/0.1"
+    replay_guard = ReplayGuard()
 
     def _send(self, status: int, body: str, content_type: str) -> None:
         payload = body.encode("utf-8")
@@ -158,7 +189,12 @@ class Handler(BaseHTTPRequestHandler):
         signature = self.headers.get("X-Twilio-Signature", "")
         try:
             status, body, event = process_incoming(
-                webhook_url, form, signature, auth_token, decision_url
+                webhook_url,
+                form,
+                signature,
+                auth_token,
+                decision_url,
+                self.replay_guard,
             )
         except Exception as exc:
             event = {"status": "decision_unavailable", "error_type": type(exc).__name__}

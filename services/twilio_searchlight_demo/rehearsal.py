@@ -17,6 +17,7 @@ from urllib import error, parse, request
 from twilio.request_validator import RequestValidator
 
 from services.twilio_searchlight_demo.app import MAX_FORM_BYTES, Handler
+from services.twilio_searchlight_demo.replay_guard import ReplayGuard
 
 
 class RehearsalDecisionHandler(BaseHTTPRequestHandler):
@@ -149,6 +150,7 @@ def run_rehearsal(source_sha: str | None = None) -> dict[str, object]:
     decision_thread = threading.Thread(target=decision.serve_forever, daemon=True)
     decision_thread.start()
 
+    Handler.replay_guard = ReplayGuard()
     webhook = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     webhook_thread = threading.Thread(target=webhook.serve_forever, daemon=True)
     webhook_thread.start()

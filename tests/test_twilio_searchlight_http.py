@@ -6,12 +6,13 @@ import threading
 import unittest
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib import parse, request
+from urllib import error, parse, request
 from unittest.mock import patch
 
 from twilio.request_validator import RequestValidator
 
 from services.twilio_searchlight_demo.app import Handler
+from services.twilio_searchlight_demo.replay_guard import ReplayGuard
 
 
 class DecisionHandler(BaseHTTPRequestHandler):
@@ -20,6 +21,7 @@ class DecisionHandler(BaseHTTPRequestHandler):
             self.send_error(404)
             return
         length = int(self.headers.get("Content-Length", "0"))
+        self.server.request_count += 1
         self.server.last_payload = json.loads(self.rfile.read(length).decode("utf-8"))
         payload = json.dumps(
             {
@@ -66,6 +68,7 @@ class TwilioSearchlightHttpTests(unittest.TestCase):
     def test_signed_webhook_round_trip_over_http(self) -> None:
         decision = ThreadingHTTPServer(("127.0.0.1", 0), DecisionHandler)
         decision.last_payload = None
+        decision.request_count = 0
         decision_thread = threading.Thread(target=decision.serve_forever, daemon=True)
         decision_thread.start()
         webhook = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
@@ -103,6 +106,7 @@ class TwilioSearchlightHttpTests(unittest.TestCase):
                     },
                     clear=False,
                 ),
+                patch.object(Handler, "replay_guard", ReplayGuard()),
             ):
                 with request.urlopen(req, timeout=3) as response:
                     twiml = response.read().decode("utf-8")
@@ -115,7 +119,32 @@ class TwilioSearchlightHttpTests(unittest.TestCase):
                     receipt["interaction"]["signature_validation"], "twilio_sdk"
                 )
                 self.assertFalse(receipt["privacy"]["message_body_recorded"])
+                with request.urlopen(req, timeout=3) as response:
+                    replayed_twiml = response.read().decode("utf-8")
+                    self.assertEqual(response.status, 200)
+                self.assertEqual(replayed_twiml, twiml)
+
+                conflict_form = {
+                    "MessageSid": "SMHTTP123",
+                    "Body": "changed content for the same SID",
+                }
+                conflict_signature = RequestValidator(auth_token).compute_signature(
+                    signed_url, conflict_form
+                )
+                conflict_req = request.Request(
+                    local_url,
+                    data=parse.urlencode(conflict_form).encode("utf-8"),
+                    headers={
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-Twilio-Signature": conflict_signature,
+                    },
+                    method="POST",
+                )
+                with self.assertRaises(error.HTTPError) as caught:
+                    request.urlopen(conflict_req, timeout=3)
+                self.assertEqual(caught.exception.code, 409)
             self.assertIn("HAL end-to-end reply.", twiml)
+            self.assertEqual(decision.request_count, 1)
             self.assertEqual(
                 decision.last_payload["capability_id"], "operator.conversation"
             )
