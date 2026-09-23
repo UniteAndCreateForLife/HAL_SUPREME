@@ -10,18 +10,82 @@ PORT = int(os.getenv("PORT", "8080"))
 QUALITY_GATE = os.getenv("HAL_QUALITY_GATE", "V11")
 FAILOVER = os.getenv("HAL_FAILOVER_ENABLED", "true").lower() == "true"
 
-PROVIDERS = {
-    "huggingface": {
-        "enabled": os.getenv("HAL_PROVIDER_HUGGINGFACE_ENABLED", "false").lower() == "true",
-        "kind": "remote-compute",
-        "capabilities": ["model_registry", "inference", "jobs"],
-    },
-    "local_hal": {
-        "enabled": os.getenv("HAL_PROVIDER_LOCAL_ENABLED", "false").lower() == "true",
-        "kind": "private-worker",
-        "capabilities": ["audio", "video", "comfyui"],
-    },
-}
+
+def env_enabled(name: str, default: bool = False) -> bool:
+    """Return a strict boolean feature flag from the environment."""
+    fallback = "true" if default else "false"
+    return os.getenv(name, fallback).strip().lower() == "true"
+
+
+def build_providers() -> dict[str, dict[str, Any]]:
+    """Build the provider inventory without exposing credentials."""
+    return {
+        "huggingface": {
+            "enabled": env_enabled("HAL_PROVIDER_HUGGINGFACE_ENABLED"),
+            "kind": "remote-compute",
+            "capabilities": ["model_registry", "inference", "jobs"],
+        },
+        "cloudflare_workers_ai": {
+            "enabled": env_enabled("HAL_PROVIDER_CLOUDFLARE_ENABLED"),
+            "kind": "serverless-edge-inference",
+            "capabilities": [
+                "inference",
+                "embeddings",
+                "speech_to_text",
+                "text_to_speech",
+                "image_generation",
+                "vision",
+                "edge_api",
+            ],
+            "budget_policy": "free_allocation_only",
+            "requires_zero_spend_ready": True,
+            "zero_spend_ready": env_enabled("HAL_PROVIDER_CLOUDFLARE_ZERO_SPEND_READY"),
+        },
+        "modal": {
+            "enabled": env_enabled("HAL_PROVIDER_MODAL_ENABLED"),
+            "kind": "serverless-gpu",
+            "capabilities": [
+                "inference",
+                "training",
+                "fine_tuning",
+                "scientific_compute",
+                "media",
+                "sandbox",
+            ],
+            "budget_policy": "free_credit_only",
+            "requires_zero_spend_ready": True,
+            "zero_spend_ready": env_enabled("HAL_PROVIDER_MODAL_ZERO_SPEND_READY"),
+        },
+        "local_hal": {
+            "enabled": env_enabled("HAL_PROVIDER_LOCAL_ENABLED"),
+            "kind": "private-worker",
+            "capabilities": ["audio", "video", "comfyui"],
+        },
+    }
+
+
+def choose_route(capability: str, providers: dict[str, dict[str, Any]] | None = None) -> dict[str, Any] | None:
+    """Choose an enabled capability only when any zero-spend gate is satisfied."""
+    inventory = providers if providers is not None else build_providers()
+    eligible = [
+        name
+        for name, provider in inventory.items()
+        if provider.get("enabled")
+        and capability in provider.get("capabilities", [])
+        and (
+            not provider.get("requires_zero_spend_ready", False)
+            or provider.get("zero_spend_ready") is True
+        )
+    ]
+    if not eligible:
+        return None
+    return {
+        "capability": capability,
+        "provider": eligible[0],
+        "fallbacks": eligible[1:] if FAILOVER else [],
+        "quality_gate": QUALITY_GATE,
+    }
+
 
 def snapshot() -> dict[str, Any]:
     return {
@@ -29,11 +93,12 @@ def snapshot() -> dict[str, Any]:
         "health": "healthy",
         "quality_gate": QUALITY_GATE,
         "failover": FAILOVER,
-        "providers": PROVIDERS,
+        "providers": build_providers(),
     }
 
+
 class Handler(BaseHTTPRequestHandler):
-    server_version = "HALComputeRouter/0.1"
+    server_version = "HALComputeRouter/0.3"
 
     def _send(self, status: int, body: dict[str, Any]) -> None:
         payload = json.dumps(body, sort_keys=True).encode()
@@ -44,16 +109,20 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(payload)
 
     def do_GET(self) -> None:
+        providers = build_providers()
         if self.path in ("/", "/v1/health"):
             self._send(200, snapshot())
             return
         if self.path == "/v1/capabilities":
-            self._send(200, {
-                "route": True,
-                "health": True,
-                "provenance_required": os.getenv("HAL_REQUIRE_PROVENANCE", "true").lower() == "true",
-                "providers": PROVIDERS,
-            })
+            self._send(
+                200,
+                {
+                    "route": True,
+                    "health": True,
+                    "provenance_required": env_enabled("HAL_REQUIRE_PROVENANCE", True),
+                    "providers": providers,
+                },
+            )
             return
         self._send(404, {"error": "not_found"})
 
@@ -71,25 +140,15 @@ class Handler(BaseHTTPRequestHandler):
         if not capability:
             self._send(400, {"error": "capability_required"})
             return
-        eligible = [
-            name for name, provider in PROVIDERS.items()
-            if provider["enabled"] and (
-                capability in provider["capabilities"]
-                or capability in {"audio", "video", "inference"}
-            )
-        ]
-        if not eligible:
+        decision = choose_route(capability)
+        if decision is None:
             self._send(503, {"error": "no_eligible_provider", "capability": capability})
             return
-        self._send(200, {
-            "capability": capability,
-            "provider": eligible[0],
-            "fallbacks": eligible[1:] if FAILOVER else [],
-            "quality_gate": QUALITY_GATE,
-        })
+        self._send(200, decision)
 
     def log_message(self, fmt: str, *args: Any) -> None:
         print(json.dumps({"component": "http", "message": fmt % args}))
+
 
 if __name__ == "__main__":
     ThreadingHTTPServer((HOST, PORT), Handler).serve_forever()

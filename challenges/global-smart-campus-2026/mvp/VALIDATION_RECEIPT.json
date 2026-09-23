@@ -1,0 +1,21 @@
+{
+  "validated_at_local": "2026-09-23T04:46:16-05:00",
+  "cases": 3,
+  "unit_tests_passed": 7,
+  "citation_validity_all": true,
+  "conflict_detection_all": true,
+  "unsupported_material_claims_total": 0,
+  "human_review_required_all": true,
+  "live_model_canary": {
+    "route": "/api/analyze?id=research-access&mode=live",
+    "http_service_version": "0.2",
+    "provider": "nvidia_nim",
+    "model": "openai/gpt-oss-20b",
+    "total_tokens": 424,
+    "accepted_model_items": 4,
+    "rejected_model_items": 0,
+    "deterministic_citation_validity": 1.0,
+    "unsupported_material_claims": 0,
+    "review_gate": "PENDING_HUMAN_REVIEW"
+  }
+}
