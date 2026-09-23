@@ -15,6 +15,7 @@ class ComputeRouterProviderTests(unittest.TestCase):
             "github_actions",
             "cloudflare_workers_ai",
             "nvidia_nim",
+            "cloudrift",
             "modal",
             "livepeer_creative",
             "lightning_ai",
@@ -172,6 +173,34 @@ class ComputeRouterProviderTests(unittest.TestCase):
         self.assertEqual(route["provider"], "livepeer_creative")
         self.assertEqual(route["budget_policy"], "registered_hacker_balance_only")
 
+    def test_cloudrift_grant_compute_requires_verified_zero_spend_readiness(self):
+        with patch.dict(
+            os.environ,
+            {
+                "HAL_PROVIDER_CLOUDRIFT_ENABLED": "true",
+                "HAL_PROVIDER_LOCAL_ENABLED": "false",
+            },
+            clear=True,
+        ):
+            self.assertIsNone(choose_route("scientific_compute", build_providers()))
+
+        with patch.dict(
+            os.environ,
+            {
+                "HAL_PROVIDER_CLOUDRIFT_ENABLED": "true",
+                "HAL_PROVIDER_CLOUDRIFT_ZERO_SPEND_READY": "true",
+                "HAL_PROVIDER_LOCAL_ENABLED": "false",
+            },
+            clear=True,
+        ):
+            route = choose_route("scientific_compute", build_providers())
+            video = choose_route("video", build_providers())
+        self.assertIsNotNone(route)
+        self.assertEqual(route["provider"], "cloudrift")
+        self.assertEqual(route["budget_policy"], "verified_grant_credits_only")
+        self.assertIsNotNone(video)
+        self.assertEqual(video["provider"], "cloudrift")
+
     def test_fail_closed_when_provider_is_disabled(self):
         providers = {
             "cloudflare_workers_ai": {
@@ -191,12 +220,14 @@ class ComputeRouterProviderTests(unittest.TestCase):
                 "HAL_PROVIDER_CLOUDFLARE_ZERO_SPEND_READY": "true",
                 "HAL_CLOUDFLARE_WORKER_TOKEN": "must-not-leak",
                 "MODAL_TOKEN_SECRET": "must-not-leak",
+                "HAL_CLOUDRIFT_API_KEY": "cloudrift-secret-must-not-leak",
             },
             clear=True,
         ):
             providers = build_providers()
         rendered = repr(providers)
         self.assertNotIn("must-not-leak", rendered)
+        self.assertNotIn("cloudrift-secret-must-not-leak", rendered)
         self.assertNotIn("token", rendered.lower())
 
 
