@@ -14,12 +14,10 @@ from engine import analyze_case, load_cases
 BASE = Path(__file__).resolve().parent
 
 
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+def sha256_normalized_text(path: Path) -> str:
+    """Hash UTF-8 text after normalizing line endings for cross-platform receipts."""
+    text = path.read_text(encoding="utf-8").replace("\r\n", "\n").replace("\r", "\n")
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 def percentile(values: list[float], pct: float) -> float:
@@ -70,9 +68,10 @@ def run(iterations: int) -> dict:
         "python": platform.python_version(),
         "platform": platform.platform(),
         "source_sha256": {
-            "engine.py": sha256(BASE / "engine.py"),
-            "cases.json": sha256(BASE / "cases.json"),
+            "engine.py": sha256_normalized_text(BASE / "engine.py"),
+            "cases.json": sha256_normalized_text(BASE / "cases.json"),
         },
+        "source_hash_policy": "UTF-8 text with CRLF/CR normalized to LF",
         "external_model_calls": 0,
         "paid_compute_used": False,
     }
