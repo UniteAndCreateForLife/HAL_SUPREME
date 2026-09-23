@@ -1,0 +1,87 @@
+{
+  "generated_at_utc": "2026-09-23T18:58:51.111834+00:00",
+  "project": "HAL Campus Evidence Desk",
+  "verdict": "HAL_JUDGE_VERIFY_OK",
+  "static_checks": {
+    "required_artifacts_present": true,
+    "canonical_cases": true,
+    "citation_validity_all": true,
+    "zero_unsupported_material_claims": true,
+    "human_review_required": true,
+    "live_cases_without_provider_error": true,
+    "live_items_grounded": true,
+    "live_conflicts_match_seeded_truth": true,
+    "multiarch_ci_success": true,
+    "multiarch_source_hash_match": true,
+    "multiarch_no_paid_compute": true
+  },
+  "dynamic_checks": {
+    "unit_tests_pass": true,
+    "benchmark_pass": true,
+    "benchmark_external_model_calls_zero": true,
+    "benchmark_paid_compute_false": true,
+    "worker_syntax_pass_or_unavailable": true
+  },
+  "missing_artifacts": [],
+  "source_sha256": {
+    "engine.py": "0397483d17d803ab348b549d1acd3660cfd7cad53d9f21c7e6cde40791a7d134",
+    "cases.json": "eb2e886b7b508661bc0f741140422902456555fc4f77412c109a90b40af83faa",
+    "worker.js": "563cdb0fe527a022dbd0b655e841ef716b372cb46d6972ad2c194691163802e7"
+  },
+  "benchmark": {
+    "generated_at_utc": "2026-09-23T18:58:50.980653+00:00",
+    "benchmark": "HAL Campus Evidence Desk deterministic acceptance engine",
+    "iterations": 30,
+    "case_count": 3,
+    "reports": 90,
+    "elapsed_seconds": 0.01582,
+    "reports_per_second": 5689.04,
+    "latency_ms": {
+      "mean": 0.174586,
+      "p50": 0.1702,
+      "p95": 0.1921,
+      "p99": 0.214,
+      "max": 0.3348
+    },
+    "acceptance_failures": [],
+    "all_acceptance_invariants_passed": true,
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "source_sha256": {
+      "engine.py": "3bb2159ca59bc9a32153d58896b519d83c61c5eea26c6e0e99e5bf6f9c66940f",
+      "cases.json": "32f7384bc18661ee41a88e1f87e13f1a43c4a377be196cc91d4b8c53ebd781ef"
+    },
+    "source_hash_policy": "UTF-8 text with CRLF/CR normalized to LF",
+    "external_model_calls": 0,
+    "paid_compute_used": false
+  },
+  "execution": {
+    "unit_tests": {
+      "command": [
+        "D:\\Python312\\python.exe",
+        "-m",
+        "unittest",
+        "-q"
+      ],
+      "returncode": 0,
+      "stdout_tail": "",
+      "stderr_tail": "----------------------------------------------------------------------\nRan 14 tests in 0.018s\n\nOK\n"
+    },
+    "worker_syntax": {
+      "command": [
+        "C:\\Program Files\\nodejs\\node.EXE",
+        "--check",
+        "D:\\HAL_SUPREME_LIVEPEER_MCP\\production\\bounties\\global_smart_campus_2026\\repo_run11\\challenges\\global-smart-campus-2026\\public_demo\\src\\worker.js"
+      ],
+      "returncode": 0,
+      "stdout_tail": "",
+      "stderr_tail": ""
+    }
+  },
+  "safety": {
+    "external_model_calls_during_verification": 0,
+    "paid_compute_required": false,
+    "real_student_or_employee_data_required": false,
+    "final_decision_automation": false
+  }
+}

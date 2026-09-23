@@ -46,3 +46,12 @@ python benchmark_deterministic.py --iterations 10000
 ```
 
 The committed `mvp/BENCHMARK_RECEIPT.json` records source hashes, latency percentiles, throughput, acceptance failures, and whether any external model or paid compute was used. The 2026-09-23 reference run processed 30,000 reports with zero acceptance-invariant failures.
+
+## One-command judge verification
+
+```powershell
+cd challenges/global-smart-campus-2026
+python judge_verify.py --output JUDGE_VERIFICATION_RECEIPT.json
+```
+
+The verifier is standard-library-only. It checks required submission artifacts and prior validation receipts, reruns deterministic unit/benchmark gates, validates the public Worker syntax when Node.js is present, records source hashes, and fails closed if any acceptance invariant is broken. It does not call an external model, use real student/employee data, or require paid compute.

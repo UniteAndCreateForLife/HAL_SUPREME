@@ -38,7 +38,9 @@ jobs:
       - name: Validate public Worker syntax
         working-directory: challenges/global-smart-campus-2026
         run: node --check public_demo/src/worker.js
-      - name: Verify no obvious secret files are tracked
+      - name: Run judge self-verification
+        working-directory: challenges/global-smart-campus-2026
+        run: python judge_verify.py --output JUDGE_VERIFY_CI_RECEIPT.json      - name: Verify no obvious secret files are tracked
         shell: python
         run: |
           import pathlib
