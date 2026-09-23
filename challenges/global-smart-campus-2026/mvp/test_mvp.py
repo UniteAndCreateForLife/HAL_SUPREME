@@ -2,7 +2,12 @@ import copy
 import unittest
 
 from engine import analyze_case, audit_bundle, load_cases, verify_audit_receipt
-from live_model import normalize_synthesis
+from live_model import (
+    LiveModelError,
+    assert_external_safe,
+    find_direct_identifiers,
+    normalize_synthesis,
+)
 
 
 class CampusEvidenceDeskTests(unittest.TestCase):
@@ -54,7 +59,6 @@ class CampusEvidenceDeskTests(unittest.TestCase):
         self.assertEqual(result["acceptance"]["invalid_citations"], ["E99"])
         self.assertEqual(len(result["findings"]), 1)
 
-
     def test_model_acceptance_rejects_false_conflict_relations(self):
         case = self.cases[1]
         payload = {
@@ -90,6 +94,36 @@ class CampusEvidenceDeskTests(unittest.TestCase):
     def test_audit_receipt_is_cross_runtime_stable(self):
         bundle = audit_bundle(self.cases[0])
         self.assertEqual(bundle["receipt"]["report_sha256"], "e2bd909a7687b21d7d8204eb4a5417d703717a04f4c110f52b2eb9409948d884")
+
+    def test_canonical_demo_inputs_clear_external_privacy_gate(self):
+        for case in self.cases:
+            self.assertEqual(find_direct_identifiers(case), [])
+            assert_external_safe(case)
+
+    def test_external_privacy_gate_blocks_direct_identifiers_without_echoing_values(self):
+        case = copy.deepcopy(self.cases[1])
+        case["evidence"].append(
+            {
+                "id": "E5",
+                "type": "unsafe_test_record",
+                "text": "Student email alice@example.edu and phone 312-555-0198 must not leave the local trust boundary.",
+            }
+        )
+        hits = find_direct_identifiers(case)
+        self.assertEqual({hit["kind"] for hit in hits}, {"email", "phone"})
+        serialized = repr(hits)
+        self.assertNotIn("alice@example.edu", serialized)
+        self.assertNotIn("312-555-0198", serialized)
+        with self.assertRaisesRegex(LiveModelError, r"external_model_blocked_direct_identifier:email,phone"):
+            assert_external_safe(case)
+
+    def test_external_privacy_gate_blocks_ssn_and_labeled_ids(self):
+        case = copy.deepcopy(self.cases[0])
+        case["question"] = "Review student ID: CAMPUS-4488 and SSN 123-45-6789."
+        hits = find_direct_identifiers(case)
+        self.assertEqual({hit["kind"] for hit in hits}, {"labeled_identifier", "us_ssn"})
+        with self.assertRaises(LiveModelError):
+            assert_external_safe(case)
 
 
 if __name__ == "__main__":

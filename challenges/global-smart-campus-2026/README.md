@@ -15,8 +15,12 @@ Core controls:
 - seeded policy conflicts must be surfaced rather than silently resolved;
 - live-model output is filtered by a deterministic acceptance layer;
 - unsupported conflict relations are rejected;
+- external hosted-model egress fails closed when common direct identifiers are detected;
+- privacy-gate evidence records only identifier category/location, never the matched value;
 - recommendations remain advisory and reversible;
 - the human-review gate stays `PENDING_HUMAN_REVIEW` by default.
+
+See [`PRIVACY_THREAT_MODEL.md`](PRIVACY_THREAT_MODEL.md) for trust boundaries, the current direct-identifier egress gate, explicit limitations, and production-hardening requirements.
 
 ## Run locally
 
@@ -28,7 +32,7 @@ python app.py
 
 ## Validation scope
 
-The repository CI runs the deterministic acceptance tests on Linux x64, Linux arm64, Windows x64, and macOS arm64; all four lanes passed in GitHub Actions run 35895272284 without requiring provider credentials. Live NVIDIA NIM evidence is retained in `mvp/LIVE_VALIDATION_RECEIPT.json`; the public demo intentionally disables external model calls to prevent uncontrolled compute use.
+The repository CI runs the deterministic acceptance and privacy-gate tests on Linux x64, Linux arm64, Windows x64, and macOS arm64. Live NVIDIA NIM evidence is retained in `mvp/LIVE_VALIDATION_RECEIPT.json`; the public demo intentionally disables external model calls to prevent uncontrolled compute use.
 
 Submission materials in this directory are sanitized and contain no portal password, API key, phone number, or legal-declaration acceptance.
 
