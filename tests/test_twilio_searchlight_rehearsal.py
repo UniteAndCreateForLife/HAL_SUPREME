@@ -18,6 +18,15 @@ class TwilioSearchlightRehearsalTests(unittest.TestCase):
         self.assertEqual(
             receipt["invalid_signature"]["hal_call_count_after_attempt"], 1
         )
+        self.assertEqual(
+            receipt["request_envelope"]["unsupported_content_type_http_status"], 415
+        )
+        self.assertEqual(
+            receipt["request_envelope"]["oversized_request_http_status"], 413
+        )
+        self.assertEqual(
+            receipt["request_envelope"]["hal_call_count_after_rejections"], 1
+        )
         self.assertFalse(receipt["boundaries"]["live_twilio_account_verified"])
         self.assertFalse(receipt["boundaries"]["external_twilio_api_call"])
         self.assertEqual(

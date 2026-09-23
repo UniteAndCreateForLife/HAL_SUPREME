@@ -14,7 +14,7 @@ from urllib import error, parse, request
 
 from twilio.request_validator import RequestValidator
 
-from services.twilio_searchlight_demo.app import Handler
+from services.twilio_searchlight_demo.app import MAX_FORM_BYTES, Handler
 
 
 class RehearsalDecisionHandler(BaseHTTPRequestHandler):
@@ -58,6 +58,22 @@ def current_source_sha() -> str:
     return subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=repo_root, text=True
     ).strip()
+
+
+def _http_post_raw(
+    url: str, payload: bytes, content_type: str, signature: str = "invalid"
+) -> tuple[int, str]:
+    req = request.Request(
+        url,
+        data=payload,
+        headers={"Content-Type": content_type, "X-Twilio-Signature": signature},
+        method="POST",
+    )
+    try:
+        with request.urlopen(req, timeout=3) as response:
+            return response.status, response.read().decode("utf-8")
+    except error.HTTPError as exc:
+        return exc.code, exc.read().decode("utf-8")
 
 
 def _http_post(url: str, form: dict[str, str], signature: str) -> tuple[int, str]:
@@ -119,6 +135,15 @@ def run_rehearsal(source_sha: str | None = None) -> dict[str, object]:
             calls_after_valid = decision.call_count
             invalid_status, invalid_twiml = _http_post(local_url, form, "invalid")
             calls_after_invalid = decision.call_count
+            unsupported_status, unsupported_twiml = _http_post_raw(
+                local_url, b"{}", "application/json"
+            )
+            oversized_status, oversized_twiml = _http_post_raw(
+                local_url,
+                b"x" * (MAX_FORM_BYTES + 1),
+                "application/x-www-form-urlencoded",
+            )
+            calls_after_envelope_rejections = decision.call_count
 
         forwarded = dict(decision.last_payload or {})
         checks = {
@@ -139,6 +164,14 @@ def run_rehearsal(source_sha: str | None = None) -> dict[str, object]:
             == calls_after_valid,
             "invalid_signature_returns_rejection_twiml": "Request rejected."
             in invalid_twiml,
+            "unsupported_content_type_http_415": unsupported_status == 415,
+            "unsupported_content_type_returns_twiml": "Unsupported content type."
+            in unsupported_twiml,
+            "oversized_request_http_413": oversized_status == 413,
+            "oversized_request_returns_twiml": "Request body too large."
+            in oversized_twiml,
+            "envelope_rejections_do_not_call_hal": calls_after_envelope_rejections
+            == calls_after_valid,
         }
         passed = all(checks.values())
         return {
@@ -165,6 +198,12 @@ def run_rehearsal(source_sha: str | None = None) -> dict[str, object]:
             "invalid_signature": {
                 "http_status": invalid_status,
                 "hal_call_count_after_attempt": calls_after_invalid,
+            },
+            "request_envelope": {
+                "max_form_bytes": MAX_FORM_BYTES,
+                "unsupported_content_type_http_status": unsupported_status,
+                "oversized_request_http_status": oversized_status,
+                "hal_call_count_after_rejections": calls_after_envelope_rejections,
             },
             "forwarded_payload": forwarded,
             "checks": checks,

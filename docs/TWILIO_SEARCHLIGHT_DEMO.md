@@ -10,6 +10,8 @@ The webhook validates `X-Twilio-Signature` using Twilio's official Python SDK be
 
 Safe event logs contain a hashed message reference, decision identifier, elapsed time, and status. They do not log the Twilio auth token, phone number, or message body.
 
+The HTTP envelope also fails closed before HAL is invoked: only `application/x-www-form-urlencoded` requests are accepted, request bodies are capped at 16 KiB, malformed/empty lengths are rejected, unsupported content types return HTTP 415, and oversized bodies return HTTP 413.
+
 ## Configuration boundary
 
 Required environment variable names:
@@ -42,7 +44,7 @@ Before a live Twilio account is connected, run the local rehearsal to prove the 
 python -m services.twilio_searchlight_demo.rehearsal --output <receipt.json>
 ```
 
-The generated receipt is bound to the current Git commit and explicitly records `live_twilio_account_verified=false` and `external_twilio_api_call=false`. It is development evidence only and must not be described as the required live Twilio-integrated Searchlight demo.
+The generated receipt is bound to the current Git commit and explicitly records `live_twilio_account_verified=false` and `external_twilio_api_call=false`. It is development evidence only and must not be described as the required live Twilio-integrated Searchlight demo. The rehearsal also verifies invalid signatures, unsupported content types, and oversized request bodies are rejected before any HAL decision call.
 
 ## Judge-readiness packet
 

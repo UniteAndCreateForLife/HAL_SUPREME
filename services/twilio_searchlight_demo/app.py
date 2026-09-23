@@ -14,6 +14,7 @@ HOST = "0.0.0.0"
 PORT = int(os.getenv("PORT", "8091"))
 MAX_BODY_CHARS = 1600
 MAX_REPLY_CHARS = 1200
+MAX_FORM_BYTES = 16_384
 
 
 def validate_twilio_request(
@@ -126,6 +127,22 @@ class Handler(BaseHTTPRequestHandler):
         if self.path != "/twilio/incoming":
             self._send(404, json.dumps({"error": "not_found"}), "application/json")
             return
+        content_type = self.headers.get("Content-Type", "")
+        if not content_type.lower().startswith("application/x-www-form-urlencoded"):
+            self._send(415, build_twiml("Unsupported content type."), "text/xml")
+            return
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+        except ValueError:
+            self._send(400, build_twiml("Invalid content length."), "text/xml")
+            return
+        if length <= 0:
+            self._send(400, build_twiml("Empty request body."), "text/xml")
+            return
+        if length > MAX_FORM_BYTES:
+            self._send(413, build_twiml("Request body too large."), "text/xml")
+            return
+
         auth_token = os.getenv("TWILIO_AUTH_TOKEN", "")
         webhook_url = os.getenv("HAL_TWILIO_WEBHOOK_URL", "")
         decision_url = os.getenv("HAL_SEARCHLIGHT_DECISION_URL", "")
@@ -134,7 +151,6 @@ class Handler(BaseHTTPRequestHandler):
                 503, build_twiml("Demo integration is not configured."), "text/xml"
             )
             return
-        length = int(self.headers.get("Content-Length", "0"))
         raw = self.rfile.read(length).decode("utf-8")
         form = {
             key: values[-1]
