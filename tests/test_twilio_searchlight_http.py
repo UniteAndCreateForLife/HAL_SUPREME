@@ -16,10 +16,41 @@ from services.twilio_searchlight_demo.app import Handler
 
 class DecisionHandler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:
+        if self.path != "/operator/commands":
+            self.send_error(404)
+            return
         length = int(self.headers.get("Content-Length", "0"))
         self.server.last_payload = json.loads(self.rfile.read(length).decode("utf-8"))
         payload = json.dumps(
-            {"reply": "HAL end-to-end reply.", "decision_id": "decision-http-1"}
+            {
+                "operation_id": "op_http_1",
+                "state": "ACCEPTED",
+                "capability_id": "operator.conversation",
+            }
+        ).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
+
+    def do_GET(self) -> None:
+        if self.path != "/operator/operations/op_http_1":
+            self.send_error(404)
+            return
+        payload = json.dumps(
+            {
+                "operation_id": "op_http_1",
+                "capability_id": "operator.conversation",
+                "state": "VERIFIED",
+                "verification": {"verified": True},
+                "after": {
+                    "ok": True,
+                    "reply": "HAL end-to-end reply.",
+                    "model": "test-private-model",
+                    "response_state": "PROVIDER_RESPONSE",
+                },
+            }
         ).encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
@@ -41,7 +72,9 @@ class TwilioSearchlightHttpTests(unittest.TestCase):
         webhook_thread = threading.Thread(target=webhook.serve_forever, daemon=True)
         webhook_thread.start()
         try:
-            decision_url = f"http://127.0.0.1:{decision.server_address[1]}/decision"
+            decision_url = (
+                f"http://127.0.0.1:{decision.server_address[1]}/operator/commands"
+            )
             local_url = f"http://127.0.0.1:{webhook.server_address[1]}/twilio/incoming"
             signed_url = "https://demo.example/twilio/incoming"
             auth_token = "unit-test-token"
@@ -83,9 +116,15 @@ class TwilioSearchlightHttpTests(unittest.TestCase):
                 )
                 self.assertFalse(receipt["privacy"]["message_body_recorded"])
             self.assertIn("HAL end-to-end reply.", twiml)
-            self.assertEqual(decision.last_payload["channel"], "twilio_sms")
-            self.assertEqual(decision.last_payload["message_sid"], "SMHTTP123")
-            self.assertEqual(decision.last_payload["body"], "hello from signed webhook")
+            self.assertEqual(
+                decision.last_payload["capability_id"], "operator.conversation"
+            )
+            self.assertEqual(
+                decision.last_payload["input"]["text"], "hello from signed webhook"
+            )
+            self.assertNotIn("SMHTTP123", json.dumps(decision.last_payload))
+            self.assertNotIn("From", decision.last_payload["input"])
+            self.assertNotIn("To", decision.last_payload["input"])
         finally:
             webhook.shutdown()
             webhook.server_close()

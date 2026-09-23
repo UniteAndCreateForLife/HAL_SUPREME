@@ -17,11 +17,41 @@ from services.twilio_searchlight_demo.app import (
 
 class DecisionHandler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:
+        if self.path != "/operator/commands":
+            self.send_error(404)
+            return
         length = int(self.headers.get("Content-Length", "0"))
-        payload = json.loads(self.rfile.read(length).decode("utf-8"))
-        self.server.last_payload = payload
+        self.server.last_payload = json.loads(self.rfile.read(length).decode("utf-8"))
         body = json.dumps(
-            {"reply": "HAL routed this safely.", "decision_id": "decision-demo-1"}
+            {
+                "operation_id": "op_demo_1",
+                "state": "ACCEPTED",
+                "capability_id": "operator.conversation",
+            }
+        ).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_GET(self) -> None:
+        if self.path != "/operator/operations/op_demo_1":
+            self.send_error(404)
+            return
+        body = json.dumps(
+            {
+                "operation_id": "op_demo_1",
+                "capability_id": "operator.conversation",
+                "state": "VERIFIED",
+                "verification": {"verified": True},
+                "after": {
+                    "ok": True,
+                    "reply": "HAL routed this safely.",
+                    "model": "test-private-model",
+                    "response_state": "PROVIDER_RESPONSE",
+                },
+            }
         ).encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
@@ -41,7 +71,7 @@ class TwilioSearchlightTests(unittest.TestCase):
         cls.thread = threading.Thread(target=cls.server.serve_forever, daemon=True)
         cls.thread.start()
         host, port = cls.server.server_address
-        cls.decision_url = f"http://{host}:{port}/decision"
+        cls.decision_url = f"http://{host}:{port}/operator/commands"
         cls.webhook_url = "https://demo.example/twilio/incoming"
         cls.auth_token = "unit-test-token"
 
@@ -74,11 +104,16 @@ class TwilioSearchlightTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertIn("HAL routed this safely.", twiml)
         self.assertEqual(event["status"], "ok")
-        self.assertEqual(event["decision_id"], "decision-demo-1")
-        self.assertEqual(self.server.last_payload["channel"], "twilio_sms")
-        self.assertEqual(self.server.last_payload["message_sid"], "SM123456")
-        self.assertNotIn("From", self.server.last_payload)
-        self.assertNotIn("To", self.server.last_payload)
+        self.assertEqual(event["decision_id"], "op_demo_1")
+        self.assertEqual(
+            self.server.last_payload["capability_id"], "operator.conversation"
+        )
+        self.assertEqual(
+            self.server.last_payload["input"]["text"], "Route this through HAL"
+        )
+        self.assertNotIn("SM123456", json.dumps(self.server.last_payload))
+        self.assertNotIn("From", self.server.last_payload["input"])
+        self.assertNotIn("To", self.server.last_payload["input"])
 
     def test_invalid_signature_fails_closed_before_hal(self) -> None:
         form, _ = self.signed_form()
@@ -107,7 +142,7 @@ class TwilioSearchlightTests(unittest.TestCase):
             self.webhook_url, form, signature, self.auth_token, self.decision_url
         )
         self.assertEqual(status, 200)
-        self.assertEqual(len(self.server.last_payload["body"]), MAX_BODY_CHARS)
+        self.assertEqual(len(self.server.last_payload["input"]["text"]), MAX_BODY_CHARS)
 
     def test_missing_auth_material_never_validates(self) -> None:
         form, signature = self.signed_form()

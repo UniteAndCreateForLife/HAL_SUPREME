@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import http.client
 import importlib.metadata
 import json
@@ -20,14 +21,42 @@ from services.twilio_searchlight_demo.app import MAX_FORM_BYTES, Handler
 
 class RehearsalDecisionHandler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:
+        if self.path != "/operator/commands":
+            self.send_error(404)
+            return
         length = int(self.headers.get("Content-Length", "0"))
         payload = json.loads(self.rfile.read(length).decode("utf-8"))
-        self.server.last_payload = payload
+        self.server.last_command = payload
         self.server.call_count += 1
         response = json.dumps(
             {
-                "reply": "HAL accepted the signed Twilio message for bounded review.",
-                "decision_id": "decision-rehearsal-1",
+                "operation_id": "op_rehearsal_1",
+                "state": "ACCEPTED",
+                "capability_id": "operator.conversation",
+            }
+        ).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(response)))
+        self.end_headers()
+        self.wfile.write(response)
+
+    def do_GET(self) -> None:
+        if self.path != "/operator/operations/op_rehearsal_1":
+            self.send_error(404)
+            return
+        response = json.dumps(
+            {
+                "operation_id": "op_rehearsal_1",
+                "capability_id": "operator.conversation",
+                "state": "VERIFIED",
+                "verification": {"verified": True},
+                "after": {
+                    "ok": True,
+                    "reply": "Local mock Gateway returned a bounded reply.",
+                    "model": "mock-rehearsal-model",
+                    "response_state": "PROVIDER_RESPONSE",
+                },
             }
         ).encode("utf-8")
         self.send_response(200)
@@ -125,7 +154,9 @@ def run_rehearsal(source_sha: str | None = None) -> dict[str, object]:
     webhook_thread.start()
 
     try:
-        decision_url = f"http://127.0.0.1:{decision.server_address[1]}/decision"
+        decision_url = (
+            f"http://127.0.0.1:{decision.server_address[1]}/operator/commands"
+        )
         webhook_root = f"http://127.0.0.1:{webhook.server_address[1]}"
         local_url = f"{webhook_root}/twilio/incoming"
         health_url = f"{webhook_root}/v1/health"
@@ -156,7 +187,11 @@ def run_rehearsal(source_sha: str | None = None) -> dict[str, object]:
             oversized_status, oversized_twiml = _http_post_oversized_header(local_url)
             calls_after_envelope_rejections = decision.call_count
 
-        forwarded = dict(decision.last_payload or {})
+        command = dict(decision.last_command or {})
+        command_input = command.get("input", {})
+        if not isinstance(command_input, dict):
+            command_input = {}
+        command_json = json.dumps(command, sort_keys=True)
         checks = {
             "source_sha_is_git_sha": len(source_sha) == 40
             and all(c in "0123456789abcdef" for c in source_sha.lower()),
@@ -165,13 +200,25 @@ def run_rehearsal(source_sha: str | None = None) -> dict[str, object]:
             is False,
             "valid_signed_request_http_200": valid_status == 200,
             "valid_signed_request_returns_twiml": "<Response>" in valid_twiml
-            and "HAL accepted the signed Twilio message" in valid_twiml,
-            "valid_request_calls_hal_once": calls_after_valid == 1,
-            "forwarded_payload_is_minimized": set(forwarded)
-            == {"channel", "message_sid", "body"},
-            "forwarded_channel_is_twilio_sms": forwarded.get("channel") == "twilio_sms",
+            and "Local mock Gateway returned a bounded reply" in valid_twiml,
+            "valid_request_calls_mock_gateway_once": calls_after_valid == 1,
+            "mock_gateway_received_operator_conversation": command.get("capability_id")
+            == "operator.conversation",
+            "forwarded_payload_is_minimized": set(command) == {"capability_id", "input"}
+            and set(command_input)
+            == {
+                "conversation_id",
+                "text",
+                "provider_mode",
+                "conversation_profile",
+                "max_tokens",
+                "present_on_oracle",
+            },
+            "message_sid_not_forwarded": "SMREHEARSAL0001" not in command_json,
+            "phone_numbers_not_forwarded": "From" not in command_json
+            and "To" not in command_json,
             "invalid_signature_http_403": invalid_status == 403,
-            "invalid_signature_does_not_call_hal": calls_after_invalid
+            "invalid_signature_does_not_call_gateway": calls_after_invalid
             == calls_after_valid,
             "invalid_signature_returns_rejection_twiml": "Request rejected."
             in invalid_twiml,
@@ -181,7 +228,7 @@ def run_rehearsal(source_sha: str | None = None) -> dict[str, object]:
             "oversized_request_http_413": oversized_status == 413,
             "oversized_request_returns_twiml": "Request body too large."
             in oversized_twiml,
-            "envelope_rejections_do_not_call_hal": calls_after_envelope_rejections
+            "envelope_rejections_do_not_call_gateway": calls_after_envelope_rejections
             == calls_after_valid,
         }
         passed = all(checks.values())
@@ -190,7 +237,7 @@ def run_rehearsal(source_sha: str | None = None) -> dict[str, object]:
             "captured_at_utc": datetime.now(timezone.utc).isoformat(),
             "source_sha": source_sha,
             "twilio_sdk": importlib.metadata.version("twilio"),
-            "scope": "local signed-webhook rehearsal with mock HAL decision service; not a live Twilio account or Searchlight submission receipt",
+            "scope": "local signed-webhook rehearsal against a mock Operator Gateway and mock provider response; not live HAL inference, a live Twilio account, or a Searchlight submission receipt",
             "boundaries": {
                 "live_twilio_account_verified": False,
                 "external_twilio_api_call": False,
@@ -204,19 +251,31 @@ def run_rehearsal(source_sha: str | None = None) -> dict[str, object]:
             "valid_request": {
                 "http_status": valid_status,
                 "twiml_contains_reply": checks["valid_signed_request_returns_twiml"],
-                "hal_call_count": calls_after_valid,
+                "mock_gateway_call_count": calls_after_valid,
             },
             "invalid_signature": {
                 "http_status": invalid_status,
-                "hal_call_count_after_attempt": calls_after_invalid,
+                "mock_gateway_call_count_after_attempt": calls_after_invalid,
             },
             "request_envelope": {
                 "max_form_bytes": MAX_FORM_BYTES,
                 "unsupported_content_type_http_status": unsupported_status,
                 "oversized_request_http_status": oversized_status,
-                "hal_call_count_after_rejections": calls_after_envelope_rejections,
+                "mock_gateway_call_count_after_rejections": calls_after_envelope_rejections,
             },
-            "forwarded_payload": forwarded,
+            "forwarded_payload": {
+                "capability_id": command.get("capability_id"),
+                "input_fields": sorted(command_input),
+                "message_body_chars": len(str(command_input.get("text", ""))),
+                "message_body_sha256": hashlib.sha256(
+                    str(command_input.get("text", "")).encode("utf-8")
+                ).hexdigest(),
+                "message_sid_forwarded": "SMREHEARSAL0001" in command_json,
+                "phone_number_fields_forwarded": any(
+                    key.lower() in {"from", "to", "phone", "phone_number"}
+                    for key in command_input
+                ),
+            },
             "checks": checks,
             "passed": passed,
         }

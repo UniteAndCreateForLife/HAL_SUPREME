@@ -6,7 +6,7 @@ import os
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib import parse, request
+from urllib import parse
 
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
@@ -14,8 +14,11 @@ from twilio.twiml.messaging_response import MessagingResponse
 from services.twilio_searchlight_demo.interaction_receipt import (
     write_interaction_receipt,
 )
+from services.twilio_searchlight_demo.operator_adapter import (
+    call_operator_conversation,
+)
 
-HOST = "0.0.0.0"
+HOST = "127.0.0.1"
 PORT = int(os.getenv("PORT", "8091"))
 MAX_BODY_CHARS = 1600
 MAX_REPLY_CHARS = 1200
@@ -38,33 +41,18 @@ def call_hal_decision(
     decision_url: str,
     message_sid: str,
     body: str,
-    timeout_seconds: float = 3.0,
+    timeout_seconds: float = 8.0,
 ) -> dict[str, str]:
     """Forward only the minimum message payload to HAL's decision service."""
     if not decision_url:
         raise ValueError("HAL_SEARCHLIGHT_DECISION_URL is required")
-    payload = json.dumps(
-        {
-            "channel": "twilio_sms",
-            "message_sid": message_sid,
-            "body": body[:MAX_BODY_CHARS],
-        }
-    ).encode("utf-8")
-    req = request.Request(
+    return call_operator_conversation(
         decision_url,
-        data=payload,
-        headers={"Content-Type": "application/json"},
-        method="POST",
+        message_sid,
+        body[:MAX_BODY_CHARS],
+        timeout_seconds,
+        MAX_REPLY_CHARS,
     )
-    with request.urlopen(req, timeout=timeout_seconds) as response:
-        data = json.loads(response.read().decode("utf-8"))
-    reply = str(data.get("reply", "")).strip()
-    if not reply:
-        raise ValueError("decision service returned no reply")
-    return {
-        "reply": reply[:MAX_REPLY_CHARS],
-        "decision_id": str(data.get("decision_id", "")),
-    }
 
 
 def build_twiml(reply: str) -> str:

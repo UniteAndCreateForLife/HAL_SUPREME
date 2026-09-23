@@ -25,9 +25,19 @@ def passing_receipt(source_sha: str) -> dict[str, object]:
             "payment_received": False,
         },
         "forwarded_payload": {
-            "channel": "twilio_sms",
-            "message_sid": "SMTEST",
-            "body": "bounded request",
+            "capability_id": "operator.conversation",
+            "input_fields": [
+                "conversation_id",
+                "text",
+                "provider_mode",
+                "conversation_profile",
+                "max_tokens",
+                "present_on_oracle",
+            ],
+            "message_body_chars": 15,
+            "message_body_sha256": "a" * 64,
+            "message_sid_forwarded": False,
+            "phone_number_fields_forwarded": False,
         },
     }
 
@@ -68,7 +78,7 @@ class TwilioSearchlightJudgePacketTests(unittest.TestCase):
     def test_non_minimized_payload_is_rejected(self) -> None:
         sha = "e" * 40
         receipt = passing_receipt(sha)
-        receipt["forwarded_payload"]["from"] = "+15555555555"
+        receipt["forwarded_payload"]["phone_number_fields_forwarded"] = True
         with self.assertRaisesRegex(ValueError, "not minimized"):
             build_judge_packet(receipt, sha)
 

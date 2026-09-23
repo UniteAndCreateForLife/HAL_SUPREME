@@ -53,10 +53,39 @@ def validate_rehearsal(receipt: dict[str, object], source_sha: str) -> None:
     forwarded = receipt.get("forwarded_payload")
     if not isinstance(forwarded, dict):
         raise ValueError("forwarded payload evidence is missing")
-    if set(forwarded) != {"channel", "message_sid", "body"}:
+    if set(forwarded) != {
+        "capability_id",
+        "input_fields",
+        "message_body_chars",
+        "message_body_sha256",
+        "message_sid_forwarded",
+        "phone_number_fields_forwarded",
+    }:
         raise ValueError("forwarded payload is not minimized")
-    if forwarded.get("channel") != "twilio_sms":
-        raise ValueError("forwarded channel is not Twilio SMS")
+    expected_fields = {
+        "conversation_id",
+        "text",
+        "provider_mode",
+        "conversation_profile",
+        "max_tokens",
+        "present_on_oracle",
+    }
+    input_fields = forwarded.get("input_fields")
+    body_hash = forwarded.get("message_body_sha256")
+    if (
+        forwarded.get("capability_id") != "operator.conversation"
+        or not isinstance(input_fields, list)
+        or any(not isinstance(item, str) for item in input_fields)
+        or set(input_fields) != expected_fields
+        or not isinstance(forwarded.get("message_body_chars"), int)
+        or forwarded.get("message_body_chars", 0) <= 0
+        or not isinstance(body_hash, str)
+        or len(body_hash) != 64
+        or any(char not in "0123456789abcdef" for char in body_hash)
+        or forwarded.get("message_sid_forwarded") is not False
+        or forwarded.get("phone_number_fields_forwarded") is not False
+    ):
+        raise ValueError("forwarded payload is not minimized")
 
 
 def build_judge_packet(
@@ -80,8 +109,8 @@ def build_judge_packet(
         "demo_framework": {
             "story": "A HAL operator sends one SMS request and receives one bounded HAL decision reply.",
             "persona": "HAL operator using Messaging as a low-friction control channel.",
-            "outcome": "A valid signed request reaches HAL and returns TwiML; a bad signature fails closed before HAL.",
-            "ai_decision_moment": "HAL receives only channel, MessageSid, and bounded body, then returns a decision reply.",
+            "outcome": "A valid signed request enters the canonical operator.conversation Gateway contract and returns local mock TwiML; a bad signature fails closed before the Gateway.",
+            "ai_decision_moment": "The local rehearsal exercises the canonical Gateway payload and a mock verified provider response. It does not prove live HAL inference.",
             "twilio_role": "Twilio Messaging supplies the webhook contract, SDK signature validation, and TwiML response path.",
         },
         "judge_criteria": {
@@ -91,7 +120,7 @@ def build_judge_packet(
             },
             "technical_impact": {
                 "status": "technical_evidence_present",
-                "evidence": "Official Twilio SDK signature validation, minimized HAL forwarding, and TwiML response are exercised locally.",
+                "evidence": "Official Twilio SDK signature validation, minimized operator.conversation payload construction, and TwiML serialization are exercised locally against a mock Gateway and provider response.",
             },
             "long_term_impact": {
                 "status": "human_narrative_required",
@@ -106,7 +135,7 @@ def build_judge_packet(
             "Twilio Messaging",
             "HTTPS webhook",
             "Twilio SDK signature validation",
-            "HAL decision endpoint",
+            "HAL Operator Gateway operator.conversation",
             "TwiML reply",
         ],
         "human_account_gates": [

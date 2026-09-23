@@ -14,9 +14,9 @@ class TwilioSearchlightRehearsalTests(unittest.TestCase):
         self.assertTrue(all(receipt["checks"].values()))
         self.assertEqual(receipt["valid_request"]["http_status"], 200)
         self.assertEqual(receipt["invalid_signature"]["http_status"], 403)
-        self.assertEqual(receipt["valid_request"]["hal_call_count"], 1)
+        self.assertEqual(receipt["valid_request"]["mock_gateway_call_count"], 1)
         self.assertEqual(
-            receipt["invalid_signature"]["hal_call_count_after_attempt"], 1
+            receipt["invalid_signature"]["mock_gateway_call_count_after_attempt"], 1
         )
         self.assertEqual(
             receipt["request_envelope"]["unsupported_content_type_http_status"], 415
@@ -25,14 +25,27 @@ class TwilioSearchlightRehearsalTests(unittest.TestCase):
             receipt["request_envelope"]["oversized_request_http_status"], 413
         )
         self.assertEqual(
-            receipt["request_envelope"]["hal_call_count_after_rejections"], 1
+            receipt["request_envelope"]["mock_gateway_call_count_after_rejections"], 1
         )
         self.assertFalse(receipt["boundaries"]["live_twilio_account_verified"])
         self.assertFalse(receipt["boundaries"]["external_twilio_api_call"])
         self.assertEqual(
             set(receipt["forwarded_payload"]),
-            {"channel", "message_sid", "body"},
+            {
+                "capability_id",
+                "input_fields",
+                "message_body_chars",
+                "message_body_sha256",
+                "message_sid_forwarded",
+                "phone_number_fields_forwarded",
+            },
         )
+        self.assertEqual(
+            receipt["forwarded_payload"]["capability_id"],
+            "operator.conversation",
+        )
+        self.assertFalse(receipt["forwarded_payload"]["message_sid_forwarded"])
+        self.assertFalse(receipt["forwarded_payload"]["phone_number_fields_forwarded"])
 
     def test_receipt_writer_uses_json_file(self) -> None:
         receipt = run_rehearsal(source_sha="b" * 40)
