@@ -40,7 +40,8 @@ jobs:
         run: node --check public_demo/src/worker.js
       - name: Run judge self-verification
         working-directory: challenges/global-smart-campus-2026
-        run: python judge_verify.py --output JUDGE_VERIFY_CI_RECEIPT.json      - name: Verify no obvious secret files are tracked
+        run: python judge_verify.py --output JUDGE_VERIFY_CI_RECEIPT.json
+      - name: Verify no obvious secret files are tracked
         shell: python
         run: |
           import pathlib
@@ -54,6 +55,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: smart-campus-benchmark-${{ matrix.os }}
-          path: challenges/global-smart-campus-2026/mvp/BENCHMARK_CI_RECEIPT.json
+          path: |
+            challenges/global-smart-campus-2026/mvp/BENCHMARK_CI_RECEIPT.json
+            challenges/global-smart-campus-2026/JUDGE_VERIFY_CI_RECEIPT.json
           if-no-files-found: error
           retention-days: 30
