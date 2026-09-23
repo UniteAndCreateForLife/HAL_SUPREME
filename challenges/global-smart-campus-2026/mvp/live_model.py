@@ -13,9 +13,44 @@ NVIDIA_ENDPOINT = "https://integrate.api.nvidia.com/v1/chat/completions"
 DEFAULT_MODEL = os.getenv("HAL_CAMPUS_NVIDIA_MODEL", "openai/gpt-oss-20b")
 MAX_MODEL_TOKENS = 256
 
+DIRECT_IDENTIFIER_PATTERNS: dict[str, re.Pattern[str]] = {
+    "email": re.compile(r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", re.I),
+    "us_ssn": re.compile(r"(?<!\d)\d{3}-\d{2}-\d{4}(?!\d)"),
+    "phone": re.compile(
+        r"(?<!\d)(?:\+?1[-.\s]?)?(?:\(\d{3}\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4}(?!\d)"
+    ),
+    "labeled_identifier": re.compile(
+        r"\b(?:student|employee|person|user)[ _-]?(?:id|number)\s*[:#=-]?\s*[A-Z0-9-]{4,32}\b",
+        re.I,
+    ),
+}
+
 
 class LiveModelError(RuntimeError):
     pass
+
+
+def find_direct_identifiers(case: dict[str, Any]) -> list[dict[str, str]]:
+    """Return identifier categories and locations without retaining matched values."""
+    scan_fields: list[tuple[str, str]] = [("question", str(case.get("question", "")))]
+    for item in case.get("evidence", []):
+        if isinstance(item, dict):
+            scan_fields.append((f"evidence:{item.get('id', 'unknown')}", str(item.get("text", ""))))
+
+    hits: list[dict[str, str]] = []
+    for location, text in scan_fields:
+        for kind, pattern in DIRECT_IDENTIFIER_PATTERNS.items():
+            if pattern.search(text):
+                hits.append({"kind": kind, "location": location})
+    return hits
+
+
+def assert_external_safe(case: dict[str, Any]) -> None:
+    hits = find_direct_identifiers(case)
+    if not hits:
+        return
+    kinds = ",".join(sorted({hit["kind"] for hit in hits}))
+    raise LiveModelError(f"external_model_blocked_direct_identifier:{kinds}")
 
 
 def _build_prompt(case: dict[str, Any]) -> str:
@@ -29,6 +64,7 @@ Evidence:\n{evidence}
 Return JSON only. Limits: findings<=2, actions<=2, conflicts<=1; each text/detail<=24 words; uncertainty<=24 words.
 Schema: {{"findings":[{{"text":"...","citations":["E1"]}}],"actions":[{{"text":"...","citations":["E1"]}}],
 "conflicts":[{{"detail":"...","evidence":["E1","E2"]}}],"uncertainty":"..."}}"""
+
 
 def _extract_json(text: str) -> dict[str, Any]:
     cleaned = text.strip()
@@ -54,7 +90,6 @@ def _bounded_text(value: Any, limit: int = 600) -> str:
     if not isinstance(value, str):
         return ""
     cleaned = " ".join(value.split())
-    # Normalize provider mojibake/non-ASCII punctuation without changing legitimate terminal question marks.
     cleaned = cleaned.encode("ascii", "replace").decode("ascii")
     cleaned = re.sub(r"(?<=[A-Za-z])\?+(?=[A-Za-z])", "-", cleaned)
     return cleaned[:limit]
@@ -163,6 +198,7 @@ def _powershell_bridge(body: dict[str, Any], timeout: float) -> dict[str, Any]:
 
 
 def _nvidia_request(case: dict[str, Any], timeout: float) -> tuple[dict[str, Any], dict[str, Any]]:
+    assert_external_safe(case)
     api_key = _get_secret("NVIDIA_API_KEY")
     if not api_key:
         raise LiveModelError("NVIDIA_API_KEY_missing")
@@ -182,7 +218,7 @@ def _nvidia_request(case: dict[str, Any], timeout: float) -> tuple[dict[str, Any
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "User-Agent": "HAL-Campus-Evidence-Desk/0.2",
+            "User-Agent": "HAL-Campus-Evidence-Desk/0.3",
         }
         try:
             import requests
@@ -205,8 +241,10 @@ def _nvidia_request(case: dict[str, Any], timeout: float) -> tuple[dict[str, Any
         "model": DEFAULT_MODEL,
         "duration_ms": duration_ms,
         "usage": {key: usage.get(key) for key in ("prompt_tokens", "completion_tokens", "total_tokens")},
+        "privacy_gate": "direct_identifier_scan_passed",
     }
     return _extract_json(content), meta
+
 
 def synthesize_case(case: dict[str, Any], *, provider: str = "nvidia", timeout: float = 75.0) -> dict[str, Any]:
     if provider != "nvidia":
@@ -228,6 +266,7 @@ def provider_status() -> dict[str, Any]:
             "model": DEFAULT_MODEL,
             "purpose": "prototype evidence synthesis only",
             "max_output_tokens": MAX_MODEL_TOKENS,
+            "privacy_gate": "block direct identifiers before external egress",
         }
     }
 
