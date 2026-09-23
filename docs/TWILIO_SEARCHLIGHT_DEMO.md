@@ -97,6 +97,19 @@ The self-contained HTML report is keyboard-friendly, responsive, high contrast, 
 
 The packet fails closed on a stale source SHA, a failing rehearsal, non-minimized HAL payload evidence, or any rehearsal receipt that tries to promote itself into live-account, submission, award, credit, payment, or spend evidence. It maps the technical evidence to the published judging criteria while leaving market claims, startup/account eligibility, live Twilio verification, and final submission as explicit human/account gates.
 
+Generate a silent, captioned walkthrough from the exact committed report using an installed Chromium-family browser and FFmpeg:
+
+```powershell
+python -m services.twilio_searchlight_demo.demo_capture `
+  --html <judge-demo.html> `
+  --output-dir <capture-directory> `
+  --source-sha $(git rev-parse HEAD) `
+  --browser 'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe' `
+  --ffmpeg 'D:\ffmpeg\bin\ffmpeg.exe'
+```
+
+The capture command fails closed if the report is stale, omits the live-account boundary, or is missing any required evidence section. It creates six browser screenshots, a 36-second H.264 MP4, SRT captions, and a SHA-256 manifest. This media is a review aid for the local technical rehearsal; it is not a live Twilio demo, application receipt, award, or payment proof.
+
 ## Container deployment handoff
 
 A minimal non-root container is provided under `services/twilio_searchlight_demo/Dockerfile` for local packaging checks. The bridge binds to `127.0.0.1`, and the Operator Gateway adapter also accepts only loopback URLs. The current image therefore cannot serve traffic through Docker port publishing or reach a host Gateway from an isolated container. Treat container deployment as blocked until a reviewed networking design preserves those local-only trust boundaries.
