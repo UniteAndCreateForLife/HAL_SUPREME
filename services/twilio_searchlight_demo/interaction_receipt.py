@@ -34,6 +34,11 @@ def build_interaction_receipt(
         )
     if event.get("status") != "ok":
         raise ValueError("only successful validated interactions may produce receipts")
+    delivery_status = event.get("delivery_status", "").strip()
+    if delivery_status != "new":
+        raise ValueError(
+            "only newly processed deliveries may produce interaction receipts"
+        )
     message_ref = event.get("message_ref", "").strip().lower()
     if not re.fullmatch(r"[0-9a-f]{12}", message_ref):
         raise ValueError(
@@ -59,6 +64,7 @@ def build_interaction_receipt(
         "interaction": {
             "status": "ok",
             "signature_validation": "twilio_sdk",
+            "delivery_status": delivery_status,
             "message_ref": message_ref,
             "decision_id": decision_id,
             "elapsed_ms": event.get("elapsed_ms", ""),

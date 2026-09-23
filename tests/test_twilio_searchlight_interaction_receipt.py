@@ -15,6 +15,7 @@ class TwilioInteractionReceiptTests(unittest.TestCase):
     def event(self) -> dict[str, str]:
         return {
             "status": "ok",
+            "delivery_status": "new",
             "message_ref": "012345abcdef",
             "decision_id": "decision-live-1",
             "elapsed_ms": "42.0",
@@ -37,6 +38,7 @@ class TwilioInteractionReceiptTests(unittest.TestCase):
         )
         self.assertEqual(receipt["source_sha"], "a" * 40)
         self.assertEqual(receipt["interaction"]["signature_validation"], "twilio_sdk")
+        self.assertEqual(receipt["interaction"]["delivery_status"], "new")
         self.assertFalse(receipt["privacy"]["phone_number_recorded"])
         self.assertFalse(receipt["privacy"]["message_body_recorded"])
         serialized = json.dumps(receipt, sort_keys=True)
@@ -87,6 +89,29 @@ class TwilioInteractionReceiptTests(unittest.TestCase):
             payload = json.loads(path.read_text(encoding="utf-8"))
             self.assertEqual(payload["source_sha"], "e" * 40)
             self.assertFalse(path.with_suffix(".json.tmp").exists())
+
+    def test_cached_retry_cannot_overwrite_original_receipt(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            path = write_interaction_receipt(
+                output_dir,
+                self.event(),
+                "f" * 40,
+                "https://demo.example/twilio/incoming",
+                "<Response><Message>first response</Message></Response>",
+            )
+            original = path.read_bytes()
+            cached_retry = self.event()
+            cached_retry["delivery_status"] = "cached_retry"
+            with self.assertRaisesRegex(ValueError, "newly processed deliveries"):
+                write_interaction_receipt(
+                    output_dir,
+                    cached_retry,
+                    "f" * 40,
+                    "https://demo.example/twilio/incoming",
+                    "<Response><Message>cached response</Message></Response>",
+                )
+            self.assertEqual(path.read_bytes(), original)
 
 
 if __name__ == "__main__":
