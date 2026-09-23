@@ -4,6 +4,7 @@ import unittest
 
 from services.twilio_searchlight_demo.judge_packet import (
     build_judge_packet,
+    render_html,
     render_markdown,
     validate_rehearsal,
 )
@@ -88,6 +89,22 @@ class TwilioSearchlightJudgePacketTests(unittest.TestCase):
         self.assertIn("not** a live Twilio account demo", text)
         self.assertIn("Live working demo verified: `false`", text)
         self.assertIn("One story → one persona → one outcome", text)
+
+    def test_html_is_accessible_source_bound_and_fail_closed(self) -> None:
+        sha = "1" * 40
+        packet = build_judge_packet(passing_receipt(sha), sha)
+        packet["demo_framework"]["story"] = "HAL <operator> & reviewer"
+
+        text = render_html(packet)
+
+        self.assertIn('<html lang="en">', text)
+        self.assertIn("Skip to evidence", text)
+        self.assertIn('aria-label="Twilio to HAL architecture"', text)
+        self.assertIn(sha, text)
+        self.assertIn("HAL &lt;operator&gt; &amp; reviewer", text)
+        self.assertIn("Live working demo verified", text)
+        self.assertIn("NOT VERIFIED", text)
+        self.assertNotIn("HAL <operator>", text)
 
 
 if __name__ == "__main__":

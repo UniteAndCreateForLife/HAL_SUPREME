@@ -4,6 +4,7 @@ import argparse
 import json
 import subprocess
 from datetime import datetime, timezone
+from html import escape
 from pathlib import Path
 
 PROGRAM_URL = "https://www.twilio.com/en-us/lp/twilio-ai-startup-searchlight"
@@ -158,6 +159,145 @@ def build_judge_packet(
     }
 
 
+def render_html(packet: dict[str, object]) -> str:
+    def e(value: object) -> str:
+        return escape(str(value), quote=True)
+
+    framework = packet["demo_framework"]
+    criteria = packet["judge_criteria"]
+    architecture = packet["architecture"]
+    gates = packet["human_account_gates"]
+    boundaries = packet["boundaries"]
+
+    criteria_html = "\n".join(
+        (
+            '<article class="card">'
+            f"<h3>{e(name.replace('_', ' ').title())}</h3>"
+            f'<p class="status">{e(item["status"].replace("_", " ").upper())}</p>'
+            f"<p>{e(item['evidence'])}</p>"
+            "</article>"
+        )
+        for name, item in criteria.items()
+    )
+    architecture_html = "\n".join(
+        f"<li><span>{index}</span>{e(step)}</li>"
+        for index, step in enumerate(architecture, start=1)
+    )
+    gates_html = "\n".join(f"<li>{e(gate)}</li>" for gate in gates)
+    boundary_html = "\n".join(
+        (
+            "<tr>"
+            f'<th scope="row">{e(name.replace("_", " ").title())}</th>'
+            f'<td><span class="not-verified">NOT VERIFIED</span></td>'
+            "</tr>"
+        )
+        for name, verified in boundaries.items()
+        if verified is False
+    )
+
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Twilio Searchlight judge-readiness report</title>
+<style>
+:root {{ color-scheme: dark; --ink:#f8fbff; --muted:#b7c5d6; --panel:#142238;
+  --accent:#39e7c2; --warning:#ffd166; --line:#37506f; }}
+* {{ box-sizing:border-box; }}
+body {{ margin:0; background:#08111f; color:var(--ink); font:16px/1.55 system-ui,sans-serif; }}
+a {{ color:var(--accent); }}
+.skip {{ position:absolute; left:-9999px; top:1rem; }}
+.skip:focus {{ left:1rem; padding:.75rem; background:#fff; color:#000; z-index:10; }}
+header,main,footer {{ width:min(1100px,calc(100% - 2rem)); margin:auto; }}
+header {{ padding:3rem 0 1.5rem; }}
+.eyebrow,.status {{ color:var(--accent); font-weight:800; letter-spacing:.08em; }}
+h1 {{ max-width:16ch; font-size:clamp(2rem,7vw,4.5rem); line-height:1.02; margin:.3rem 0 1rem; }}
+.lede {{ max-width:72ch; color:var(--muted); }}
+.badges {{ display:flex; flex-wrap:wrap; gap:.6rem; margin:1.5rem 0; }}
+.badge,.not-verified {{ border:2px solid var(--warning); border-radius:999px; color:var(--warning);
+  display:inline-block; font-weight:800; padding:.25rem .7rem; }}
+section {{ margin:1rem 0 2rem; padding:clamp(1rem,4vw,2rem); background:var(--panel);
+  border:1px solid var(--line); border-radius:1rem; }}
+.grid {{ display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }}
+.card {{ border-left:4px solid var(--accent); padding:0 1rem; }}
+dl {{ display:grid; grid-template-columns:minmax(9rem,1fr) 3fr; gap:.7rem 1rem; }}
+dt {{ font-weight:800; }}
+dd {{ margin:0; color:var(--muted); }}
+.flow {{ list-style:none; display:flex; flex-wrap:wrap; gap:.65rem; padding:0; }}
+.flow li {{ background:#0b1728; border:1px solid var(--line); border-radius:.6rem; padding:.65rem; }}
+.flow li span {{ color:var(--accent); font-weight:800; margin-right:.5rem; }}
+table {{ width:100%; border-collapse:collapse; }}
+th,td {{ text-align:left; padding:.75rem; border-bottom:1px solid var(--line); }}
+footer {{ color:var(--muted); padding:0 0 3rem; overflow-wrap:anywhere; }}
+@media (max-width:600px) {{ dl {{ grid-template-columns:1fr; }} dd {{ margin-bottom:.7rem; }}
+  th,td {{ display:block; }} td {{ padding-top:0; }} }}
+</style>
+</head>
+<body>
+<a class="skip" href="#evidence">Skip to evidence</a>
+<header>
+<p class="eyebrow">SOURCE-BOUND LOCAL REHEARSAL</p>
+<h1>HAL operator control through Twilio Messaging</h1>
+<p class="lede">{e(framework["story"])}</p>
+<div class="badges">
+<span class="badge">LOCAL REHEARSAL PASSED</span>
+<span class="not-verified">LIVE TWILIO NOT VERIFIED</span>
+</div>
+<p>Source SHA: <code>{e(packet["source_sha"])}</code></p>
+</header>
+<main id="evidence">
+<section aria-labelledby="boundary-title">
+<h2 id="boundary-title">Evidence boundary</h2>
+<p>This report proves a deterministic, source-bound local rehearsal. It is not a live
+Twilio account demo, application receipt, honoree selection, credit award, or payment receipt.</p>
+<table>
+<caption>Claims intentionally held as unverified</caption>
+<tbody>{boundary_html}</tbody>
+</table>
+</section>
+<section aria-labelledby="story-title">
+<h2 id="story-title">One story, one persona, one outcome</h2>
+<dl>
+<dt>Persona</dt><dd>{e(framework["persona"])}</dd>
+<dt>Outcome</dt><dd>{e(framework["outcome"])}</dd>
+<dt>AI decision moment</dt><dd>{e(framework["ai_decision_moment"])}</dd>
+<dt>Twilio role</dt><dd>{e(framework["twilio_role"])}</dd>
+</dl>
+</section>
+<section aria-labelledby="architecture-title">
+<h2 id="architecture-title">Request architecture</h2>
+<ol class="flow" aria-label="Twilio to HAL architecture">{architecture_html}</ol>
+</section>
+<section aria-labelledby="criteria-title">
+<h2 id="criteria-title">Judging-criteria evidence map</h2>
+<div class="grid">{criteria_html}</div>
+</section>
+<section aria-labelledby="gates-title">
+<h2 id="gates-title">Human and account gates</h2>
+<ol>{gates_html}</ol>
+</section>
+<section aria-labelledby="state-title">
+<h2 id="state-title">Machine-readable state</h2>
+<dl>
+<dt>Technical rehearsal ready</dt><dd>{e(str(packet["technical_rehearsal_ready"]).lower())}</dd>
+<dt>Live working demo verified</dt><dd><span class="not-verified">NOT VERIFIED</span></dd>
+<dt>Application ready</dt><dd><span class="not-verified">NOT VERIFIED</span></dd>
+<dt>Submission</dt><dd>{e(packet["submission_state"])}</dd>
+<dt>Award</dt><dd>{e(packet["award_state"])}</dd>
+<dt>Payment</dt><dd>{e(packet["payment_state"])}</dd>
+</dl>
+</section>
+</main>
+<footer>
+<p>Official deadline as published: {e(packet["deadline_as_published"])}</p>
+<p>Program source: <a href="{e(packet["program_url"])}">{e(packet["program_url"])}</a></p>
+</footer>
+</body>
+</html>
+"""
+
+
 def render_markdown(packet: dict[str, object]) -> str:
     framework = packet["demo_framework"]
     criteria = packet["judge_criteria"]
@@ -219,6 +359,7 @@ def main() -> int:
     parser.add_argument("--rehearsal", type=Path, required=True)
     parser.add_argument("--json-output", type=Path, required=True)
     parser.add_argument("--markdown-output", type=Path, required=True)
+    parser.add_argument("--html-output", type=Path, required=True)
     args = parser.parse_args()
 
     source_sha = current_source_sha()
@@ -229,6 +370,8 @@ def main() -> int:
     args.markdown_output.write_text(
         render_markdown(packet), encoding="utf-8", newline="\n"
     )
+    args.html_output.parent.mkdir(parents=True, exist_ok=True)
+    args.html_output.write_text(render_html(packet), encoding="utf-8", newline="\n")
     print(json.dumps(packet, indent=2, sort_keys=True))
     return 0
 

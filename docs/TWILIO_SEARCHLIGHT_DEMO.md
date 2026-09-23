@@ -89,8 +89,11 @@ Generate a source-bound packet from a passing rehearsal receipt:
 python -m services.twilio_searchlight_demo.judge_packet \
   --rehearsal <rehearsal-receipt.json> \
   --json-output <judge-packet.json> \
-  --markdown-output <judge-packet.md>
+  --markdown-output <judge-packet.md> \
+  --html-output <judge-demo.html>
 ```
+
+The self-contained HTML report is keyboard-friendly, responsive, high contrast, and uses semantic headings, a skip link, an architecture label, and explicit `NOT VERIFIED` badges for every live-account or submission claim. It has no external assets or scripts, so reviewers can open the exact source-bound evidence artifact offline.
 
 The packet fails closed on a stale source SHA, a failing rehearsal, non-minimized HAL payload evidence, or any rehearsal receipt that tries to promote itself into live-account, submission, award, credit, payment, or spend evidence. It maps the technical evidence to the published judging criteria while leaving market claims, startup/account eligibility, live Twilio verification, and final submission as explicit human/account gates.
 
