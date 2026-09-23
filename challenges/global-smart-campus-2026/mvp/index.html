@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HAL Campus Evidence Desk</title>
+<style>
+:root{font-family:Inter,system-ui,sans-serif;color-scheme:dark;background:#0b0d10;color:#eef2f7}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top,#18202b 0,#0b0d10 42%);min-height:100vh}
+header{padding:32px clamp(20px,5vw,64px) 18px;border-bottom:1px solid #27313d}
+h1{margin:0;font-size:clamp(28px,5vw,52px)}
+.subtitle{max-width:920px;color:#aeb9c7;line-height:1.5;margin-top:10px}
+.badge{display:inline-block;padding:6px 10px;border:1px solid #3b4a5a;border-radius:999px;color:#c7d6e7;font-size:12px;margin-right:8px}
+main{display:grid;grid-template-columns:minmax(260px,1fr) minmax(320px,1.4fr);gap:20px;padding:24px clamp(20px,5vw,64px) 52px}
+.panel{background:#11161d;border:1px solid #27313d;border-radius:16px;padding:20px;box-shadow:0 18px 48px #0006}
+label{display:block;font-size:13px;color:#9faabb;margin:14px 0 8px}
+select,button{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #354354;background:#171e27;color:#eef2f7;font:inherit}
+button{cursor:pointer;font-weight:700;margin-top:12px;background:#e9eef5;color:#0b0d10;border:none}
+button:hover{filter:brightness(.95)}
+.evidence{margin-top:16px;display:grid;gap:10px}
+.card{border:1px solid #2c3744;background:#0d1218;border-radius:12px;padding:13px}
+.eid{font:700 12px ui-monospace,monospace;color:#95b7dd}
+.etype{font-size:11px;color:#7f8b99;text-transform:uppercase;letter-spacing:.08em}
+.card p{margin:8px 0 0;line-height:1.45;color:#d9e1eb}
+#result{display:grid;gap:14px}
+.section{border-top:1px solid #28323e;padding-top:14px}
+.section:first-child{border-top:0;padding-top:0}
+.section h3{margin:0 0 10px;font-size:16px}
+.item{margin:8px 0;line-height:1.45}
+.cite{font:700 12px ui-monospace,monospace;color:#9fc5ef}
+.warn{border-left:3px solid #d9b34c;padding-left:12px}
+.ok{border-left:3px solid #69c58f;padding-left:12px}
+.muted{color:#8c98a7}.gate{padding:12px;border:1px solid #5f4f25;background:#211b0d;border-radius:10px}
+.model{border:1px solid #30455e;background:#101923;border-radius:12px;padding:14px}
+@media(max-width:850px){main{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+<div><span class="badge">Synthetic demo data</span><span class="badge">Human review required</span><span class="badge">Deterministic acceptance</span></div>
+<h1>HAL Campus Evidence Desk</h1>
+<p class="subtitle">Private, auditable evidence synthesis for campus operations. Every material claim is tied to supplied evidence, conflicts are surfaced, and live-model suggestions are filtered by a deterministic acceptance layer before a human reviewer sees them.</p>
+</header>
+<main>
+<section class="panel">
+<label for="caseSelect">Synthetic campus scenario</label>
+<select id="caseSelect"></select>
+<label for="modeSelect">Analysis mode</label>
+<select id="modeSelect"><option value="deterministic">Deterministic evidence analysis</option><option value="live">Live verified model + deterministic acceptance</option></select>
+<button id="analyzeBtn">Analyze supplied evidence</button>
+<div id="status" class="section muted"></div>
+<div id="question" class="section"></div>
+<div id="evidence" class="evidence"></div>
+</section>
+<section class="panel">
+<div id="result"><p class="muted">Select a case and run the evidence analysis.</p></div>
+</section>
+</main>
+<script>
+const select=document.querySelector('#caseSelect');
+const modeSelect=document.querySelector('#modeSelect');
+const evidenceEl=document.querySelector('#evidence');
+const questionEl=document.querySelector('#question');
+const resultEl=document.querySelector('#result');
+const statusEl=document.querySelector('#status');
+let cases=[];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function renderCase(){
+ const c=cases.find(x=>x.id===select.value);if(!c)return;
+ questionEl.innerHTML=`<h3>${esc(c.title)}</h3><p>${esc(c.question)}</p>`;
+ evidenceEl.innerHTML=c.evidence.map(e=>`<div class="card"><div><span class="eid">${esc(e.id)}</span> <span class="etype">${esc(e.type)}</span></div><p>${esc(e.text)}</p></div>`).join('');
+}
+function cites(ids){return (ids||[]).map(x=>`<span class="cite">[${esc(x)}]</span>`).join(' ')}
+function renderModel(model){
+ if(!model)return '';
+ if(model.error)return `<div class="section"><h3>Live model</h3><div class="item warn">Live provider unavailable: ${esc(model.error)}. Deterministic report remains valid.</div></div>`;
+ const a=model.acceptance||{};
+ const findings=(model.findings||[]).map(x=>`<div class="item">${esc(x.text)} ${cites(x.citations)}</div>`).join('')||'<div class="muted">No model findings survived acceptance.</div>';
+ const actions=(model.actions||[]).map(x=>`<div class="item">${esc(x.text)} ${cites(x.citations)}</div>`).join('')||'<div class="muted">No model actions survived acceptance.</div>';
+ const conflicts=(model.conflicts||[]).map(x=>`<div class="item warn">${esc(x.detail)} ${cites(x.evidence)}</div>`).join('')||'<div class="muted">No live-model conflict survived deterministic relation checks.</div>';
+ const p=model.provider||{};
+ return `<div class="section model"><h3>Live model synthesis - accepted items only</h3><div class="item">${esc(model.summary||'')}</div><div class="item"><b>Findings</b>${findings}</div><div class="item"><b>Advisory actions</b>${actions}</div><div class="item"><b>Accepted conflicts</b>${conflicts}</div><div class="item ok">Accepted: ${esc(a.accepted_items??0)} | Rejected: ${esc(a.rejected_items??0)} | Unsupported conflict relations rejected: ${esc(a.unsupported_conflict_relations_rejected??0)} | Conflict truth match: ${a.model_conflict_detection?'PASS':'FAIL'} | Provider: ${esc(p.provider||'unknown')} | Model: ${esc(p.model||'unknown')} | ${esc(p.duration_ms||'?')} ms</div></div>`;
+}
+async function init(){
+ const [caseRows,status]=await Promise.all([fetch('/api/cases').then(r=>r.json()),fetch('/api/status').then(r=>r.json())]);
+ cases=caseRows;
+ select.innerHTML=cases.map(c=>`<option value="${esc(c.id)}">${esc(c.title)}</option>`).join('');
+ const n=status.providers?.nvidia;
+ statusEl.textContent=`Live model configured: ${n?.configured?'yes':'no'} · ${n?.model||'n/a'} · prototype use only`;
+ renderCase();
+}
+select.addEventListener('change',renderCase);
+document.querySelector('#analyzeBtn').addEventListener('click',async()=>{
+ resultEl.innerHTML='<p class="muted">Analyzing only the approved evidence set…</p>';
+ const url=`/api/analyze?id=${encodeURIComponent(select.value)}&mode=${encodeURIComponent(modeSelect.value)}`;
+ const response=await fetch(url);
+ const report=await response.json();
+ if(!response.ok){resultEl.innerHTML=`<p class="warn">Analysis error: ${esc(report.error||response.status)}</p>`;return;}
+ const conflicts=report.conflicts.length?report.conflicts.map(x=>`<div class="item warn">${esc(x.detail)} ${cites(x.evidence)}</div>`).join(''):'<div class="item ok">No seeded conflict detected in the supplied evidence.</div>';
+ resultEl.innerHTML=`
+  <div class="section"><h3>Evidence-grounded findings</h3>${report.claims.map(x=>`<div class="item">${esc(x.text)} ${cites(x.citations)}</div>`).join('')}</div>
+  <div class="section"><h3>Conflict check</h3>${conflicts}</div>
+  <div class="section"><h3>Reversible action plan</h3>${report.actions.map(x=>`<div class="item">${esc(x.text)} ${cites(x.citations)}</div>`).join('')}</div>
+  ${renderModel(report.model_synthesis)}
+  <div class="section"><h3>Uncertainty</h3><div class="item warn">${esc(report.uncertainty)}</div></div>
+  <div class="section"><h3>Validation</h3><div class="item ok">Citation validity: ${(report.validation.citation_validity*100).toFixed(0)}% · Conflict test: ${report.validation.conflict_detection?'PASS':'FAIL'} · Unsupported material claims: ${report.validation.unsupported_material_claims}</div></div>
+  <div class="section"><h3>Human review gate</h3><div class="gate">${esc(report.review_gate.status)} — recommendations are advisory and cannot self-approve.</div></div>`;
+});
+init().catch(err=>{resultEl.innerHTML=`<p class="warn">Startup error: ${esc(err)}</p>`});
+</script>
+</body>
+</html>
