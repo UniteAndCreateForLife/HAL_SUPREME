@@ -59,12 +59,13 @@ def call_operator_conversation(
     body: str,
     timeout_seconds: float,
     max_reply_chars: int,
+    max_wait_seconds: float = MAX_OPERATOR_WAIT_SECONDS,
 ) -> dict[str, str]:
     """Accept only a verified, real provider reply from canonical HAL."""
     origin = _gateway_origin(commands_url)
-    if not message_sid or not body or timeout_seconds <= 0:
+    if not message_sid or not body or timeout_seconds <= 0 or max_wait_seconds <= 0:
         raise ValueError("HAL operator conversation needs a message and timeout")
-    deadline = time.monotonic() + min(timeout_seconds, MAX_OPERATOR_WAIT_SECONDS)
+    deadline = time.monotonic() + min(timeout_seconds, max_wait_seconds)
     conversation_id = (
         "twilio_sms_" + hashlib.sha256(message_sid.encode()).hexdigest()[:24]
     )
@@ -119,6 +120,7 @@ def call_operator_conversation(
             return {
                 "reply": reply.strip()[:max_reply_chars],
                 "decision_id": operation_id,
+                "model": after["model"].strip(),
             }
         if state not in PENDING_STATES:
             raise ValueError("HAL operator conversation did not verify")
