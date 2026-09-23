@@ -17,6 +17,9 @@ Core controls:
 - unsupported conflict relations are rejected;
 - external hosted-model egress fails closed when common direct identifiers are detected;
 - privacy-gate evidence records only identifier category/location, never the matched value;
+- per-report audit receipts are SHA-256 bound to canonical report content;
+- review events can be chained by SHA-256 so mutation, deletion/reordering, or unauthorized close-role changes fail verification;
+- only the `reviewer` role can emit approve/reject review events in the reference audit chain;
 - recommendations remain advisory and reversible;
 - the human-review gate stays `PENDING_HUMAN_REVIEW` by default.
 
@@ -32,11 +35,15 @@ python app.py
 
 ## Validation scope
 
-The repository CI runs the deterministic acceptance and privacy-gate tests on Linux x64, Linux arm64, Windows x64, and macOS arm64. Live NVIDIA NIM evidence is retained in `mvp/LIVE_VALIDATION_RECEIPT.json`; the public demo intentionally disables external model calls to prevent uncontrolled compute use.
+The repository CI runs the deterministic acceptance, privacy-gate, and audit-chain tests on Linux x64, Linux arm64, Windows x64, and macOS arm64. Live NVIDIA NIM evidence is retained in `mvp/LIVE_VALIDATION_RECEIPT.json`; the public demo intentionally disables external model calls to prevent uncontrolled compute use.
 
 Submission materials in this directory are sanitized and contain no portal password, API key, phone number, or legal-declaration acceptance.
 
 Competition deadline: 5 October 2026. Final presentations: 27 October 2026.
+
+## Tamper-evident review audit chain
+
+`mvp/audit_chain.py` links each privacy-minimized review event to the prior event hash and the existing canonical report receipt. Audit events retain only the case identifier, report hash, role, event type, bounded note, sequence, and chain hashes; reviewer identity and evidence text are deliberately excluded. The verifier rejects mutated events, broken ordering/linkage, unsupported roles/event types, invalid report receipts, and analyst/auditor attempts to close a review.
 
 ## Reproducible deterministic benchmark
 
