@@ -38,7 +38,7 @@ jobs:
 
       - name: Prove default zero-spend fail-closed state
         env:
-          EXPECTED_SHA: ${{ github.sha }}
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           mkdir -p evidence/compute-router-ci
           python - <<'PY'
@@ -75,7 +75,7 @@ jobs:
       - name: Upload source-bound evidence
         uses: actions/upload-artifact@v4
         with:
-          name: compute-router-${{ github.sha }}
+          name: compute-router-${{ github.event.pull_request.head.sha || github.sha }}
           path: evidence/compute-router-ci/
           if-no-files-found: error
           retention-days: 30
