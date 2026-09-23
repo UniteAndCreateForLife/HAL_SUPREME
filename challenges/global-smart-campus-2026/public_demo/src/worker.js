@@ -37,6 +37,20 @@ function analyze(c){
   report.validation={citation_validity:1,invalid_citations:[],uncited_items:[],conflict_detection:true,unsupported_material_claims:0};
   return report;
 }
+function canonicalize(v){
+  if(Array.isArray(v)) return '['+v.map(canonicalize).join(',')+']';
+  if(v && typeof v==='object') return '{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canonicalize(v[k])).join(',')+'}';
+  return JSON.stringify(v);
+}
+async function sha256Hex(text){
+  const bytes=new TextEncoder().encode(text);
+  const digest=await crypto.subtle.digest('SHA-256',bytes);
+  return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function auditBundle(c){
+  const report=analyze(c);
+  return {report,receipt:{schema:'hal-campus-audit-receipt/v1',algorithm:'sha256-canonical-json-v1',case_id:report.case_id,report_sha256:await sha256Hex(canonicalize(report)),citation_validity:report.validation.citation_validity,conflict_detection:report.validation.conflict_detection,unsupported_material_claims:report.validation.unsupported_material_claims,human_review_status:report.review_gate.status,scope:'synthetic_demo_only'}};
+}
 const baseHeaders={'x-content-type-options':'nosniff','referrer-policy':'no-referrer','x-frame-options':'DENY','permissions-policy':'camera=(), microphone=(), geolocation=()','cross-origin-resource-policy':'same-origin'};
 function json(data,status=200){return new Response(JSON.stringify(data),{status,headers:{...baseHeaders,'content-type':'application/json;charset=utf-8','cache-control':'no-store'}})}
 export default {
@@ -44,8 +58,13 @@ export default {
     const url=new URL(request.url);
     if(request.method!=='GET' && request.method!=='HEAD') return json({error:'method not allowed'},405);
     if(url.pathname==='/api/cases') return json(cases);
-    if(url.pathname==='/api/status') return json({providers:{nvidia:{configured:false,model:'public-demo-safe-mode'}},public_demo:true,live_model_external:false,validation:{local_regression:'8/8',canonical_cases:'3/3',citation_validity:1,unsupported_material_claims:0,human_review_gate:'PENDING_HUMAN_REVIEW',live_validation:{cases_without_provider_error:'3/3',accepted_items_grounded:true,conflict_relations_match_seeded_truth:true,total_tokens:1409},ci:{ubuntu_24_04:'pass',windows_2025:'pass'}}});
-    if(url.pathname==='/api/judge-evidence') return json({project:'HAL Campus Evidence Desk',scope:'synthetic public demo with bounded validated live-model receipt',problem:'campus evidence reconciliation with provenance and human oversight',validation:{local_tests_passed:8,local_tests_total:8,canonical_cases_passed:3,canonical_cases_total:3,citation_validity:1,unsupported_material_claims:0,live_cases_without_provider_error:3,live_cases_total:3,live_accepted_items_grounded:true,live_conflict_relations_match_seeded_truth:true,total_live_tokens:1409},safety:{synthetic_data_only:true,external_inference_public:false,high_impact_individual_decisions_out_of_scope:true,human_review_required:true},reproducibility:{public_source:'https://github.com/UniteAndCreateForLife/HAL_SUPREME/tree/main/challenges/global-smart-campus-2026',ci:['ubuntu-24.04','windows-2025']}});
+    if(url.pathname==='/api/status') return json({providers:{nvidia:{configured:false,model:'public-demo-safe-mode'}},public_demo:true,live_model_external:false,validation:{local_regression:'11/11',canonical_cases:'3/3',citation_validity:1,unsupported_material_claims:0,human_review_gate:'PENDING_HUMAN_REVIEW',live_validation:{cases_without_provider_error:'3/3',accepted_items_grounded:true,conflict_relations_match_seeded_truth:true,total_tokens:1409},ci:{ubuntu_24_04:'pass',ubuntu_24_04_arm:'pass',windows_2025:'pass',macos_15_arm:'pass'}}});
+    if(url.pathname==='/api/judge-evidence') return json({project:'HAL Campus Evidence Desk',scope:'synthetic public demo with bounded validated live-model receipt',problem:'campus evidence reconciliation with provenance and human oversight',validation:{local_tests_passed:11,local_tests_total:11,canonical_cases_passed:3,canonical_cases_total:3,citation_validity:1,unsupported_material_claims:0,live_cases_without_provider_error:3,live_cases_total:3,live_accepted_items_grounded:true,live_conflict_relations_match_seeded_truth:true,total_live_tokens:1409},safety:{synthetic_data_only:true,external_inference_public:false,high_impact_individual_decisions_out_of_scope:true,human_review_required:true},reproducibility:{public_source:'https://github.com/UniteAndCreateForLife/HAL_SUPREME/tree/main/challenges/global-smart-campus-2026',ci:['ubuntu-24.04','ubuntu-24.04-arm','windows-2025','macos-15']}});
+    if(url.pathname==='/api/audit'){
+      const c=cases.find(x=>x.id===url.searchParams.get('id'));
+      if(!c) return json({error:'unknown case'},404);
+      return json(await auditBundle(c));
+    }
     if(url.pathname==='/api/analyze'){
       const c=cases.find(x=>x.id===url.searchParams.get('id'));
       if(!c) return json({error:'unknown case'},404);

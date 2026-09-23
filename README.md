@@ -40,3 +40,17 @@ INGEST → VOICE → SEGMENT → DEPTH → WORLD → COMPOSITE → RELIGHT → A
 - deploy/ — deployment manifests
 
 This repository starts clean by design. Existing HAL code is migrated only after review, rather than bulk-importing historical filesystem debris.
+
+
+## Livepeer Agent Creative MCP
+
+HAL can use Livepeer Agent's creative MCP as a replaceable remote media worker for image, video, audio, multi-scene projects and finishing. The integration discovers the provider's current tool schemas at runtime rather than pinning stale signatures.
+
+Start with:
+
+```bash
+python scripts/livepeer_creative.py doctor
+python scripts/livepeer_creative.py tools
+```
+
+See `docs/LIVEPEER_CREATIVE_MCP.md` for the authentication, spend-control, provenance and production runbook.

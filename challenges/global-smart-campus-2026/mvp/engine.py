@@ -1,10 +1,47 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
 
 BASE = Path(__file__).resolve().parent
+
+
+def _canonical_value(data: Any) -> Any:
+    if isinstance(data, dict):
+        return {key: _canonical_value(value) for key, value in data.items()}
+    if isinstance(data, list):
+        return [_canonical_value(value) for value in data]
+    if isinstance(data, float) and data.is_integer():
+        return int(data)
+    return data
+
+
+def canonical_json_bytes(data: Any) -> bytes:
+    normalized = _canonical_value(data)
+    return json.dumps(normalized, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+
+
+def build_audit_receipt(report: dict[str, Any]) -> dict[str, Any]:
+    validation = report.get("validation", {})
+    review_gate = report.get("review_gate", {})
+    return {
+        "schema": "hal-campus-audit-receipt/v1",
+        "algorithm": "sha256-canonical-json-v1",
+        "case_id": report.get("case_id"),
+        "report_sha256": hashlib.sha256(canonical_json_bytes(report)).hexdigest(),
+        "citation_validity": validation.get("citation_validity"),
+        "conflict_detection": validation.get("conflict_detection"),
+        "unsupported_material_claims": validation.get("unsupported_material_claims"),
+        "human_review_status": review_gate.get("status"),
+        "scope": "synthetic_demo_only",
+    }
+
+
+def verify_audit_receipt(report: dict[str, Any], receipt: dict[str, Any]) -> bool:
+    expected = build_audit_receipt(report)
+    return receipt.get("case_id") == expected["case_id"] and receipt.get("report_sha256") == expected["report_sha256"]
 
 
 def load_cases() -> list[dict[str, Any]]:
@@ -91,6 +128,11 @@ def validate_report(report: dict[str, Any], evidence: dict[str, dict[str, Any]])
         "conflict_detection": conflict_ids == expected,
         "unsupported_material_claims": len(invalid) + len(uncited),
     }
+
+
+def audit_bundle(case: dict[str, Any]) -> dict[str, Any]:
+    report = analyze_case(case)
+    return {"report": report, "receipt": build_audit_receipt(report)}
 
 
 def analyze_all() -> list[dict[str, Any]]:

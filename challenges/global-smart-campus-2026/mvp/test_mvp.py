@@ -1,6 +1,7 @@
+import copy
 import unittest
 
-from engine import analyze_case, load_cases
+from engine import analyze_case, audit_bundle, load_cases, verify_audit_receipt
 from live_model import normalize_synthesis
 
 
@@ -72,6 +73,23 @@ class CampusEvidenceDeskTests(unittest.TestCase):
         before = [dict(item) for item in case["evidence"]]
         normalize_synthesis(case, {"findings": [], "actions": [], "conflicts": []})
         self.assertEqual(case["evidence"], before)
+
+    def test_audit_receipt_verifies_untampered_report(self):
+        for case in self.cases:
+            bundle = audit_bundle(case)
+            self.assertTrue(verify_audit_receipt(bundle["report"], bundle["receipt"]))
+            self.assertEqual(bundle["receipt"]["human_review_status"], "PENDING_HUMAN_REVIEW")
+            self.assertEqual(bundle["receipt"]["unsupported_material_claims"], 0)
+
+    def test_audit_receipt_detects_tampering(self):
+        bundle = audit_bundle(self.cases[0])
+        changed = copy.deepcopy(bundle["report"])
+        changed["actions"][0]["text"] += " altered"
+        self.assertFalse(verify_audit_receipt(changed, bundle["receipt"]))
+
+    def test_audit_receipt_is_cross_runtime_stable(self):
+        bundle = audit_bundle(self.cases[0])
+        self.assertEqual(bundle["receipt"]["report_sha256"], "e2bd909a7687b21d7d8204eb4a5417d703717a04f4c110f52b2eb9409948d884")
 
 
 if __name__ == "__main__":

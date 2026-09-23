@@ -6,7 +6,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from engine import analyze_case, analyze_case_with_model, load_cases
+from engine import analyze_case, analyze_case_with_model, audit_bundle, load_cases
 from live_model import provider_status
 
 BASE = Path(__file__).resolve().parent
@@ -36,7 +36,7 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path == "/api/status":
             return self._send(200, _json_bytes({
                 "service": "HAL Campus Evidence Desk",
-                "version": "0.2",
+                "version": "0.3",
                 "data_class": "synthetic_demo_only",
                 "human_review_required": True,
                 "providers": provider_status(),
@@ -47,6 +47,13 @@ class Handler(BaseHTTPRequestHandler):
                 for c in CASES.values()
             ]
             return self._send(200, _json_bytes(rows), "application/json; charset=utf-8")
+        if parsed.path == "/api/audit":
+            query = parse_qs(parsed.query)
+            case_id = query.get("id", [""])[0]
+            case = CASES.get(case_id)
+            if not case:
+                return self._send(404, _json_bytes({"error": "case_not_found"}), "application/json; charset=utf-8")
+            return self._send(200, _json_bytes(audit_bundle(case)), "application/json; charset=utf-8")
         if parsed.path == "/api/analyze":
             query = parse_qs(parsed.query)
             case_id = query.get("id", [""])[0]
