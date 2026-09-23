@@ -87,6 +87,10 @@ class CampusEvidenceDeskTests(unittest.TestCase):
         changed["actions"][0]["text"] += " altered"
         self.assertFalse(verify_audit_receipt(changed, bundle["receipt"]))
 
+    def test_audit_receipt_is_cross_runtime_stable(self):
+        bundle = audit_bundle(self.cases[0])
+        self.assertEqual(bundle["receipt"]["report_sha256"], "e2bd909a7687b21d7d8204eb4a5417d703717a04f4c110f52b2eb9409948d884")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

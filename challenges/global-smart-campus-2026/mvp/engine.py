@@ -8,8 +8,19 @@ from typing import Any
 BASE = Path(__file__).resolve().parent
 
 
+def _canonical_value(data: Any) -> Any:
+    if isinstance(data, dict):
+        return {key: _canonical_value(value) for key, value in data.items()}
+    if isinstance(data, list):
+        return [_canonical_value(value) for value in data]
+    if isinstance(data, float) and data.is_integer():
+        return int(data)
+    return data
+
+
 def canonical_json_bytes(data: Any) -> bytes:
-    return json.dumps(data, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    normalized = _canonical_value(data)
+    return json.dumps(normalized, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
 
 
 def build_audit_receipt(report: dict[str, Any]) -> dict[str, Any]:
