@@ -13,7 +13,7 @@ This matrix maps the official Global Smart Campus 2026 startup judging framework
 
 ## Reproducible acceptance facts
 
-- Regression suite after privacy hardening: **14 tests** (pending CI confirmation on this branch before merge).
+- Regression suite after privacy hardening: **14 tests passed on all four standard CI platforms in GitHub Actions run 35902342491**.
 - Privacy egress gate: canonical synthetic cases pass; common email/phone/SSN/labeled identifiers are blocked before external inference; matched identifier values are not retained in gate evidence.
 - Tamper-evident audit export: `/api/audit?id=<case>` binds each deterministic report to a canonical SHA-256 receipt; mutation-detection regression coverage passes.
 - Canonical synthetic cases: **3/3 passed**.
