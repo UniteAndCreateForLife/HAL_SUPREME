@@ -66,23 +66,23 @@ button:hover{filter:brightness(.95)}
 </section>
 
 <section class="panel judge" id="judgeEvidence">
-<h2>Judge evidence â€” validated, reproducible, bounded</h2>
+<h2>Judge evidence — validated, reproducible, bounded</h2>
 <p class="subtitle">The public build exposes only synthetic data and deterministic analysis. Live-model evaluation was run separately under bounded developer inference and retained as a validation receipt.</p>
 <div class="metrics">
-  <div class="metric"><b>8/8</b><span class="muted">local regression tests passed</span></div>
+  <div class="metric"><b>22/22</b><span class="muted">local regression tests passed</span></div>
   <div class="metric"><b>3/3</b><span class="muted">canonical cases validated</span></div>
   <div class="metric"><b>100%</b><span class="muted">citation validity in canonical cases</span></div>
   <div class="metric"><b>0</b><span class="muted">unsupported material claims accepted</span></div>
 </div>
 <div class="arch">
-  <div class="card"><div class="etype">Evidence boundary</div><p>Analysis is scoped to an approved case evidence set. Accepted items must cite supplied evidence IDs.</p></div>
-  <div class="card"><div class="etype">Deterministic acceptance</div><p>Invalid citations and unsupported conflict relations are rejected before model output is surfaced.</p></div>
-  <div class="card"><div class="etype">Human authority</div><p>All recommendations remain advisory and end in <span class="cite">PENDING_HUMAN_REVIEW</span>.</p></div>
+  <div class="card"><div class="etype">Evidence boundary</div><p>Analysis is scoped to an approved case evidence set. Accepted items must cite supplied evidence IDs, and unsupported conflict relations are rejected.</p></div>
+  <div class="card"><div class="etype">Tenant + audit boundary</div><p>Review events are tenant-scoped, fail closed on cross-tenant actions, and are linked through a tamper-evident SHA-256 audit chain.</p></div>
+  <div class="card"><div class="etype">Human authority</div><p>All recommendations remain advisory and end in <span class="cite">PENDING_HUMAN_REVIEW</span>; review closure remains reviewer-authorized.</p></div>
 </div>
 <div class="section">
   <h3>Reproducibility and scale path</h3>
-  <div class="item">Linux + Windows GitHub Actions acceptance CI passed for the sanitized public source. The architecture is provider-agnostic and can use institution-controlled local/open models or bounded managed inference.</div>
-  <div class="item">Pilot hardening path: SSO/RBAC, tenant isolation, retention controls, audit exports, institution-approved connectors, and reviewer usability testing.</div>
+  <div class="item">Four-platform GitHub Actions acceptance CI has passed on Ubuntu 24.04 x64, Ubuntu 24.04 ARM64, Windows 2025 x64, and macOS 15 ARM64. The architecture is provider-agnostic and can use institution-controlled local/open models or bounded managed inference.</div>
+  <div class="item">Current MVP hardening includes deterministic acceptance, fail-closed tenant-scoped RBAC, privacy-minimized review events, and tamper-evident audit linkage. Pilot hardening remains institution SSO, durable audit export/retention controls, approved production connectors, and reviewer usability testing.</div>
   <div class="links item"><a href="https://github.com/UniteAndCreateForLife/HAL_SUPREME/tree/main/challenges/global-smart-campus-2026" rel="noopener noreferrer">Sanitized public source and acceptance workflow</a></div>
 </div>
 </section>
