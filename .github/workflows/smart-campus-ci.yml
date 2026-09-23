@@ -1,0 +1,48 @@
+name: HAL Campus Evidence Desk CI
+
+on:
+  push:
+    branches:
+      - challenge/global-smart-campus-2026
+  pull_request:
+    paths:
+      - 'challenges/global-smart-campus-2026/**'
+      - '.github/workflows/smart-campus-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  acceptance:
+    name: Acceptance (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: challenges/global-smart-campus-2026/mvp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile Python
+        run: python -m compileall -q .
+      - name: Run acceptance tests
+        run: python -m unittest -v
+      - name: Validate public Worker syntax
+        working-directory: challenges/global-smart-campus-2026
+        run: node --check public_demo/src/worker.js
+      - name: Verify no obvious secret files are tracked
+        shell: python
+        run: |
+          import pathlib
+          banned = {'.env', 'kaggle.json', 'credentials.json'}
+          root = pathlib.Path('.').resolve()
+          hits = [str(p.relative_to(root)) for p in root.rglob('*') if p.is_file() and p.name.lower() in banned]
+          if hits:
+              raise SystemExit(f'blocked secret-like files: {hits}')
+          print('secret-file gate: PASS')
