@@ -1,0 +1,40 @@
+name: HAL Livepeer Creative MCP
+
+on:
+  push:
+    branches:
+      - feature/livepeer-creative-mcp
+    paths:
+      - "integrations/livepeer_creative/**"
+      - "scripts/livepeer_creative.py"
+      - "tests/test_livepeer_creative_client.py"
+      - "services/compute_router/app.py"
+      - "configs/livepeer_creative.example.env"
+      - "docs/LIVEPEER_CREATIVE_MCP.md"
+      - ".github/workflows/livepeer-creative-mcp.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "integrations/livepeer_creative/**"
+      - "scripts/livepeer_creative.py"
+      - "tests/test_livepeer_creative_client.py"
+      - "services/compute_router/app.py"
+      - "configs/livepeer_creative.example.env"
+      - "docs/LIVEPEER_CREATIVE_MCP.md"
+      - ".github/workflows/livepeer-creative-mcp.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Compile
+        run: python -m compileall -q integrations scripts services
+      - name: Unit tests
+        run: python -m unittest -v tests.test_livepeer_creative_client
+      - name: CLI help
+        run: python scripts/livepeer_creative.py --help
