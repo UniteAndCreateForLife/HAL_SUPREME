@@ -84,6 +84,23 @@ def build_providers() -> dict[str, dict[str, Any]]:
             "requires_zero_spend_ready": True,
             "zero_spend_ready": env_enabled("HAL_PROVIDER_NVIDIA_NIM_ZERO_SPEND_READY"),
         },
+        "cloudrift": {
+            "enabled": env_enabled("HAL_PROVIDER_CLOUDRIFT_ENABLED"),
+            "kind": "grant-gpu-compute",
+            "capabilities": [
+                "inference",
+                "training",
+                "fine_tuning",
+                "scientific_compute",
+                "media",
+                "video",
+                "sandbox",
+            ],
+            "priority": 35,
+            "budget_policy": "verified_grant_credits_only",
+            "requires_zero_spend_ready": True,
+            "zero_spend_ready": env_enabled("HAL_PROVIDER_CLOUDRIFT_ZERO_SPEND_READY"),
+        },
         "modal": {
             "enabled": env_enabled("HAL_PROVIDER_MODAL_ENABLED"),
             "kind": "serverless-gpu",
