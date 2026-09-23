@@ -1,0 +1,101 @@
+name: Compute Router CI
+
+on:
+  push:
+    branches: ["main", "feat/cloudflare-workers-provider", "infra/verified-free-provider-router"]
+    paths:
+      - "services/compute_router/**"
+      - "tests/test_compute_router.py"
+      - ".github/workflows/compute-router.yml"
+  pull_request:
+    paths:
+      - "services/compute_router/**"
+      - "tests/test_compute_router.py"
+      - ".github/workflows/compute-router.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  zero-spend-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test tooling
+        run: python -m pip install ruff==0.14.14
+
+      - name: Run compute-router tests
+        run: python -m unittest discover -s tests -p 'test_compute_router.py' -v
+
+      - name: Static checks
+        run: |
+          python -m py_compile services/compute_router/app.py tests/test_compute_router.py
+          ruff check services/compute_router tests/test_compute_router.py
+
+      - name: Prove default zero-spend fail-closed state
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          mkdir -p evidence/compute-router-ci
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from services.compute_router.app import build_providers, choose_route
+
+          providers = build_providers()
+          remote_names = (
+              "huggingface",
+              "openrouter_free",
+              "github_actions",
+              "cloudflare_workers_ai",
+              "nvidia_nim",
+              "modal",
+              "livepeer_creative",
+              "lightning_ai",
+          )
+          remote_capabilities = set()
+          provider_state = {}
+          for name in remote_names:
+              provider = providers[name]
+              assert provider["enabled"] is False
+              assert provider["zero_spend_ready"] is False
+              assert provider["requires_zero_spend_ready"] is True
+              remote_capabilities.update(provider["capabilities"])
+              provider_state[name] = {
+                  "enabled": provider["enabled"],
+                  "zero_spend_ready": provider["zero_spend_ready"],
+                  "budget_policy": provider["budget_policy"],
+              }
+          assert providers["local_hal"]["enabled"] is False
+          for capability in sorted(remote_capabilities):
+              assert choose_route(capability, providers) is None, capability
+          receipt = {
+              "source_sha": os.environ["EXPECTED_SHA"],
+              "remote_provider_count": len(remote_names),
+              "remote_capability_count": len(remote_capabilities),
+              "provider_state": provider_state,
+              "local_hal_enabled": providers["local_hal"]["enabled"],
+              "external_provider_call": False,
+              "compute_credit_award_verified": False,
+              "paid": False,
+          }
+          Path("evidence/compute-router-ci/readiness.json").write_text(
+              json.dumps(receipt, sort_keys=True, indent=2) + "\n",
+              encoding="utf-8",
+              newline="\n",
+          )
+          PY
+          sha256sum evidence/compute-router-ci/readiness.json > evidence/compute-router-ci/SHA256SUMS
+
+      - name: Upload source-bound evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: compute-router-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/compute-router-ci/
+          if-no-files-found: error
+          retention-days: 30

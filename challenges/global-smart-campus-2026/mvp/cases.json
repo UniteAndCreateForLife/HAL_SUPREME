@@ -1,0 +1,83 @@
+{
+  "cases": [
+    {
+      "id": "policy-conflict",
+      "title": "Conflicting policy guidance",
+      "question": "What should the department do before approving after-hours lab access?",
+      "evidence": [
+        {
+          "id": "E1",
+          "type": "policy_memo",
+          "text": "Policy memo A requires department-chair approval and annual safety training before after-hours lab access."
+        },
+        {
+          "id": "E2",
+          "type": "policy_memo",
+          "text": "Policy memo B allows trained research staff to request after-hours access through the security office without chair approval."
+        },
+        {
+          "id": "E3",
+          "type": "training_record",
+          "text": "The synthetic requester completed annual safety training on 2026-08-18."
+        }
+      ],
+      "expected_conflicts": [["E1", "E2"]]
+    },
+    {
+      "id": "research-access",
+      "title": "Research access request",
+      "question": "What review steps are required before releasing the synthetic research dataset?",
+      "evidence": [
+        {
+          "id": "E1",
+          "type": "request",
+          "text": "The synthetic requester asks for a de-identified dataset for a campus mobility study."
+        },
+        {
+          "id": "E2",
+          "type": "data_policy",
+          "text": "Dataset release requires data-owner approval, a purpose statement, and a documented retention period."
+        },
+        {
+          "id": "E3",
+          "type": "security_note",
+          "text": "The proposed workspace supports encrypted storage and access logging."
+        },
+        {
+          "id": "E4",
+          "type": "review_note",
+          "text": "No data-owner approval is attached to the request."
+        }
+      ],
+      "expected_conflicts": []
+    },
+    {
+      "id": "energy-anomaly",
+      "title": "Facilities energy anomaly",
+      "question": "What should facilities investigate first after the overnight energy spike?",
+      "evidence": [
+        {
+          "id": "E1",
+          "type": "meter_event",
+          "text": "Building C electricity use increased 38 percent between 01:00 and 03:00 compared with the prior seven-night median."
+        },
+        {
+          "id": "E2",
+          "type": "maintenance_note",
+          "text": "Air-handler AHU-C3 was placed in manual override during a ventilation inspection at 00:42."
+        },
+        {
+          "id": "E3",
+          "type": "occupancy_note",
+          "text": "No scheduled overnight event or approved extended occupancy is recorded for Building C."
+        },
+        {
+          "id": "E4",
+          "type": "weather_note",
+          "text": "Outdoor temperature remained within two degrees of the seven-night median."
+        }
+      ],
+      "expected_conflicts": []
+    }
+  ]
+}
