@@ -38,6 +38,8 @@ def build_providers() -> dict[str, dict[str, Any]]:
                 "edge_api",
             ],
             "budget_policy": "free_allocation_only",
+            "requires_zero_spend_ready": True,
+            "zero_spend_ready": env_enabled("HAL_PROVIDER_CLOUDFLARE_ZERO_SPEND_READY"),
         },
         "modal": {
             "enabled": env_enabled("HAL_PROVIDER_MODAL_ENABLED"),
@@ -51,6 +53,8 @@ def build_providers() -> dict[str, dict[str, Any]]:
                 "sandbox",
             ],
             "budget_policy": "free_credit_only",
+            "requires_zero_spend_ready": True,
+            "zero_spend_ready": env_enabled("HAL_PROVIDER_MODAL_ZERO_SPEND_READY"),
         },
         "local_hal": {
             "enabled": env_enabled("HAL_PROVIDER_LOCAL_ENABLED"),
@@ -61,12 +65,17 @@ def build_providers() -> dict[str, dict[str, Any]]:
 
 
 def choose_route(capability: str, providers: dict[str, dict[str, Any]] | None = None) -> dict[str, Any] | None:
-    """Choose only enabled providers that explicitly advertise a capability."""
+    """Choose an enabled capability only when any zero-spend gate is satisfied."""
     inventory = providers if providers is not None else build_providers()
     eligible = [
         name
         for name, provider in inventory.items()
-        if provider.get("enabled") and capability in provider.get("capabilities", [])
+        if provider.get("enabled")
+        and capability in provider.get("capabilities", [])
+        and (
+            not provider.get("requires_zero_spend_ready", False)
+            or provider.get("zero_spend_ready") is True
+        )
     ]
     if not eligible:
         return None
@@ -89,7 +98,7 @@ def snapshot() -> dict[str, Any]:
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "HALComputeRouter/0.2"
+    server_version = "HALComputeRouter/0.3"
 
     def _send(self, status: int, body: dict[str, Any]) -> None:
         payload = json.dumps(body, sort_keys=True).encode()
