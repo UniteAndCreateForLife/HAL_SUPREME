@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, windows-2025]
+        os: [ubuntu-24.04, ubuntu-24.04-arm, windows-2025, macos-15]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -33,6 +33,8 @@ jobs:
         run: python -m compileall -q .
       - name: Run acceptance tests
         run: python -m unittest -v
+      - name: Run deterministic acceptance benchmark
+        run: python benchmark_deterministic.py --iterations 1000 --output BENCHMARK_CI_RECEIPT.json
       - name: Validate public Worker syntax
         working-directory: challenges/global-smart-campus-2026
         run: node --check public_demo/src/worker.js
@@ -46,3 +48,10 @@ jobs:
           if hits:
               raise SystemExit(f'blocked secret-like files: {hits}')
           print('secret-file gate: PASS')
+      - name: Upload benchmark receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: smart-campus-benchmark-${{ matrix.os }}
+          path: challenges/global-smart-campus-2026/mvp/BENCHMARK_CI_RECEIPT.json
+          if-no-files-found: error
+          retention-days: 30

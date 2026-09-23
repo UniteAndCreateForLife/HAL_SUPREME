@@ -28,8 +28,17 @@ python app.py
 
 ## Validation scope
 
-The repository CI runs the deterministic acceptance tests on Linux and Windows without requiring provider credentials. Live NVIDIA NIM evidence is retained in `mvp/LIVE_VALIDATION_RECEIPT.json`; the public demo intentionally disables external model calls to prevent uncontrolled compute use.
+The repository CI runs the deterministic acceptance tests on Linux x64, Linux arm64, Windows x64, and macOS arm64; all four lanes passed in GitHub Actions run 35895272284 without requiring provider credentials. Live NVIDIA NIM evidence is retained in `mvp/LIVE_VALIDATION_RECEIPT.json`; the public demo intentionally disables external model calls to prevent uncontrolled compute use.
 
 Submission materials in this directory are sanitized and contain no portal password, API key, phone number, or legal-declaration acceptance.
 
 Competition deadline: 5 October 2026. Final presentations: 27 October 2026.
+
+## Reproducible deterministic benchmark
+
+```powershell
+cd challenges/global-smart-campus-2026/mvp
+python benchmark_deterministic.py --iterations 10000
+```
+
+The committed `mvp/BENCHMARK_RECEIPT.json` records source hashes, latency percentiles, throughput, acceptance failures, and whether any external model or paid compute was used. The 2026-09-23 reference run processed 30,000 reports with zero acceptance-invariant failures.

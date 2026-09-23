@@ -1,0 +1,27 @@
+{
+  "generated_at_utc": "2026-09-23T17:06:17.659628+00:00",
+  "benchmark": "HAL Campus Evidence Desk deterministic acceptance engine",
+  "iterations": 10000,
+  "case_count": 3,
+  "reports": 30000,
+  "elapsed_seconds": 7.993744,
+  "reports_per_second": 3752.93,
+  "latency_ms": {
+    "mean": 0.264687,
+    "p50": 0.2659,
+    "p95": 0.3482,
+    "p99": 0.4805,
+    "max": 3.6357
+  },
+  "acceptance_failures": [],
+  "all_acceptance_invariants_passed": true,
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "source_sha256": {
+    "engine.py": "076f1008d8b71b75c2bb98a2878862d0632ce5bf8e6edd056c3dbe0bbce33338",
+    "cases.json": "32f7384bc18661ee41a88e1f87e13f1a43c4a377be196cc91d4b8c53ebd781ef"
+  },
+  "source_hash_policy": "UTF-8 text with CRLF/CR normalized to LF",
+  "external_model_calls": 0,
+  "paid_compute_used": false
+}

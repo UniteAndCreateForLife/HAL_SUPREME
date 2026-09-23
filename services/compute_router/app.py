@@ -24,6 +24,39 @@ def build_providers() -> dict[str, dict[str, Any]]:
             "enabled": env_enabled("HAL_PROVIDER_HUGGINGFACE_ENABLED"),
             "kind": "remote-compute",
             "capabilities": ["model_registry", "inference", "jobs"],
+            "priority": 60,
+            "budget_policy": "zero_gpu_or_verified_free_only",
+            "requires_zero_spend_ready": True,
+            "zero_spend_ready": env_enabled(
+                "HAL_PROVIDER_HUGGINGFACE_ZERO_SPEND_READY"
+            ),
+        },
+        "openrouter_free": {
+            "enabled": env_enabled("HAL_PROVIDER_OPENROUTER_FREE_ENABLED"),
+            "kind": "hosted-free-inference",
+            "capabilities": [
+                "inference",
+                "coding",
+                "classification",
+                "agent_microtask",
+            ],
+            "priority": 10,
+            "budget_policy": "free_models_only",
+            "requires_zero_spend_ready": True,
+            "zero_spend_ready": env_enabled(
+                "HAL_PROVIDER_OPENROUTER_FREE_ZERO_SPEND_READY"
+            ),
+        },
+        "github_actions": {
+            "enabled": env_enabled("HAL_PROVIDER_GITHUB_ACTIONS_ENABLED"),
+            "kind": "ci-compute",
+            "capabilities": ["build", "test", "benchmark", "packaging"],
+            "priority": 15,
+            "budget_policy": "public_standard_runners_only",
+            "requires_zero_spend_ready": True,
+            "zero_spend_ready": env_enabled(
+                "HAL_PROVIDER_GITHUB_ACTIONS_ZERO_SPEND_READY"
+            ),
         },
         "cloudflare_workers_ai": {
             "enabled": env_enabled("HAL_PROVIDER_CLOUDFLARE_ENABLED"),
@@ -37,9 +70,19 @@ def build_providers() -> dict[str, dict[str, Any]]:
                 "vision",
                 "edge_api",
             ],
+            "priority": 20,
             "budget_policy": "free_allocation_only",
             "requires_zero_spend_ready": True,
             "zero_spend_ready": env_enabled("HAL_PROVIDER_CLOUDFLARE_ZERO_SPEND_READY"),
+        },
+        "nvidia_nim": {
+            "enabled": env_enabled("HAL_PROVIDER_NVIDIA_NIM_ENABLED"),
+            "kind": "developer-hosted-inference",
+            "capabilities": ["inference", "coding", "rag", "agent_eval"],
+            "priority": 30,
+            "budget_policy": "verified_developer_access_only",
+            "requires_zero_spend_ready": True,
+            "zero_spend_ready": env_enabled("HAL_PROVIDER_NVIDIA_NIM_ZERO_SPEND_READY"),
         },
         "modal": {
             "enabled": env_enabled("HAL_PROVIDER_MODAL_ENABLED"),
@@ -52,37 +95,83 @@ def build_providers() -> dict[str, dict[str, Any]]:
                 "media",
                 "sandbox",
             ],
+            "priority": 40,
             "budget_policy": "free_credit_only",
             "requires_zero_spend_ready": True,
             "zero_spend_ready": env_enabled("HAL_PROVIDER_MODAL_ZERO_SPEND_READY"),
         },
+        "livepeer_creative": {
+            "enabled": env_enabled("HAL_PROVIDER_LIVEPEER_CREATIVE_ENABLED"),
+            "kind": "remote-media-worker",
+            "capabilities": [
+                "image_generation",
+                "video",
+                "audio",
+                "media",
+                "media_finishing",
+            ],
+            "priority": 45,
+            "budget_policy": "registered_hacker_balance_only",
+            "requires_zero_spend_ready": True,
+            "zero_spend_ready": env_enabled(
+                "HAL_PROVIDER_LIVEPEER_CREATIVE_ZERO_SPEND_READY"
+            ),
+        },
+        "lightning_ai": {
+            "enabled": env_enabled("HAL_PROVIDER_LIGHTNING_AI_ENABLED"),
+            "kind": "gpu-studio-jobs",
+            "capabilities": [
+                "inference",
+                "training",
+                "fine_tuning",
+                "scientific_compute",
+                "media",
+                "sandbox",
+            ],
+            "priority": 50,
+            "budget_policy": "verified_free_credit_only",
+            "requires_zero_spend_ready": True,
+            "zero_spend_ready": env_enabled(
+                "HAL_PROVIDER_LIGHTNING_AI_ZERO_SPEND_READY"
+            ),
+        },
         "local_hal": {
             "enabled": env_enabled("HAL_PROVIDER_LOCAL_ENABLED"),
             "kind": "private-worker",
-            "capabilities": ["audio", "video", "comfyui"],
+            "capabilities": ["audio", "video", "comfyui", "media"],
+            "priority": 5,
+            "budget_policy": "local_operator_managed",
         },
     }
 
 
-def choose_route(capability: str, providers: dict[str, dict[str, Any]] | None = None) -> dict[str, Any] | None:
+def choose_route(
+    capability: str, providers: dict[str, dict[str, Any]] | None = None
+) -> dict[str, Any] | None:
     """Choose an enabled capability only when any zero-spend gate is satisfied."""
     inventory = providers if providers is not None else build_providers()
-    eligible = [
-        name
-        for name, provider in inventory.items()
-        if provider.get("enabled")
-        and capability in provider.get("capabilities", [])
-        and (
-            not provider.get("requires_zero_spend_ready", False)
-            or provider.get("zero_spend_ready") is True
-        )
-    ]
+    eligible = sorted(
+        [
+            name
+            for name, provider in inventory.items()
+            if provider.get("enabled")
+            and capability in provider.get("capabilities", [])
+            and (
+                not provider.get("requires_zero_spend_ready", False)
+                or provider.get("zero_spend_ready") is True
+            )
+        ],
+        key=lambda name: (int(inventory[name].get("priority", 100)), name),
+    )
     if not eligible:
         return None
+    primary = inventory[eligible[0]]
     return {
         "capability": capability,
         "provider": eligible[0],
         "fallbacks": eligible[1:] if FAILOVER else [],
+        "provider_kind": primary.get("kind", "unknown"),
+        "budget_policy": primary.get("budget_policy", "operator_managed"),
         "quality_gate": QUALITY_GATE,
     }
 
@@ -98,7 +187,7 @@ def snapshot() -> dict[str, Any]:
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "HALComputeRouter/0.3"
+    server_version = "HALComputeRouter/0.4"
 
     def _send(self, status: int, body: dict[str, Any]) -> None:
         payload = json.dumps(body, sort_keys=True).encode()
