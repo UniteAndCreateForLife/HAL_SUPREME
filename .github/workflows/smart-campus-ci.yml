@@ -38,6 +38,11 @@ jobs:
       - name: Validate public Worker syntax
         working-directory: challenges/global-smart-campus-2026
         run: node --check public_demo/src/worker.js
+      - name: Test browser acceptance gate (parity with Python engine)
+        working-directory: challenges/global-smart-campus-2026
+        run: |
+          node --check public_demo/public/gate.js
+          node --test public_demo/test/gate.test.js
       - name: Run judge self-verification
         working-directory: challenges/global-smart-campus-2026
         run: python judge_verify.py --output JUDGE_VERIFY_CI_RECEIPT.json

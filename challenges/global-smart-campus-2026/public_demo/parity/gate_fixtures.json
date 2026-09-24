@@ -1,0 +1,631 @@
+[
+ {
+  "name": "scenario:grounded",
+  "case_id": "policy-conflict",
+  "payload": {
+   "summary": "Draft answer to: What should the department do before approving after-hours lab access?",
+   "findings": [
+    {
+     "text": "Policy memo A requires department-chair approval and annual safety training before after-hours lab access.",
+     "citations": [
+      "E1"
+     ]
+    },
+    {
+     "text": "Policy memo B allows trained research staff to request after-hours access through the security office without chair approval.",
+     "citations": [
+      "E2"
+     ]
+    }
+   ],
+   "actions": [
+    {
+     "text": "Send the decision to a human reviewer together with the cited evidence.",
+     "citations": [
+      "E1"
+     ]
+    }
+   ],
+   "conflicts": [
+    {
+     "detail": "[E1] and [E2] prescribe incompatible requirements.",
+     "evidence": [
+      "E1",
+      "E2"
+     ]
+    }
+   ],
+   "uncertainty": "Only the supplied evidence was considered."
+  }
+ },
+ {
+  "name": "scenario:uncited",
+  "case_id": "policy-conflict",
+  "payload": {
+   "findings": [
+    {
+     "text": "This request is low risk and can be approved today.",
+     "citations": []
+    },
+    {
+     "text": "Policy memo A requires department-chair approval and annual safety training before after-hours lab access.",
+     "citations": [
+      "E1"
+     ]
+    }
+   ],
+   "actions": [],
+   "conflicts": []
+  }
+ },
+ {
+  "name": "scenario:invented_id",
+  "case_id": "policy-conflict",
+  "payload": {
+   "findings": [
+    {
+     "text": "A prior incident report supports approval.",
+     "citations": [
+      "E9"
+     ]
+    }
+   ],
+   "actions": [
+    {
+     "text": "Approve on the strength of the incident report.",
+     "citations": [
+      "E1",
+      "E9"
+     ]
+    }
+   ],
+   "conflicts": []
+  }
+ },
+ {
+  "name": "scenario:invented_conflict",
+  "case_id": "policy-conflict",
+  "payload": {
+   "findings": [],
+   "actions": [],
+   "conflicts": [
+    {
+     "detail": "These two records contradict each other.",
+     "evidence": [
+      "E2",
+      "E3"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "scenario:malformed",
+  "case_id": "policy-conflict",
+  "payload": {
+   "findings": [
+    "approve it",
+    {
+     "text": "   ",
+     "citations": [
+      "E1"
+     ]
+    }
+   ],
+   "actions": {
+    "text": "not a list"
+   },
+   "conflicts": []
+  }
+ },
+ {
+  "name": "scenario:grounded",
+  "case_id": "research-access",
+  "payload": {
+   "summary": "Draft answer to: What review steps are required before releasing the synthetic research dataset?",
+   "findings": [
+    {
+     "text": "The synthetic requester asks for a de-identified dataset for a campus mobility study.",
+     "citations": [
+      "E1"
+     ]
+    },
+    {
+     "text": "Dataset release requires data-owner approval, a purpose statement, and a documented retention period.",
+     "citations": [
+      "E2"
+     ]
+    }
+   ],
+   "actions": [
+    {
+     "text": "Send the decision to a human reviewer together with the cited evidence.",
+     "citations": [
+      "E1"
+     ]
+    }
+   ],
+   "conflicts": [],
+   "uncertainty": "Only the supplied evidence was considered."
+  }
+ },
+ {
+  "name": "scenario:uncited",
+  "case_id": "research-access",
+  "payload": {
+   "findings": [
+    {
+     "text": "This request is low risk and can be approved today.",
+     "citations": []
+    },
+    {
+     "text": "The synthetic requester asks for a de-identified dataset for a campus mobility study.",
+     "citations": [
+      "E1"
+     ]
+    }
+   ],
+   "actions": [],
+   "conflicts": []
+  }
+ },
+ {
+  "name": "scenario:invented_id",
+  "case_id": "research-access",
+  "payload": {
+   "findings": [
+    {
+     "text": "A prior incident report supports approval.",
+     "citations": [
+      "E9"
+     ]
+    }
+   ],
+   "actions": [
+    {
+     "text": "Approve on the strength of the incident report.",
+     "citations": [
+      "E1",
+      "E9"
+     ]
+    }
+   ],
+   "conflicts": []
+  }
+ },
+ {
+  "name": "scenario:invented_conflict",
+  "case_id": "research-access",
+  "payload": {
+   "findings": [],
+   "actions": [],
+   "conflicts": [
+    {
+     "detail": "These two records contradict each other.",
+     "evidence": [
+      "E2",
+      "E3"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "scenario:malformed",
+  "case_id": "research-access",
+  "payload": {
+   "findings": [
+    "approve it",
+    {
+     "text": "   ",
+     "citations": [
+      "E1"
+     ]
+    }
+   ],
+   "actions": {
+    "text": "not a list"
+   },
+   "conflicts": []
+  }
+ },
+ {
+  "name": "scenario:grounded",
+  "case_id": "energy-anomaly",
+  "payload": {
+   "summary": "Draft answer to: What should facilities investigate first after the overnight energy spike?",
+   "findings": [
+    {
+     "text": "Building C electricity use increased 38 percent between 01:00 and 03:00 compared with the prior seven-night median.",
+     "citations": [
+      "E1"
+     ]
+    },
+    {
+     "text": "Air-handler AHU-C3 was placed in manual override during a ventilation inspection at 00:42.",
+     "citations": [
+      "E2"
+     ]
+    }
+   ],
+   "actions": [
+    {
+     "text": "Send the decision to a human reviewer together with the cited evidence.",
+     "citations": [
+      "E1"
+     ]
+    }
+   ],
+   "conflicts": [],
+   "uncertainty": "Only the supplied evidence was considered."
+  }
+ },
+ {
+  "name": "scenario:uncited",
+  "case_id": "energy-anomaly",
+  "payload": {
+   "findings": [
+    {
+     "text": "This request is low risk and can be approved today.",
+     "citations": []
+    },
+    {
+     "text": "Building C electricity use increased 38 percent between 01:00 and 03:00 compared with the prior seven-night median.",
+     "citations": [
+      "E1"
+     ]
+    }
+   ],
+   "actions": [],
+   "conflicts": []
+  }
+ },
+ {
+  "name": "scenario:invented_id",
+  "case_id": "energy-anomaly",
+  "payload": {
+   "findings": [
+    {
+     "text": "A prior incident report supports approval.",
+     "citations": [
+      "E9"
+     ]
+    }
+   ],
+   "actions": [
+    {
+     "text": "Approve on the strength of the incident report.",
+     "citations": [
+      "E1",
+      "E9"
+     ]
+    }
+   ],
+   "conflicts": []
+  }
+ },
+ {
+  "name": "scenario:invented_conflict",
+  "case_id": "energy-anomaly",
+  "payload": {
+   "findings": [],
+   "actions": [],
+   "conflicts": [
+    {
+     "detail": "These two records contradict each other.",
+     "evidence": [
+      "E2",
+      "E3"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "scenario:malformed",
+  "case_id": "energy-anomaly",
+  "payload": {
+   "findings": [
+    "approve it",
+    {
+     "text": "   ",
+     "citations": [
+      "E1"
+     ]
+    }
+   ],
+   "actions": {
+    "text": "not a list"
+   },
+   "conflicts": []
+  }
+ },
+ {
+  "name": "unicode_whitespace",
+  "case_id": "policy-conflict",
+  "payload": {
+   "summary": "  Approve\tthe\n request — café  naïve ",
+   "findings": [
+    {
+     "text": " Memo A  requires approval ",
+     "citations": [
+      " E1 "
+     ]
+    }
+   ],
+   "actions": [],
+   "conflicts": []
+  }
+ },
+ {
+  "name": "limits",
+  "case_id": "research-access",
+  "payload": {
+   "findings": [
+    {
+     "text": "Finding 0",
+     "citations": [
+      "E1"
+     ]
+    },
+    {
+     "text": "Finding 1",
+     "citations": [
+      "E1"
+     ]
+    },
+    {
+     "text": "Finding 2",
+     "citations": [
+      "E1"
+     ]
+    },
+    {
+     "text": "Finding 3",
+     "citations": [
+      "E1"
+     ]
+    },
+    {
+     "text": "Finding 4",
+     "citations": [
+      "E1"
+     ]
+    },
+    {
+     "text": "Finding 5",
+     "citations": [
+      "E1"
+     ]
+    },
+    {
+     "text": "Finding 6",
+     "citations": [
+      "E1"
+     ]
+    },
+    {
+     "text": "Finding 7",
+     "citations": [
+      "E1"
+     ]
+    },
+    {
+     "text": "Finding 8",
+     "citations": [
+      "E1"
+     ]
+    },
+    {
+     "text": "Finding 9",
+     "citations": [
+      "E1"
+     ]
+    }
+   ],
+   "actions": [
+    {
+     "text": "Action 0",
+     "citations": [
+      "E2"
+     ]
+    },
+    {
+     "text": "Action 1",
+     "citations": [
+      "E2"
+     ]
+    },
+    {
+     "text": "Action 2",
+     "citations": [
+      "E2"
+     ]
+    },
+    {
+     "text": "Action 3",
+     "citations": [
+      "E2"
+     ]
+    },
+    {
+     "text": "Action 4",
+     "citations": [
+      "E2"
+     ]
+    },
+    {
+     "text": "Action 5",
+     "citations": [
+      "E2"
+     ]
+    },
+    {
+     "text": "Action 6",
+     "citations": [
+      "E2"
+     ]
+    },
+    {
+     "text": "Action 7",
+     "citations": [
+      "E2"
+     ]
+    }
+   ],
+   "conflicts": []
+  }
+ },
+ {
+  "name": "duplicate_conflict_ids",
+  "case_id": "policy-conflict",
+  "payload": {
+   "findings": [],
+   "actions": [],
+   "conflicts": [
+    {
+     "detail": "duplicate ids",
+     "evidence": [
+      "E1",
+      "E1",
+      "E2"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "reversed_conflict_pair",
+  "case_id": "policy-conflict",
+  "payload": {
+   "findings": [],
+   "actions": [],
+   "conflicts": [
+    {
+     "detail": "reversed",
+     "evidence": [
+      "E2",
+      "E1"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "non_string_citations",
+  "case_id": "energy-anomaly",
+  "payload": {
+   "findings": [
+    {
+     "text": "numeric",
+     "citations": [
+      1,
+      "E1"
+     ]
+    },
+    {
+     "text": "boolean",
+     "citations": [
+      true
+     ]
+    },
+    {
+     "text": "null",
+     "citations": [
+      null
+     ]
+    },
+    {
+     "text": "string, not a list",
+     "citations": "E1"
+    }
+   ],
+   "actions": [],
+   "conflicts": []
+  }
+ },
+ {
+  "name": "too_many_citations",
+  "case_id": "energy-anomaly",
+  "payload": {
+   "findings": [
+    {
+     "text": "many citations",
+     "citations": [
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "E1",
+      "E2",
+      "E3"
+     ]
+    }
+   ],
+   "actions": [],
+   "conflicts": []
+  }
+ },
+ {
+  "name": "long_text",
+  "case_id": "research-access",
+  "payload": {
+   "summary": "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
+   "findings": [
+    {
+     "text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+     "citations": [
+      "E1"
+     ]
+    }
+   ],
+   "uncertainty": "uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+   "actions": [],
+   "conflicts": []
+  }
+ },
+ {
+  "name": "missing_sections",
+  "case_id": "research-access",
+  "payload": {}
+ },
+ {
+  "name": "wrong_keys",
+  "case_id": "policy-conflict",
+  "payload": {
+   "findings": [
+    {
+     "detail": "wrong key",
+     "evidence": [
+      "E1"
+     ]
+    }
+   ],
+   "conflicts": [
+    {
+     "text": "wrong key",
+     "citations": [
+      "E1",
+      "E2"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "emoji_and_control",
+  "case_id": "policy-conflict",
+  "payload": {
+   "findings": [
+    {
+     "text": "Safe 👍 approval\u001cnow",
+     "citations": [
+      "E3"
+     ]
+    }
+   ],
+   "actions": [],
+   "conflicts": []
+  }
+ }
+]
