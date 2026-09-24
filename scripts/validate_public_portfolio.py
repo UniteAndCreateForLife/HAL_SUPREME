@@ -146,6 +146,62 @@ def validate(repo_root: Path = REPO_ROOT) -> list[str]:
         if verification.get("external_mutation") is not False:
             errors.append("Livepeer inventory unexpectedly mutated external state")
 
+    claude = next(
+        (doc for doc in evidence_documents if doc.get("evidence_id") == "claude-hal-mcp-fabric-2026-09-24"),
+        None,
+    )
+    if not claude:
+        errors.append("missing Claude HAL MCP fabric evidence receipt")
+    else:
+        claude_client = claude.get("claude", {})
+        claude_mcp = claude.get("mcp", {})
+        proof = claude.get("authenticated_proof", {})
+        authority = claude.get("authority", {})
+        side_effects = claude.get("side_effects", {})
+        if (
+            claude_client.get("authenticated") is not True
+            or claude_client.get("project_trusted") is not True
+            or claude_client.get("permission_bypass_disabled") is not True
+            or claude_client.get("account_identifiers_published") is not False
+        ):
+            errors.append("Claude client authentication or privacy receipt is incomplete")
+        if (
+            claude_mcp.get("project_servers_connected") != 3
+            or claude_mcp.get("bounded_hal_bridge_tools") != 11
+            or claude_mcp.get("hal_gateway_tools") != 5
+            or claude_mcp.get("livepeer_method_count") != 125
+            or claude_mcp.get("private_connector_url_published") is not False
+            or claude_mcp.get("credential_material_published") is not False
+        ):
+            errors.append("Claude MCP connection or privacy receipt is inconsistent")
+        if (
+            proof.get("verified") is not True
+            or proof.get("required_tool_uses_observed") != 3
+            or proof.get("all_required_results_ok") is not True
+            or proof.get("unexpected_substantive_tool_uses") != []
+            or proof.get("plain_text_claim_accepted_as_proof") is not False
+        ):
+            errors.append("Claude authenticated tool-use proof is incomplete")
+        if any(authority.get(key) is not False for key in (
+            "work_order_execution",
+            "arbitrary_shell_via_bounded_bridge",
+            "provider_mutation_without_review",
+            "spending_authorized",
+            "public_submission_authorized",
+            "identity_or_credential_mutation_authorized",
+        )):
+            errors.append("Claude bounded bridge authority is broader than declared")
+        if any(side_effects.get(key) != 0 for key in (
+            "work_orders_submitted",
+            "media_jobs_submitted",
+            "assets_uploaded",
+            "applications_submitted",
+            "messages_sent",
+            "account_mutations",
+            "spend_usd",
+        )):
+            errors.append("Claude integration verification recorded an external side effect")
+
     plugin_manifest = _load_json(REPO_ROOT / "plugins" / "livepeer-creative-mcp" / "plugin.json", errors)
     mcp_manifest = _load_json(REPO_ROOT / "plugins" / "livepeer-creative-mcp" / "mcp.json", errors)
     if plugin_manifest.get("name") != "livepeer-creative-mcp" or plugin_manifest.get("version") != "0.1.0":
