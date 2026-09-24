@@ -6,6 +6,9 @@ Competition entry for the Global Smart Campus Technology Innovation Challenge 20
 
 https://hal-campus-evidence-desk.therealjakobhedrich.workers.dev
 
+Public competition release and recorded demo:
+https://github.com/UniteAndCreateForLife/HAL_SUPREME/releases/tag/gsc2026-demo-v1
+
 ## What it demonstrates
 
 HAL Campus Evidence Desk is a bounded, evidence-grounded assistant for campus operations and research review. The included MVP uses synthetic data only.
@@ -17,13 +20,14 @@ Core controls:
 - unsupported conflict relations are rejected;
 - external hosted-model egress fails closed when common direct identifiers are detected;
 - privacy-gate evidence records only identifier category/location, never the matched value;
+- tenant-scoped authorization rejects cross-tenant actions and tenant-scope switching;
+- role-based access restricts review closure to the `reviewer` role in the reference workflow;
 - per-report audit receipts are SHA-256 bound to canonical report content;
-- review events can be chained by SHA-256 so mutation, deletion/reordering, or unauthorized close-role changes fail verification;
-- only the `reviewer` role can emit approve/reject review events in the reference audit chain;
+- review events are chained by SHA-256 so mutation, deletion/reordering, broken linkage, invalid receipts, or unauthorized close-role changes fail verification;
 - recommendations remain advisory and reversible;
 - the human-review gate stays `PENDING_HUMAN_REVIEW` by default.
 
-See [`PRIVACY_THREAT_MODEL.md`](PRIVACY_THREAT_MODEL.md) for trust boundaries, the current direct-identifier egress gate, explicit limitations, and production-hardening requirements.
+See [`PRIVACY_THREAT_MODEL.md`](PRIVACY_THREAT_MODEL.md) for trust boundaries, the current direct-identifier egress gate, tenant authorization boundary, explicit limitations, and production-hardening requirements.
 
 ## Run locally
 
@@ -35,7 +39,7 @@ python app.py
 
 ## Validation scope
 
-The repository CI runs the deterministic acceptance, privacy-gate, and audit-chain tests on Linux x64, Linux arm64, Windows x64, and macOS arm64. Live NVIDIA NIM evidence is retained in `mvp/LIVE_VALIDATION_RECEIPT.json`; the public demo intentionally disables external model calls to prevent uncontrolled compute use.
+The current unit suite contains **22 tests** covering deterministic grounding, privacy egress, audit integrity, role authorization, and tenant isolation. The repository CI runs the acceptance workflow on Linux x64, Linux ARM64, Windows x64, and macOS ARM64. Live NVIDIA NIM evidence is retained in `mvp/LIVE_VALIDATION_RECEIPT.json`; the public demo intentionally disables external model calls to prevent uncontrolled compute use.
 
 Submission materials in this directory are sanitized and contain no portal password, API key, phone number, or legal-declaration acceptance.
 
@@ -43,7 +47,7 @@ Competition deadline: 5 October 2026. Final presentations: 27 October 2026.
 
 ## Tamper-evident review audit chain
 
-`mvp/audit_chain.py` links each privacy-minimized review event to the prior event hash and the existing canonical report receipt. Audit events retain only the case identifier, report hash, role, event type, bounded note, sequence, and chain hashes; reviewer identity and evidence text are deliberately excluded. The verifier rejects mutated events, broken ordering/linkage, unsupported roles/event types, invalid report receipts, and analyst/auditor attempts to close a review.
+`mvp/audit_chain.py` links each privacy-minimized review event to the prior event hash and the existing canonical report receipt. Audit events retain only the tenant scope, case identifier, report hash, role, event type, bounded note, sequence, and chain hashes; reviewer identity and evidence text are deliberately excluded. The verifier rejects mutated events, broken ordering/linkage, unsupported roles/event types, invalid report receipts, cross-tenant actions, tenant-scope changes, and analyst/auditor attempts to close a review.
 
 ## Reproducible deterministic benchmark
 
@@ -62,3 +66,7 @@ python judge_verify.py --output JUDGE_VERIFICATION_RECEIPT.json
 ```
 
 The verifier is standard-library-only. It checks required submission artifacts and prior validation receipts, reruns deterministic unit/benchmark gates, validates the public Worker syntax when Node.js is present, records source hashes, and fails closed if any acceptance invariant is broken. It does not call an external model, use real student/employee data, or require paid compute.
+
+## Security non-claims
+
+The tenant/RBAC layer is an application-level competition reference control. It is not a substitute for institutional SSO, authoritative role mapping, storage/query-level tenant partitioning, key management, or a formal security/privacy review. The MVP does not claim FERPA, HIPAA, GDPR, SOC 2, ISO 27001, or other regulatory/security certification.
