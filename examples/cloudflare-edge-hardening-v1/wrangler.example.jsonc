@@ -18,7 +18,7 @@
   ],
   "vars": {
     "HAL_ALLOWED_ORIGINS": "https://halsupreme.com,https://www.halsupreme.com",
-    "HAL_REQUIRE_TURNSTILE": "1",
+    "HAL_REQUIRE_AUTH": "1",
     "HAL_EDGE_FALLBACK_ENABLED": "0",
     "HAL_EDGE_FALLBACK_MODEL": "@cf/meta/llama-3.1-8b-instruct"
   }
