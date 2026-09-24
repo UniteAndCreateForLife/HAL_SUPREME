@@ -1,0 +1,71 @@
+{
+  "schema": "hal.public_evidence.v1",
+  "evidence_id": "livepeer-chatgpt-mcp-2026-09-24",
+  "subject": "ChatGPT and HAL connection to Livepeer Creative MCP",
+  "observed_at_utc": "2026-09-24T02:18:36Z",
+  "source_repository": "https://github.com/UniteAndCreateForLife/HAL_SUPREME",
+  "source_base_commit": "c7145cf3f6e60e78f11ddbfca7f4a8e22278c893",
+  "mcp": {
+    "server_name": "livepeer-agent-creative",
+    "server_version": "1.0.0",
+    "protocol_version": "2025-11-25",
+    "method_count": 125,
+    "required_methods_present": true,
+    "required_methods": [
+      "analyze_video_tracks",
+      "assemble",
+      "asset_lineage",
+      "create_media",
+      "get_pricing",
+      "list_capabilities",
+      "me",
+      "me_usage",
+      "spend_cap",
+      "submit_creative_job"
+    ]
+  },
+  "capabilities": {
+    "total": 209,
+    "ai": 175,
+    "tool": 34,
+    "mcp": 0
+  },
+  "chatgpt_plugin": {
+    "name": "livepeer-creative-mcp",
+    "version": "0.1.0",
+    "source": "plugins/livepeer-creative-mcp",
+    "installed_and_read_verified": true
+  },
+  "hal_bridge": {
+    "method_count": 11,
+    "local_protocol_verification": true,
+    "public_protocol_verification": true,
+    "livepeer_status_read": true,
+    "video_work_order_queue": true,
+    "provider_execution_authority": false
+  },
+  "verification": {
+    "transport_initialized": true,
+    "plugin_namespace_read_succeeded": true,
+    "inventory_calls_read_only": true,
+    "media_job_submitted": false,
+    "external_mutation": false,
+    "public_client_tests": {
+      "command": "python -m unittest -v tests.test_livepeer_creative_client",
+      "tests_passed": 4,
+      "tests_failed": 0
+    }
+  },
+  "excluded_private_data": [
+    "credentials",
+    "connector paths",
+    "account balances",
+    "usage history",
+    "local filesystem paths"
+  ],
+  "caveats": [
+    "The remote method and capability catalog is a dated live snapshot.",
+    "Discovery success does not prove that every model will complete every requested render.",
+    "No media-producing provider tool was called as part of this receipt."
+  ]
+}

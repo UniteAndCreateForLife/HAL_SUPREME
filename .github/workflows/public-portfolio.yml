@@ -1,0 +1,48 @@
+name: Public Portfolio Evidence
+
+on:
+  push:
+    branches:
+      - main
+      - "codex/public-work-portfolio"
+    paths:
+      - "PORTFOLIO.md"
+      - "README.md"
+      - "case-studies/**"
+      - "docs/PUBLIC_WORK_*.md"
+      - "evidence/portfolio/**"
+      - "portfolio/**"
+      - "plugins/livepeer-creative-mcp/**"
+      - "scripts/validate_public_portfolio.py"
+      - "tests/test_public_portfolio.py"
+      - ".github/workflows/public-portfolio.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "PORTFOLIO.md"
+      - "README.md"
+      - "case-studies/**"
+      - "docs/PUBLIC_WORK_*.md"
+      - "evidence/portfolio/**"
+      - "portfolio/**"
+      - "plugins/livepeer-creative-mcp/**"
+      - "scripts/validate_public_portfolio.py"
+      - "tests/test_public_portfolio.py"
+      - ".github/workflows/public-portfolio.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate public portfolio evidence
+        run: python scripts/validate_public_portfolio.py
+      - name: Run portfolio tests
+        run: python -m unittest -v tests.test_public_portfolio

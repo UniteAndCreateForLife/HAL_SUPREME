@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "livepeer-creative": {
+      "type": "streamable-http",
+      "url": "https://agent.livepeer.org/api/mcp/creative"
+    }
+  }
+}

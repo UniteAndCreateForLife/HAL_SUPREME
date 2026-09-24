@@ -1,0 +1,24 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "livepeer-creative-mcp",
+  "version": "0.1.0",
+  "description": "Connect ChatGPT to Livepeer Creative MCP for private HAL video, image, audio, 3D, critique, and finishing workflows with explicit cost and execution gates.",
+  "author": {
+    "name": "UniteAndCreateForLife"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Livepeer Creative MCP",
+        "shortDescription": "Live creative tools for HAL video production",
+        "longDescription": "Use Livepeer Creative MCP's live model and production-tool catalog for private HAL video, image, audio, 3D, critique, editing, and finishing workflows. Inspect availability and pricing before execution, preserve HAL's existing production authority, and require an exact confirmation before generation or grant use.",
+        "developerName": "UniteAndCreateForLife",
+        "category": "Creativity",
+        "capabilities": [
+          "Interactive"
+        ],
+        "defaultPrompt": "Inspect the live Livepeer capability and pricing catalog, then help plan a private HAL video workflow. Do not run a media-producing tool until you show the exact tool, model, inputs, expected cost, and receive explicit confirmation."
+      }
+    }
+  }
+}
