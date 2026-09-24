@@ -1,0 +1,29 @@
+name: Agent Bounty Guard
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "examples/agent_bounty_guard/**"
+      - ".github/workflows/agent-bounty-guard.yml"
+  pull_request:
+    paths:
+      - "examples/agent_bounty_guard/**"
+      - ".github/workflows/agent-bounty-guard.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run guard tests (offline)
+        run: python -m unittest -v examples.agent_bounty_guard.test_guard
+      - name: Compile
+        run: python -m py_compile examples/agent_bounty_guard/guard.py examples/agent_bounty_guard/test_guard.py
