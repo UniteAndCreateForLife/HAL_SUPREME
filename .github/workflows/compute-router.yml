@@ -54,6 +54,7 @@ jobs:
               "github_actions",
               "cloudflare_workers_ai",
               "nvidia_nim",
+              "cloudrift",
               "modal",
               "livepeer_creative",
               "lightning_ai",
@@ -66,11 +67,18 @@ jobs:
               assert provider["zero_spend_ready"] is False
               assert provider["requires_zero_spend_ready"] is True
               remote_capabilities.update(provider["capabilities"])
-              provider_state[name] = {
+              state = {
                   "enabled": provider["enabled"],
                   "zero_spend_ready": provider["zero_spend_ready"],
                   "budget_policy": provider["budget_policy"],
               }
+              if "account_class" in provider:
+                  state["account_class"] = provider["account_class"]
+              if "sponsorship_verified" in provider:
+                  state["sponsorship_verified"] = provider["sponsorship_verified"]
+              provider_state[name] = state
+          assert provider_state["livepeer_creative"]["account_class"] == "keyless_demo"
+          assert provider_state["livepeer_creative"]["sponsorship_verified"] is False
           assert providers["local_hal"]["enabled"] is False
           for capability in sorted(remote_capabilities):
               assert choose_route(capability, providers) is None, capability
