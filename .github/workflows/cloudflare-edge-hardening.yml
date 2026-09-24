@@ -1,0 +1,31 @@
+name: Cloudflare Edge Hardening
+
+on:
+  pull_request:
+    paths:
+      - "examples/cloudflare-edge-hardening-v1/**"
+      - ".github/workflows/cloudflare-edge-hardening.yml"
+  push:
+    branches: [main]
+    paths:
+      - "examples/cloudflare-edge-hardening-v1/**"
+      - ".github/workflows/cloudflare-edge-hardening.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/cloudflare-edge-hardening-v1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Syntax check
+        run: node --check src/worker.mjs
+      - name: Abuse-boundary tests
+        run: node --test test/*.test.mjs
