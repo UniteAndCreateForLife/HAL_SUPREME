@@ -120,6 +120,7 @@ def validate(repo_root: Path = REPO_ROOT) -> list[str]:
         mcp = livepeer.get("mcp", {})
         caps = livepeer.get("capabilities", {})
         plugin = livepeer.get("chatgpt_plugin", {})
+        opencode = livepeer.get("opencode", {})
         bridge = livepeer.get("hal_bridge", {})
         verification = livepeer.get("verification", {})
         if mcp.get("method_count", 0) < 100 or mcp.get("required_methods_present") is not True:
@@ -128,6 +129,14 @@ def validate(repo_root: Path = REPO_ROOT) -> list[str]:
             errors.append("Livepeer capability totals do not reconcile")
         if plugin.get("version") != "0.1.0" or plugin.get("installed_and_read_verified") is not True:
             errors.append("ChatGPT plugin receipt is incomplete")
+        if (
+            opencode.get("client_version") != "1.18.18"
+            or opencode.get("connection_status") != "connected"
+            or opencode.get("provider_catalog_method_count_during_verification") != mcp.get("method_count")
+            or opencode.get("all_provider_calls_require_review") is not True
+            or opencode.get("verification_read_only") is not True
+        ):
+            errors.append("OpenCode Livepeer connection receipt is incomplete")
         if bridge.get("method_count") != 11 or bridge.get("provider_execution_authority") is not False:
             errors.append("HAL bridge authority receipt is inconsistent")
         if verification.get("inventory_calls_read_only") is not True:

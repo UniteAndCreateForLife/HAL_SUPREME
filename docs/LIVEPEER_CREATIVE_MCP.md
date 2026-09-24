@@ -34,6 +34,37 @@ The doctor performs initialization + tool discovery only. It should not intentio
 
 If Livepeer requires an interactive OAuth/browser connection, complete that through an MCP-capable client on the authorized computer. If the resulting connection exposes a bearer/token to HAL, keep it only in the local environment or secret store.
 
+## OpenCode setup
+
+OpenCode 1.18.x can load the same Streamable HTTP server from its configuration:
+
+```json
+{
+  "mcp": {
+    "livepeer-creative": {
+      "type": "remote",
+      "url": "https://agent.livepeer.org/api/mcp/creative",
+      "enabled": true,
+      "oauth": false,
+      "timeout": 120000
+    }
+  },
+  "permission": {
+    "livepeer-creative_*": "ask"
+  }
+}
+```
+
+`oauth: false` matches the keyless endpoint mode observed for this verification.
+Use the authentication mode the provider documents for your account if that
+changes. The longer timeout allows the large live catalog to load. Requiring
+review for the server wildcard exposes every method without silently authorizing
+generation, uploads, cancellation, account changes, or grant use.
+
+Verify the connection with `opencode mcp list`. A connected server and a tool
+catalog prove availability only; they do not prove that a specific model can
+complete a render or that execution is authorized.
+
 ## Controlled execution
 
 After inspecting the current runtime schema:
