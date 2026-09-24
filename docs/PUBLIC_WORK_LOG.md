@@ -4,7 +4,7 @@ This log indexes public, reviewable outcomes. It does not mirror HAL’s private
 
 | Date | Outcome | Evidence |
 |---|---|---|
-| 2026-09-24 | Connected ChatGPT and HAL to Livepeer Creative MCP; verified 125 MCP methods and a 209-capability live catalog through read-only calls; added a dated case study and machine receipt. | [Case study](../case-studies/LIVEPEER_CHATGPT_MCP_2026-09-24.md) · [Receipt](../evidence/portfolio/livepeer_chatgpt_mcp_2026-09-24.json) |
+| 2026-09-24 | Connected ChatGPT, OpenCode, and HAL to Livepeer Creative MCP; verified OpenCode 1.18.18 reported the server connected; independently verified 125 MCP methods and a 209-capability live catalog through read-only calls; added a dated case study and machine receipt. | [Case study](../case-studies/LIVEPEER_CHATGPT_MCP_2026-09-24.md) · [Receipt](../evidence/portfolio/livepeer_chatgpt_mcp_2026-09-24.json) |
 | 2026-09-23 | Hardened HAL Campus Evidence Desk with tenant-ID validation, tenant-scoped RBAC regression coverage, privacy gating, and a tamper-evident review chain. Current public suite: 30 tests. | [Project](../challenges/global-smart-campus-2026/README.md) · [Judge receipt](../challenges/global-smart-campus-2026/JUDGE_VERIFICATION_RECEIPT.json) |
 | 2026-09-23 | Verified the Campus Evidence Desk acceptance engine across Linux x64, Linux ARM64, Windows x64, and macOS ARM64 with matching source hashes and no paid compute. | [Multi-platform receipt](../challenges/global-smart-campus-2026/MULTIARCH_CI_RECEIPT.json) |
 | 2026-09-20 | Published a provenance-controlled public-interest engineering package with scope, budget, privacy, security, evidence, and release-readiness records. | [HAL_OPEN_PUBLIC_INTEREST](https://github.com/UniteAndCreateForLife/HAL_OPEN_PUBLIC_INTEREST) |

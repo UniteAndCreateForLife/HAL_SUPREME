@@ -48,7 +48,7 @@ This repository starts clean by design. Existing HAL code is migrated only after
 
 ## Livepeer Agent Creative MCP
 
-HAL can use Livepeer Agent's creative MCP as a replaceable remote media worker for image, video, audio, multi-scene projects and finishing. The integration discovers the provider's current tool schemas at runtime rather than pinning stale signatures.
+HAL can use Livepeer Agent's creative MCP as a replaceable remote media worker for image, video, audio, multi-scene projects and finishing. ChatGPT and OpenCode can discover the provider's current tool schemas at runtime rather than pinning stale signatures. Provider mutations remain subject to explicit action and cost review.
 
 Start with:
 
@@ -57,4 +57,4 @@ python scripts/livepeer_creative.py doctor
 python scripts/livepeer_creative.py tools
 ```
 
-See `docs/LIVEPEER_CREATIVE_MCP.md` for the authentication, spend-control, provenance and production runbook. The inspectable ChatGPT plugin source is in [`plugins/livepeer-creative-mcp/`](plugins/livepeer-creative-mcp/).
+See `docs/LIVEPEER_CREATIVE_MCP.md` for the authentication, OpenCode connection, spend-control, provenance and production runbook. The inspectable ChatGPT plugin source is in [`plugins/livepeer-creative-mcp/`](plugins/livepeer-creative-mcp/).

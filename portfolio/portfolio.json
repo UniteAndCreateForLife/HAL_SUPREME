@@ -26,12 +26,13 @@
     },
     {
       "id": "livepeer-chatgpt-mcp",
-      "title": "ChatGPT + Livepeer Creative MCP",
+      "title": "ChatGPT + OpenCode + Livepeer Creative MCP",
       "status": "connected_read_only_verified",
-      "summary": "Runtime-discovered creative MCP integration for ChatGPT and HAL with secret-safe transport, explicit execution gates, and provider-independent provenance.",
+      "summary": "Runtime-discovered creative MCP integration for ChatGPT, OpenCode, and HAL with secret-safe transport, explicit execution gates, and provider-independent provenance.",
       "skills": [
         "MCP",
         "ChatGPT plugins",
+        "OpenCode",
         "Python",
         "Streamable HTTP",
         "video production",

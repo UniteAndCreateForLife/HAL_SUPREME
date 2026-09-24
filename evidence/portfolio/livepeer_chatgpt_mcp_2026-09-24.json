@@ -1,10 +1,10 @@
 {
   "schema": "hal.public_evidence.v1",
   "evidence_id": "livepeer-chatgpt-mcp-2026-09-24",
-  "subject": "ChatGPT and HAL connection to Livepeer Creative MCP",
-  "observed_at_utc": "2026-09-24T02:18:36Z",
+  "subject": "ChatGPT, OpenCode, and HAL connection to Livepeer Creative MCP",
+  "observed_at_utc": "2026-09-24T02:38:09Z",
   "source_repository": "https://github.com/UniteAndCreateForLife/HAL_SUPREME",
-  "source_base_commit": "c7145cf3f6e60e78f11ddbfca7f4a8e22278c893",
+  "source_base_commit": "76c2362890324122d29f99bdc3eea04a0dac39f1",
   "mcp": {
     "server_name": "livepeer-agent-creative",
     "server_version": "1.0.0",
@@ -36,6 +36,16 @@
     "source": "plugins/livepeer-creative-mcp",
     "installed_and_read_verified": true
   },
+  "opencode": {
+    "client_version": "1.18.18",
+    "server_id": "livepeer-creative",
+    "connection_status": "connected",
+    "provider_catalog_method_count_during_verification": 125,
+    "provider_tool_name_set_sha256": "dbc911c047f26e8760d7cd9ad9a1f89c7e40debb91fce0df420ea34a97861d9f",
+    "all_provider_calls_require_review": true,
+    "production_skill_loaded": true,
+    "verification_read_only": true
+  },
   "hal_bridge": {
     "method_count": 11,
     "local_protocol_verification": true,
@@ -47,6 +57,7 @@
   "verification": {
     "transport_initialized": true,
     "plugin_namespace_read_succeeded": true,
+    "opencode_connection_read_succeeded": true,
     "inventory_calls_read_only": true,
     "media_job_submitted": false,
     "external_mutation": false,
