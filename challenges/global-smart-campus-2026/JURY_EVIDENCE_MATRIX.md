@@ -13,7 +13,7 @@ This matrix maps the official Global Smart Campus 2026 startup judging framework
 
 ## Reproducible acceptance facts
 
-- Regression suite after privacy + audit-chain + tenant-isolation + tenant-ID-boundary hardening: **30 tests**; the branch is designed for the same four standard CI platforms used by the accepted workflow.
+- Regression suite after privacy + audit-chain + tenant-isolation + tenant-ID-boundary hardening: **30 tests; all four standard CI platforms passed in GitHub Actions run 35944898125**.
 - Tenant isolation: `mvp/access_control.py` validates tenant scopes and fails closed on cross-tenant access; audit-chain tests reject cross-tenant review actions, tenant-scope switching, and malformed tenant identifiers. Dedicated access-control tests also verify 1-character, 2-character, and 64-character valid scopes; overlength, uppercase, slash-containing, and hyphen-bounded invalid scopes; unknown-role fail-closed behavior; and reviewer/auditor/analyst permission boundaries.
 - Privacy egress gate: canonical synthetic cases pass; common email/phone/SSN/labeled identifiers are blocked before external inference; matched identifier values are not retained in gate evidence.
 - Tamper-evident audit controls: `/api/audit?id=<case>` binds each deterministic report to a canonical SHA-256 receipt, while `mvp/audit_chain.py` links privacy-minimized review events to that receipt and the prior event hash; mutation, broken ordering/linkage, invalid receipts, unauthorized close-role attempts, and tenant-boundary violations fail verification.
