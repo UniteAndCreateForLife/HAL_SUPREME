@@ -11,7 +11,8 @@ Public-safe deployment reference for the existing `hal-chat` Worker.
 - Drops client-supplied `tools`, `tool_choice`, provider overrides, and system messages.
 - Limits body size, message count, and aggregate message characters.
 - Allows only configured browser origins.
-- Supports Turnstile server-side validation for browser chat.
+- Uses Turnstile server-side validation to issue short-lived signed browser session tokens.
+- Requires bearer authorization for chat when enabled; trusted mobile/CLI clients use a separate explicit API bearer.
 - Adds Workers AI degraded fallback without pretending local HAL memory/tools are available.
 - Returns explicit degraded provenance.
 - Uses bindings/secrets instead of embedding credentials.
@@ -23,11 +24,13 @@ The current live `hal-chat` source was not available in the public HAL repositor
 Required secrets:
 - `HAL_GATEWAY_URL`
 - `HAL_GATEWAY_TOKEN`
-- `HAL_TURNSTILE_SECRET` when Turnstile is required
+- `HAL_TURNSTILE_SECRET` for browser session issuance
+- `HAL_SESSION_SECRET` for HMAC-signed 15-minute browser sessions
+- `HAL_API_BEARER` only if trusted non-browser clients are needed
 
 Recommended variables:
 - `HAL_ALLOWED_ORIGINS`
-- `HAL_REQUIRE_TURNSTILE=1`
+- `HAL_REQUIRE_AUTH=1`
 - `HAL_EDGE_FALLBACK_ENABLED=0` until zero-spend readiness is verified
 - `HAL_EDGE_FALLBACK_MODEL`
 
@@ -41,10 +44,10 @@ Required bindings:
 1. Export/back up the current Worker source/config.
 2. Compare live routes with this reference; preserve speech/transcription/image routes.
 3. Add the two rate-limit bindings with unique namespace IDs.
-4. Add Turnstile and keep the secret in Cloudflare Secrets.
+4. Add Turnstile, a session-signing secret, and (only if needed) a trusted API bearer in Cloudflare Secrets.
 5. Keep Workers AI fallback disabled initially.
 6. Deploy to a preview/staging Worker.
-7. Verify origin rejection, Turnstile missing/replay/expired behavior, token caps, `tools` stripping, chat/fast/build/expert/council routing, heavy-mode limits, and gateway-down behavior.
+7. Verify origin rejection, Turnstile missing/replay/expired behavior, session issuance/expiry, missing/invalid bearer rejection, token caps, `tools` stripping, chat/fast/build/expert/council routing, heavy-mode limits, and gateway-down behavior.
 8. Verify zero secret leakage in logs/responses.
 9. Enable fallback only after confirming zero-spend entitlement/rate limits.
 10. Promote to `hal-chat` and retain rollback version.
