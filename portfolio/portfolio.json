@@ -1,7 +1,7 @@
 {
   "schema": "hal.public_portfolio.v1",
   "owner": "UniteAndCreateForLife",
-  "updated_at_utc": "2026-09-24T03:17:00Z",
+  "updated_at_utc": "2026-09-24T04:09:13Z",
   "projects": [
     {
       "id": "hal-campus-evidence-desk",
@@ -23,6 +23,25 @@
         "challenges/global-smart-campus-2026/mvp/LIVE_VALIDATION_RECEIPT.json"
       ],
       "public_url": "https://hal-campus-evidence-desk.therealjakobhedrich.workers.dev"
+    },
+    {
+      "id": "claude-hal-mcp-fabric",
+      "title": "Claude Code + HAL MCP Fabric",
+      "status": "authenticated_read_only_verified",
+      "summary": "Authenticated Claude Code integration with a bounded HAL bridge, existing model gateway, Livepeer Creative MCP, explicit permission gates, and tool-result evidence.",
+      "skills": [
+        "Claude Code",
+        "MCP",
+        "Python",
+        "agent architecture",
+        "permission design",
+        "evidence receipts",
+        "privacy-safe public artifacts"
+      ],
+      "evidence": [
+        "evidence/portfolio/claude_hal_mcp_fabric_2026-09-24.json"
+      ],
+      "case_study": "case-studies/CLAUDE_HAL_MCP_FABRIC_2026-09-24.md"
     },
     {
       "id": "livepeer-chatgpt-mcp",

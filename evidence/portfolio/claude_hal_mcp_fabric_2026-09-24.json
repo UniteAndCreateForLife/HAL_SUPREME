@@ -1,0 +1,79 @@
+{
+  "schema": "hal.public_evidence.v1",
+  "evidence_id": "claude-hal-mcp-fabric-2026-09-24",
+  "subject": "Authenticated Claude Code access to bounded HAL and Livepeer MCP tools",
+  "observed_at_utc": "2026-09-24T04:09:13Z",
+  "source_repository": "https://github.com/UniteAndCreateForLife/HAL_SUPREME",
+  "source_base_commit": "2165d5097b3b07dae186a61e72d73d032a9eeec4",
+  "private_receipt_sha256": "4285dd145a54a96174439227fa0994e03f551646e9cee460b1ed8d85e6921ea3",
+  "claude": {
+    "client": "Claude Code",
+    "version": "2.1.281",
+    "authenticated": true,
+    "project_trusted": true,
+    "permission_bypass_disabled": true,
+    "account_identifiers_published": false
+  },
+  "mcp": {
+    "project_servers_approved": 3,
+    "project_servers_connected": 3,
+    "bounded_hal_bridge_tools": 11,
+    "hal_gateway_tools": 5,
+    "livepeer_method_count": 125,
+    "livepeer_sorted_method_name_sha256": "dbc911c047f26e8760d7cd9ad9a1f89c7e40debb91fce0df420ea34a97861d9f",
+    "private_connector_url_published": false,
+    "credential_material_published": false
+  },
+  "authenticated_proof": {
+    "verified": true,
+    "required_tool_uses": [
+      "bridge_status",
+      "gateway_health",
+      "livepeer_status"
+    ],
+    "required_tool_uses_observed": 3,
+    "all_required_results_ok": true,
+    "discovery_tool_uses": [
+      "ToolSearch"
+    ],
+    "unexpected_substantive_tool_uses": [],
+    "plain_text_claim_accepted_as_proof": false
+  },
+  "verification": {
+    "claude_installation_health": true,
+    "python_compile": true,
+    "diff_check": true,
+    "focused_tests_passed": 30,
+    "focused_tests_failed": 0,
+    "private_acceptance_suites_passed": 98,
+    "private_acceptance_suites_total": 99,
+    "new_acceptance_failures": 0,
+    "new_content_privacy_scan": true
+  },
+  "authority": {
+    "work_order_execution": false,
+    "arbitrary_shell_via_bounded_bridge": false,
+    "provider_mutation_without_review": false,
+    "spending_authorized": false,
+    "public_submission_authorized": false,
+    "identity_or_credential_mutation_authorized": false
+  },
+  "side_effects": {
+    "work_orders_submitted": 0,
+    "media_jobs_submitted": 0,
+    "assets_uploaded": 0,
+    "applications_submitted": 0,
+    "messages_sent": 0,
+    "account_mutations": 0,
+    "spend_usd": 0
+  },
+  "excluded_private_data": [
+    "account email and organization identifiers",
+    "local filesystem paths and usernames",
+    "OAuth URLs, codes, challenges, and tokens",
+    "private bridge connector path",
+    "operational work orders and staged artifacts",
+    "client and application packets",
+    "credentials"
+  ]
+}
