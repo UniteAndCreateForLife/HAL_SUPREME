@@ -48,3 +48,26 @@ test("fallback prompt explicitly denies unavailable local state", () => {
   assert.match(prompt, /local memory, tools, files/i);
   assert.match(prompt, /unavailable/i);
 });
+
+import { createSessionToken, verifySessionToken, authorizeRequest } from "../src/worker.mjs";
+
+test("signed session tokens verify and expire scope correctly", async () => {
+  const env = { HAL_SESSION_SECRET: "test-secret-long-enough-for-hmac" };
+  const token = await createSessionToken(env, 60);
+  assert.equal(await verifySessionToken(token, env), true);
+  assert.equal(await verifySessionToken(token + "x", env), false);
+});
+
+test("chat auth rejects missing bearer when required", async () => {
+  const request = new Request("https://example.test/chat", { method: "POST" });
+  const result = await authorizeRequest(request, { HAL_REQUIRE_AUTH: "1", HAL_SESSION_SECRET: "test-secret" });
+  assert.equal(result.ok, false);
+  assert.equal(result.reason, "authorization_required");
+});
+
+test("trusted API bearer supports non-browser clients explicitly", async () => {
+  const request = new Request("https://example.test/chat", { headers: { authorization: "Bearer mobile-secret" } });
+  const result = await authorizeRequest(request, { HAL_REQUIRE_AUTH: "1", HAL_API_BEARER: "mobile-secret" });
+  assert.equal(result.ok, true);
+  assert.equal(result.type, "api");
+});
