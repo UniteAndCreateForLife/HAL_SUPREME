@@ -19,6 +19,9 @@ def env_enabled(name: str, default: bool = False) -> bool:
 
 def build_providers() -> dict[str, dict[str, Any]]:
     """Build the provider inventory without exposing credentials."""
+    livepeer_authenticated = env_enabled(
+        "HAL_PROVIDER_LIVEPEER_CREATIVE_AUTHENTICATED"
+    )
     return {
         "huggingface": {
             "enabled": env_enabled("HAL_PROVIDER_HUGGINGFACE_ENABLED"),
@@ -128,10 +131,20 @@ def build_providers() -> dict[str, dict[str, Any]]:
                 "media_finishing",
             ],
             "priority": 45,
-            "budget_policy": "registered_hacker_balance_only",
+            "budget_policy": "authenticated_verified_balance_only",
             "requires_zero_spend_ready": True,
-            "zero_spend_ready": env_enabled(
-                "HAL_PROVIDER_LIVEPEER_CREATIVE_ZERO_SPEND_READY"
+            "account_class": (
+                "authenticated" if livepeer_authenticated else "keyless_demo"
+            ),
+            "sponsorship_verified": (
+                livepeer_authenticated
+                and env_enabled(
+                    "HAL_PROVIDER_LIVEPEER_CREATIVE_SPONSORSHIP_VERIFIED"
+                )
+            ),
+            "zero_spend_ready": (
+                livepeer_authenticated
+                and env_enabled("HAL_PROVIDER_LIVEPEER_CREATIVE_ZERO_SPEND_READY")
             ),
         },
         "lightning_ai": {

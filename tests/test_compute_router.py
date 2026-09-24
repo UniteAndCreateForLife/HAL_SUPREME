@@ -159,7 +159,7 @@ class ComputeRouterProviderTests(unittest.TestCase):
         self.assertEqual(route["provider"], "github_actions")
         self.assertEqual(route["budget_policy"], "public_standard_runners_only")
 
-    def test_livepeer_media_route_requires_registered_balance_admission(self):
+    def test_livepeer_keyless_demo_cannot_be_admitted_as_zero_spend(self):
         with patch.dict(
             os.environ,
             {
@@ -168,10 +168,42 @@ class ComputeRouterProviderTests(unittest.TestCase):
             },
             clear=True,
         ):
-            route = choose_route("video", build_providers())
+            providers = build_providers()
+            route = choose_route("video", providers)
+        self.assertIsNone(route)
+        self.assertEqual(providers["livepeer_creative"]["account_class"], "keyless_demo")
+        self.assertFalse(providers["livepeer_creative"]["sponsorship_verified"])
+        self.assertFalse(providers["livepeer_creative"]["zero_spend_ready"])
+
+    def test_livepeer_media_route_requires_authenticated_verified_balance(self):
+        with patch.dict(
+            os.environ,
+            {
+                "HAL_PROVIDER_LIVEPEER_CREATIVE_ENABLED": "true",
+                "HAL_PROVIDER_LIVEPEER_CREATIVE_AUTHENTICATED": "true",
+                "HAL_PROVIDER_LIVEPEER_CREATIVE_ZERO_SPEND_READY": "true",
+            },
+            clear=True,
+        ):
+            providers = build_providers()
+            route = choose_route("video", providers)
         self.assertIsNotNone(route)
         self.assertEqual(route["provider"], "livepeer_creative")
-        self.assertEqual(route["budget_policy"], "registered_hacker_balance_only")
+        self.assertEqual(route["budget_policy"], "authenticated_verified_balance_only")
+        self.assertEqual(providers["livepeer_creative"]["account_class"], "authenticated")
+        self.assertFalse(providers["livepeer_creative"]["sponsorship_verified"])
+
+    def test_livepeer_sponsorship_label_requires_authentication(self):
+        with patch.dict(
+            os.environ,
+            {
+                "HAL_PROVIDER_LIVEPEER_CREATIVE_SPONSORSHIP_VERIFIED": "true",
+            },
+            clear=True,
+        ):
+            provider = build_providers()["livepeer_creative"]
+        self.assertEqual(provider["account_class"], "keyless_demo")
+        self.assertFalse(provider["sponsorship_verified"])
 
     def test_cloudrift_grant_compute_requires_verified_zero_spend_readiness(self):
         with patch.dict(
