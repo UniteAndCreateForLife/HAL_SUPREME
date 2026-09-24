@@ -4,6 +4,10 @@ Canonical, curated source repository for HAL SUPREME.
 
 HAL SUPREME is organized as a durable multimodal agent and production system. Stable control-plane state remains separate from replaceable AI workers and render backends.
 
+## Public engineering portfolio
+
+Start with the [HAL SUPREME public portfolio](PORTFOLIO.md) for a concise, evidence-linked view of completed work, current capabilities, and collaboration opportunities. The [public work log](docs/PUBLIC_WORK_LOG.md) records dated, reviewable milestones. The [publication policy](docs/PUBLIC_WORK_POLICY.md) defines how private HAL work becomes a safe public case study without publishing secrets, personal data, private endpoints, or unsupported claims.
+
 ## Architectural invariants
 - Work is committed only after verification.
 - Character/family identity is persistent and backend-independent.
@@ -53,4 +57,4 @@ python scripts/livepeer_creative.py doctor
 python scripts/livepeer_creative.py tools
 ```
 
-See `docs/LIVEPEER_CREATIVE_MCP.md` for the authentication, spend-control, provenance and production runbook.
+See `docs/LIVEPEER_CREATIVE_MCP.md` for the authentication, spend-control, provenance and production runbook. The inspectable ChatGPT plugin source is in [`plugins/livepeer-creative-mcp/`](plugins/livepeer-creative-mcp/).

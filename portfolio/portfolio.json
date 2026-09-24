@@ -1,0 +1,51 @@
+{
+  "schema": "hal.public_portfolio.v1",
+  "owner": "UniteAndCreateForLife",
+  "updated_at_utc": "2026-09-24T02:18:36Z",
+  "projects": [
+    {
+      "id": "hal-campus-evidence-desk",
+      "title": "HAL Campus Evidence Desk",
+      "status": "public_prototype_verified",
+      "summary": "Evidence-grounded synthetic-data campus operations and research-review prototype with deterministic acceptance, privacy controls, tenant-scoped RBAC, and tamper-evident review receipts.",
+      "skills": [
+        "Python",
+        "Cloudflare Workers",
+        "privacy engineering",
+        "RBAC",
+        "tamper-evident audit",
+        "multi-platform CI"
+      ],
+      "evidence": [
+        "challenges/global-smart-campus-2026/JUDGE_VERIFICATION_RECEIPT.json",
+        "challenges/global-smart-campus-2026/MULTIARCH_CI_RECEIPT.json",
+        "challenges/global-smart-campus-2026/mvp/BENCHMARK_RECEIPT.json",
+        "challenges/global-smart-campus-2026/mvp/LIVE_VALIDATION_RECEIPT.json"
+      ],
+      "public_url": "https://hal-campus-evidence-desk.therealjakobhedrich.workers.dev"
+    },
+    {
+      "id": "livepeer-chatgpt-mcp",
+      "title": "ChatGPT + Livepeer Creative MCP",
+      "status": "connected_read_only_verified",
+      "summary": "Runtime-discovered creative MCP integration for ChatGPT and HAL with secret-safe transport, explicit execution gates, and provider-independent provenance.",
+      "skills": [
+        "MCP",
+        "ChatGPT plugins",
+        "Python",
+        "Streamable HTTP",
+        "video production",
+        "provider safety gates"
+      ],
+      "evidence": [
+        "evidence/portfolio/livepeer_chatgpt_mcp_2026-09-24.json",
+        "plugins/livepeer-creative-mcp/plugin.json",
+        "plugins/livepeer-creative-mcp/mcp.json",
+        "plugins/livepeer-creative-mcp/skills/livepeer-video-production/SKILL.md",
+        "tests/test_livepeer_creative_client.py",
+        "integrations/livepeer_creative/client.py"
+      ],
+      "case_study": "case-studies/LIVEPEER_CHATGPT_MCP_2026-09-24.md"
+    }
+  ]
+}
