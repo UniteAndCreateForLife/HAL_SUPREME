@@ -1,0 +1,51 @@
+{
+  "schema": "hal.public_evidence.v1",
+  "evidence_id": "revenue-truth-control-plane-2026-09-24",
+  "subject": "Evidence-bound revenue and payout state projection",
+  "observed_at_utc": "2026-09-24T03:17:00Z",
+  "source_repository": "https://github.com/UniteAndCreateForLife/HAL_SUPREME",
+  "source_base_commit": "75458b0",
+  "public_artifact": {
+    "module": "examples/revenue_truth/revenue_projection.py",
+    "tests": "examples/revenue_truth/test_revenue_projection.py",
+    "stage_count": 11,
+    "derived_projection_only": true,
+    "canonical_ledger_authority": false,
+    "external_execution_authority": false
+  },
+  "verification": {
+    "focused_test_command": "python -m unittest -v examples.revenue_truth.test_revenue_projection",
+    "focused_tests_passed": 6,
+    "focused_tests_failed": 0,
+    "python_compile": true,
+    "private_operator_javascript_syntax": true,
+    "private_operator_live_api": true,
+    "private_operator_browser_console_errors": 0,
+    "private_operator_browser_console_warnings": 0,
+    "external_mutation": false,
+    "spend_usd": 0
+  },
+  "invariants": [
+    "prepared is not submitted",
+    "claim submission is not sponsor acceptance",
+    "merge is not award or payment",
+    "advertised value is not verified paid value",
+    "bounty pool status is not recipient payment",
+    "paid and reconciled requires verified settlement evidence"
+  ],
+  "excluded_private_data": [
+    "operational ledger rows",
+    "local filesystem paths",
+    "account identity",
+    "payout onboarding data",
+    "client identity",
+    "credentials"
+  ],
+  "side_effects": {
+    "applications_submitted": 0,
+    "claims_submitted": 0,
+    "messages_sent": 0,
+    "account_mutations": 0,
+    "payout_mutations": 0
+  }
+}
