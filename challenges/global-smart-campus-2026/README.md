@@ -21,6 +21,7 @@ Core controls:
 - external hosted-model egress fails closed when common direct identifiers are detected;
 - privacy-gate evidence records only identifier category/location, never the matched value;
 - tenant-scoped authorization rejects cross-tenant actions and tenant-scope switching;
+- tenant identifiers are explicitly bounded to 1–64 lowercase alphanumeric/hyphen characters with alphanumeric boundaries;
 - role-based access restricts review closure to the `reviewer` role in the reference workflow;
 - per-report audit receipts are SHA-256 bound to canonical report content;
 - review events are chained by SHA-256 so mutation, deletion/reordering, broken linkage, invalid receipts, or unauthorized close-role changes fail verification;
@@ -39,7 +40,7 @@ python app.py
 
 ## Validation scope
 
-The current unit suite contains **22 tests** covering deterministic grounding, privacy egress, audit integrity, role authorization, and tenant isolation. The repository CI runs the acceptance workflow on Linux x64, Linux ARM64, Windows x64, and macOS ARM64. Live NVIDIA NIM evidence is retained in `mvp/LIVE_VALIDATION_RECEIPT.json`; the public demo intentionally disables external model calls to prevent uncontrolled compute use.
+The current unit suite contains **30 tests** covering deterministic grounding, privacy egress, audit integrity, role authorization, tenant isolation, and tenant-ID boundary validation. The repository CI runs the acceptance workflow on Linux x64, Linux ARM64, Windows x64, and macOS ARM64. Live NVIDIA NIM evidence is retained in `mvp/LIVE_VALIDATION_RECEIPT.json`; the public demo intentionally disables external model calls to prevent uncontrolled compute use.
 
 Submission materials in this directory are sanitized and contain no portal password, API key, phone number, or legal-declaration acceptance.
 

@@ -3,7 +3,10 @@ from __future__ import annotations
 import re
 
 DEFAULT_TENANT_ID = "demo-campus"
-TENANT_ID_RE = re.compile(r"^[a-z0-9](?:[a-z0-9-]{1,62}[a-z0-9])?$")
+# 1-64 lowercase alphanumeric/hyphen characters, with alphanumeric boundaries.
+# The optional suffix permits two-character tenant IDs while still rejecting
+# leading/trailing hyphens and overlong scopes.
+TENANT_ID_RE = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$")
 
 ROLE_ACTIONS = {
     "analyst": frozenset({"case:read", "report:analyze", "review:write"}),
