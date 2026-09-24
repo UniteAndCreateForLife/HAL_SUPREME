@@ -1,0 +1,83 @@
+{
+  "schema": "hal.public_evidence.v1",
+  "evidence_id": "bounded-desktop-automation-upwork-mcp-2026-09-24",
+  "subject": "Bounded scheduled desktop automation fallback and authenticated Upwork MCP read path",
+  "observed_at_utc": "2026-09-24T22:19:44Z",
+  "source_repository": "https://github.com/UniteAndCreateForLife/HAL_SUPREME",
+  "private_install_receipt_sha256": "cd2b2c46e2594d06ee4f4e4280e4cf465747819552f26f4f66e970cbc50f8dc1",
+  "relay": {
+    "fixed_public_issue": 35,
+    "schema": "hal-work/v1",
+    "executable_mode": "read_only",
+    "immutable_author_identity_checked": true,
+    "arbitrary_shell_authority": false,
+    "command_tools_available_to_worker": false,
+    "worker_mcp_tools_available": false,
+    "raw_model_output_published": false,
+    "successful_canary_exit_code": 0,
+    "successful_canary_receipt_sha256": "7f6e192214092db213a24b4267a5efab2305c5a10783b3fdd5e841d0e71be34f",
+    "failed_canaries_preserved": 2,
+    "schedule_minutes": 5,
+    "scheduled_task_result": 0
+  },
+  "radar": {
+    "read_only": true,
+    "schedule_minutes": 30,
+    "scheduled_task_result": 0,
+    "receipt_ok": true,
+    "rows": 362,
+    "verdicts": {
+      "watch": 1,
+      "park": 166,
+      "reject": 195
+    },
+    "new_or_upgraded": 0,
+    "claims_submitted": 0,
+    "applications_submitted": 0,
+    "network_retry_attempts_max": 3,
+    "full_tests_passed": 111,
+    "full_tests_failed": 0,
+    "python_compile": true
+  },
+  "upwork": {
+    "official_mcp_endpoint_used": true,
+    "claude_code_oauth_connected": true,
+    "codex_oauth_connected": true,
+    "authenticated_read_tool": "list_accounts",
+    "authenticated_read_result_ok": true,
+    "account_identifiers_published": false,
+    "account_content_published": false,
+    "write_tools_called": 0,
+    "connects_spent": 0,
+    "proposals_submitted": 0,
+    "messages_sent": 0,
+    "account_mutations": 0
+  },
+  "installation": {
+    "source_archive_sha256": "27265f15f8b9d5a4022860fb3ab0329a4a5134c0ec58ff694e35cdf975efc575",
+    "archive_entries": 12,
+    "manifest_payload_files_verified": 11,
+    "supplied_installer_executed_unchanged": false,
+    "existing_claude_permission_file_changed": false,
+    "public_github_comments_written_during_canary": 5
+  },
+  "side_effects": {
+    "local_scheduled_tasks_created": 2,
+    "public_status_or_retry_comments": 5,
+    "upwork_writes": 0,
+    "applications_submitted": 0,
+    "claims_submitted": 0,
+    "messages_sent": 0,
+    "account_mutations": 0,
+    "spend_usd": 0
+  },
+  "excluded_private_data": [
+    "local filesystem paths and usernames",
+    "GitHub numeric user id",
+    "account and organization identifiers",
+    "OAuth URLs, codes, challenges, and tokens",
+    "raw local model output",
+    "opportunity URLs and application packets",
+    "credentials and private receipts"
+  ]
+}

@@ -202,6 +202,76 @@ def validate(repo_root: Path = REPO_ROOT) -> list[str]:
         )):
             errors.append("Claude integration verification recorded an external side effect")
 
+    fallback = next(
+        (
+            doc
+            for doc in evidence_documents
+            if doc.get("evidence_id") == "bounded-desktop-automation-upwork-mcp-2026-09-24"
+        ),
+        None,
+    )
+    if not fallback:
+        errors.append("missing bounded desktop automation and Upwork MCP evidence receipt")
+    else:
+        relay = fallback.get("relay", {})
+        radar = fallback.get("radar", {})
+        upwork = fallback.get("upwork", {})
+        installation = fallback.get("installation", {})
+        side_effects = fallback.get("side_effects", {})
+        if (
+            relay.get("executable_mode") != "read_only"
+            or relay.get("immutable_author_identity_checked") is not True
+            or relay.get("arbitrary_shell_authority") is not False
+            or relay.get("command_tools_available_to_worker") is not False
+            or relay.get("worker_mcp_tools_available") is not False
+            or relay.get("raw_model_output_published") is not False
+            or relay.get("successful_canary_exit_code") != 0
+            or relay.get("scheduled_task_result") != 0
+        ):
+            errors.append("bounded relay authority or successful canary receipt is inconsistent")
+        if (
+            radar.get("read_only") is not True
+            or radar.get("scheduled_task_result") != 0
+            or radar.get("receipt_ok") is not True
+            or radar.get("full_tests_passed") != 111
+            or radar.get("full_tests_failed") != 0
+            or radar.get("python_compile") is not True
+            or radar.get("claims_submitted") != 0
+            or radar.get("applications_submitted") != 0
+        ):
+            errors.append("scheduled radar verification receipt is incomplete")
+        if (
+            upwork.get("official_mcp_endpoint_used") is not True
+            or upwork.get("claude_code_oauth_connected") is not True
+            or upwork.get("codex_oauth_connected") is not True
+            or upwork.get("authenticated_read_result_ok") is not True
+            or upwork.get("account_identifiers_published") is not False
+            or upwork.get("account_content_published") is not False
+            or any(upwork.get(key) != 0 for key in (
+                "write_tools_called",
+                "connects_spent",
+                "proposals_submitted",
+                "messages_sent",
+                "account_mutations",
+            ))
+        ):
+            errors.append("Upwork MCP authentication or write-boundary receipt is inconsistent")
+        if (
+            installation.get("manifest_payload_files_verified") != 11
+            or installation.get("supplied_installer_executed_unchanged") is not False
+            or installation.get("existing_claude_permission_file_changed") is not False
+        ):
+            errors.append("automation pack installation receipt is inconsistent")
+        if any(side_effects.get(key) != 0 for key in (
+            "upwork_writes",
+            "applications_submitted",
+            "claims_submitted",
+            "messages_sent",
+            "account_mutations",
+            "spend_usd",
+        )):
+            errors.append("automation verification recorded a gated external side effect")
+
     plugin_manifest = _load_json(REPO_ROOT / "plugins" / "livepeer-creative-mcp" / "plugin.json", errors)
     mcp_manifest = _load_json(REPO_ROOT / "plugins" / "livepeer-creative-mcp" / "mcp.json", errors)
     if plugin_manifest.get("name") != "livepeer-creative-mcp" or plugin_manifest.get("version") != "0.1.0":

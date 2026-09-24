@@ -1,7 +1,7 @@
 {
   "schema": "hal.public_portfolio.v1",
   "owner": "UniteAndCreateForLife",
-  "updated_at_utc": "2026-09-24T04:09:13Z",
+  "updated_at_utc": "2026-09-24T22:19:44Z",
   "projects": [
     {
       "id": "hal-campus-evidence-desk",
@@ -23,6 +23,27 @@
         "challenges/global-smart-campus-2026/mvp/LIVE_VALIDATION_RECEIPT.json"
       ],
       "public_url": "https://hal-campus-evidence-desk.therealjakobhedrich.workers.dev"
+    },
+    {
+      "id": "bounded-desktop-automation-upwork-mcp",
+      "title": "Bounded Desktop Automation + Upwork MCP",
+      "status": "scheduled_read_only_verified",
+      "summary": "Scheduled read-only GitHub-to-local diagnostics, sanitized public receipts, resilient opportunity radar, and authenticated Upwork MCP read access with explicit external-action gates.",
+      "skills": [
+        "PowerShell",
+        "Windows Task Scheduler",
+        "MCP",
+        "OAuth",
+        "Claude Code",
+        "Codex",
+        "failure containment",
+        "evidence receipts",
+        "privacy-safe public artifacts"
+      ],
+      "evidence": [
+        "evidence/portfolio/bounded_desktop_automation_upwork_mcp_2026-09-24.json"
+      ],
+      "case_study": "case-studies/BOUNDED_DESKTOP_AUTOMATION_AND_UPWORK_MCP_2026-09-24.md"
     },
     {
       "id": "claude-hal-mcp-fabric",
