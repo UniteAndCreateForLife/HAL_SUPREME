@@ -22,26 +22,25 @@ Start with the [HAL SUPREME public portfolio](PORTFOLIO.md) for a concise, evide
 INGEST → VOICE → SEGMENT → DEPTH → WORLD → COMPOSITE → RELIGHT → AUDIO_SPACE → GRADE → QC → MASTER
 
 ## Repository map
-- core/ — stable runtime primitives
-- workgraph/ — durable jobs, leases, attempts and checkpoints
-- provider_mesh/ — capability routing and worker health
-- manifest/ — production graph orchestration
-- dreamforge/ — episode/shot compiler and renderer routing
-- reality_stage/ — deterministic embodied/world stage
-- renderers/ — replaceable render adapters
-- voice/ — authorized voice routing and provenance
-- vision/ — segmentation/depth/tracking adapters
-- family/ — persistent character identity contracts
+Only directories that exist in this repository are listed.
+
+- case-studies/ — dated, evidence-linked write-ups of completed work
+- challenges/ — challenge entries, including `global-smart-campus-2026/` (Campus Evidence Desk)
+- evidence/ — machine-readable receipts backing the portfolio
+- portfolio/ — structured portfolio index (`portfolio.json`)
+- examples/ — self-contained modules: `revenue_truth/`, `cloudflare-edge-hardening-v1/`
+- renderers/ — replaceable render adapters and routing (ComfyUI, LTX, remote workers)
+- services/ — service entrypoints (`compute_router/`)
+- integrations/ — external adapters (`livepeer_creative/`)
+- plugins/ — inspectable plugin sources (`livepeer-creative-mcp/`)
 - provenance/ — artifact/operation receipts
-- qc/ — acceptance gates
-- services/ — service entrypoints
-- integrations/ — external adapters
+- qc/ — acceptance gates (motion QC)
 - schemas/ — versioned contracts
 - configs/ — safe configuration templates
-- scripts/ — operator/developer tools
-- tests/ — contract, recovery and adversarial tests
-- docs/ — architecture and runbooks
-- deploy/ — deployment manifests
+- scripts/ — operator/developer tools, including the public-portfolio validator
+- tests/ — contract and routing tests
+- docs/ — architecture, runbooks, public work log and policy
+- .github/ — CI workflows
 
 This repository starts clean by design. Existing HAL code is migrated only after review, rather than bulk-importing historical filesystem debris.
 
