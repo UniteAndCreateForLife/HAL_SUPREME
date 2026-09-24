@@ -13,8 +13,10 @@
  *   HAL_GATEWAY_URL
  *   HAL_GATEWAY_TOKEN
  *   HAL_ALLOWED_ORIGINS       comma-separated
- *   HAL_TURNSTILE_SECRET      optional but recommended for anonymous browser chat
- *   HAL_REQUIRE_TURNSTILE     "1" to require browser proof
+ *   HAL_TURNSTILE_SECRET      required for browser session issuance
+ *   HAL_SESSION_SECRET        HMAC secret for short-lived browser sessions
+ *   HAL_API_BEARER            optional trusted mobile/CLI bearer
+ *   HAL_REQUIRE_AUTH          "1" to require session/API bearer
  *   HAL_EDGE_FALLBACK_ENABLED "1" to enable Workers AI fallback
  *   HAL_EDGE_FALLBACK_MODEL   optional @cf/... model
  */
@@ -93,7 +95,6 @@ async function rateLimit(binding, key) {
 }
 
 async function validateTurnstile(request, env) {
-  if (env.HAL_REQUIRE_TURNSTILE !== "1") return { ok: true, skipped: true };
   if (!request.headers.get("Origin")) {
     return { ok: false, reason: "browser_proof_required" };
   }
@@ -117,6 +118,88 @@ async function validateTurnstile(request, env) {
     ok: result.success === true,
     reason: result.success === true ? null : "turnstile_rejected",
   };
+}
+
+
+function utf8(value) {
+  return new TextEncoder().encode(value);
+}
+
+function toBase64Url(bytes) {
+  let binary = "";
+  for (const b of bytes) binary += String.fromCharCode(b);
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+
+function fromBase64Url(value) {
+  const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
+  const padded = normalized + "=".repeat((4 - (normalized.length % 4)) % 4);
+  const binary = atob(padded);
+  return Uint8Array.from(binary, (c) => c.charCodeAt(0));
+}
+
+async function importSessionKey(secret) {
+  return crypto.subtle.importKey(
+    "raw",
+    utf8(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign", "verify"]
+  );
+}
+
+async function createSessionToken(env, ttlSeconds = 900) {
+  if (!env.HAL_SESSION_SECRET) throw new Error("session_secret_missing");
+  const now = Math.floor(Date.now() / 1000);
+  const body = toBase64Url(utf8(JSON.stringify({
+    v: 1,
+    scope: "hal:chat",
+    iat: now,
+    exp: now + ttlSeconds,
+    nonce: crypto.randomUUID(),
+  })));
+  const key = await importSessionKey(env.HAL_SESSION_SECRET);
+  const signature = new Uint8Array(await crypto.subtle.sign("HMAC", key, utf8(body)));
+  return `${body}.${toBase64Url(signature)}`;
+}
+
+async function verifySessionToken(token, env) {
+  if (!env.HAL_SESSION_SECRET || typeof token !== "string") return false;
+  const parts = token.split(".");
+  if (parts.length !== 2) return false;
+  try {
+    const key = await importSessionKey(env.HAL_SESSION_SECRET);
+    const ok = await crypto.subtle.verify("HMAC", key, fromBase64Url(parts[1]), utf8(parts[0]));
+    if (!ok) return false;
+    const payload = JSON.parse(new TextDecoder().decode(fromBase64Url(parts[0])));
+    const now = Math.floor(Date.now() / 1000);
+    return payload?.v === 1 && payload?.scope === "hal:chat" && Number(payload?.exp) > now;
+  } catch {
+    return false;
+  }
+}
+
+async function authorizeRequest(request, env) {
+  if (env.HAL_REQUIRE_AUTH !== "1") return { ok: true, type: "disabled" };
+  const header = request.headers.get("authorization") || "";
+  if (!header.startsWith("Bearer ")) return { ok: false, reason: "authorization_required" };
+  const token = header.slice(7).trim();
+  if (env.HAL_API_BEARER && token === env.HAL_API_BEARER) return { ok: true, type: "api" };
+  if (await verifySessionToken(token, env)) return { ok: true, type: "session" };
+  return { ok: false, reason: "authorization_rejected" };
+}
+
+async function handleSession(request, env) {
+  const originFailure = rejectBrowserOrigin(request, env);
+  if (originFailure) return originFailure;
+  if (!(await rateLimit(env.CHAT_RATE_LIMITER, `session:${ipKey(request)}`))) {
+    return json(429, { error: "rate_limited" }, { "retry-after": "60" });
+  }
+  const proof = await validateTurnstile(request, env);
+  if (!proof.ok) return json(403, { error: proof.reason });
+  if (!env.HAL_SESSION_SECRET) return json(503, { error: "session_not_configured" });
+  const token = await createSessionToken(env);
+  return json(200, { session_token: token, token_type: "Bearer", expires_in: 900 });
 }
 
 function sanitizeMessages(messages) {
@@ -228,6 +311,9 @@ async function handleChat(request, env) {
   const originFailure = rejectBrowserOrigin(request, env);
   if (originFailure) return originFailure;
 
+  const authorization = await authorizeRequest(request, env);
+  if (!authorization.ok) return json(401, { error: authorization.reason });
+
   if (!(await rateLimit(env.CHAT_RATE_LIMITER, `chat:${ipKey(request)}`))) {
     return json(429, { error: "rate_limited" }, { "retry-after": "60" });
   }
@@ -242,9 +328,6 @@ async function handleChat(request, env) {
   if (payload.heavy && !(await rateLimit(env.HEAVY_RATE_LIMITER, `heavy:${ipKey(request)}`))) {
     return json(429, { error: "heavy_mode_rate_limited" }, { "retry-after": "60" });
   }
-
-  const proof = await validateTurnstile(request, env);
-  if (!proof.ok) return json(403, { error: proof.reason });
 
   try {
     const r = await gatewayChat(payload, env);
@@ -280,6 +363,8 @@ async function handleHealth(env) {
       request_budget_enforced: true,
       rate_limit_bindings_expected: true,
       turnstile_supported: true,
+      short_lived_session_supported: true,
+      trusted_api_bearer_supported: true,
     },
   });
 }
@@ -302,6 +387,12 @@ export default {
       return r;
     }
 
+    if (request.method === "POST" && url.pathname === "/session") {
+      const r = await handleSession(request, env);
+      Object.entries(cors).forEach(([k, v]) => r.headers.set(k, v));
+      return r;
+    }
+
     if (request.method === "POST" && ["/chat", "/v1/chat/completions"].includes(url.pathname)) {
       const r = await handleChat(request, env);
       Object.entries(cors).forEach(([k, v]) => r.headers.set(k, v));
@@ -312,4 +403,4 @@ export default {
   },
 };
 
-export { MODES, normalizeChatPayload, sanitizeMessages, fallbackPrompt, allowedOrigins };
+export { MODES, normalizeChatPayload, sanitizeMessages, fallbackPrompt, allowedOrigins, createSessionToken, verifySessionToken, authorizeRequest };
