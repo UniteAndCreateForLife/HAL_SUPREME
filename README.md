@@ -58,3 +58,12 @@ python scripts/livepeer_creative.py tools
 ```
 
 See `docs/LIVEPEER_CREATIVE_MCP.md` for the authentication, OpenCode connection, spend-control, provenance and production runbook. The inspectable ChatGPT plugin source is in [`plugins/livepeer-creative-mcp/`](plugins/livepeer-creative-mcp/).
+
+## Revenue truth control plane
+
+The public [`examples/revenue_truth/`](examples/revenue_truth/) module projects
+opportunity records through eleven evidence stages while keeping advertised
+value separate from verified payment. Its focused tests protect the boundaries
+between preparation, submission, acceptance, award, and settlement. See the
+[case study](case-studies/REVENUE_TRUTH_CONTROL_PLANE_2026-09-24.md) and
+[machine receipt](evidence/portfolio/revenue_truth_control_plane_2026-09-24.json).

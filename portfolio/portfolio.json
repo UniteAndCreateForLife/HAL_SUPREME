@@ -1,7 +1,7 @@
 {
   "schema": "hal.public_portfolio.v1",
   "owner": "UniteAndCreateForLife",
-  "updated_at_utc": "2026-09-24T02:18:36Z",
+  "updated_at_utc": "2026-09-24T03:17:00Z",
   "projects": [
     {
       "id": "hal-campus-evidence-desk",
@@ -47,6 +47,26 @@
         "integrations/livepeer_creative/client.py"
       ],
       "case_study": "case-studies/LIVEPEER_CHATGPT_MCP_2026-09-24.md"
+    },
+    {
+      "id": "revenue-truth-control-plane",
+      "title": "Revenue Truth Control Plane",
+      "status": "local_projection_verified",
+      "summary": "Eleven-stage evidence projection for opportunities, sponsor decisions, payout readiness, and verified settlement with explicit human gates.",
+      "skills": [
+        "Python",
+        "revenue operations",
+        "workflow state machines",
+        "evidence receipts",
+        "human approval gates",
+        "privacy-safe public artifacts"
+      ],
+      "evidence": [
+        "evidence/portfolio/revenue_truth_control_plane_2026-09-24.json",
+        "examples/revenue_truth/revenue_projection.py",
+        "examples/revenue_truth/test_revenue_projection.py"
+      ],
+      "case_study": "case-studies/REVENUE_TRUTH_CONTROL_PLANE_2026-09-24.md"
     }
   ]
 }
