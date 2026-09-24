@@ -41,4 +41,10 @@ python -m unittest -v tests.test_public_portfolio
 
 ## Collaboration
 
-This work is suitable for conversations with infrastructure providers, model and media platforms, research partners, grant programs, accelerators, and investors looking for implementation evidence rather than concept-only claims. The clearest starting points are the case studies above and their linked receipts.
+This work is suitable for conversations with infrastructure providers, model and media platforms, research partners, grant programs, accelerators, clients, and investors looking for implementation evidence rather than concept-only claims.
+
+- [Contributing](CONTRIBUTING.md) — focused public contributions and evidence standards.
+- [Community roadmap](docs/COMMUNITY_ROADMAP.md) — current interoperability, evaluation, local-AI, provenance, multimodal, and agent-safety themes.
+- [Work With HAL](docs/WORK_WITH_HAL.md) — bounded paid engineering, research, infrastructure, and integration collaboration.
+
+The clearest technical starting points remain the case studies above and their linked receipts.

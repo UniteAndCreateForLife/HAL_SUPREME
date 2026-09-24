@@ -8,6 +8,16 @@ HAL SUPREME is organized as a durable multimodal agent and production system. St
 
 Start with the [HAL SUPREME public portfolio](PORTFOLIO.md) for a concise, evidence-linked view of completed work, current capabilities, and collaboration opportunities. The [public work log](docs/PUBLIC_WORK_LOG.md) records dated, reviewable milestones. The [publication policy](docs/PUBLIC_WORK_POLICY.md) defines how private HAL work becomes a safe public case study without publishing secrets, personal data, private endpoints, or unsupported claims.
 
+## Get involved
+
+- **Use or evaluate HAL:** start with the [public portfolio](PORTFOLIO.md) and its linked demos, tests, and receipts.
+- **Contribute:** read [CONTRIBUTING.md](CONTRIBUTING.md) and the [community roadmap](docs/COMMUNITY_ROADMAP.md).
+- **Research or interoperate:** open a focused collaboration issue for agent evaluation, MCP interoperability, provenance, local/private AI, or multimodal systems.
+- **Hire / partner with HAL:** see [Work With HAL](docs/WORK_WITH_HAL.md) for bounded engineering engagement shapes and public proof.
+- **Private details:** use the contact path at https://halsupreme.com rather than posting confidential information in GitHub.
+
+HAL values narrow, testable work over generic integration requests or inflated activity.
+
 ## Architectural invariants
 - Work is committed only after verification.
 - Character/family identity is persistent and backend-independent.
