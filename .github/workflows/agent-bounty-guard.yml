@@ -27,3 +27,11 @@ jobs:
         run: python -m unittest -v examples.agent_bounty_guard.test_guard
       - name: Compile
         run: python -m py_compile examples/agent_bounty_guard/guard.py examples/agent_bounty_guard/test_guard.py
+      - name: Check JavaScript parity data is current
+        run: |
+          python examples/agent_bounty_guard/js/parity/generate_expected.py
+          git diff --exit-code -- examples/agent_bounty_guard/js/parity
+      - name: Run JavaScript port tests (parity with Python)
+        run: |
+          node --check examples/agent_bounty_guard/js/guard.js
+          node --test examples/agent_bounty_guard/js/test/guard.test.js

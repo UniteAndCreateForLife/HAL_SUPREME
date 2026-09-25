@@ -45,6 +45,23 @@ Documents read: `CONTRIBUTING.md` (root, `.github/`, `docs/`), `AGENTS.md`,
 `CLAUDE.md`, `.github/copilot-instructions.md`, pull request templates,
 `SECURITY.md`, `README.md`, and any issues you name.
 
+## JavaScript port and web page
+
+`js/guard.js` is a dependency-free port for browsers and Node, and `js/index.html` is a page that
+scans pasted text or a public repository from the visitor's browser (read-only, no model calls).
+Try it on Hugging Face: https://huggingface.co/spaces/uniteandcreateforlife/agent-bounty-guard
+
+The port counts positions in Unicode code points and uses Python's definition of whitespace, so
+its findings match the Python original exactly: on 48 fixtures in `js/parity/` (checked in CI,
+which also regenerates them from Python and fails if they drift) and on 333 live documents
+(184 honeypot issues, 90 legitimate issues, 59 contributor documents) compared on 2026-09-25.
+One known difference: Python treats non-ASCII letters as word characters for ``, JavaScript
+does not, so a keyword glued to a non-ASCII letter can match in one and not the other.
+
+```bash
+node --test examples/agent_bounty_guard/js/test/guard.test.js
+```
+
 ## Rules
 
 | Rule | Severity | Looks for |
