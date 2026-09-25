@@ -1,0 +1,101 @@
+{
+  "schema_version": "hal.cinematic-world/v1",
+  "world_id": "world:continuity-canary",
+  "authorities": {
+    "history": "EventStore",
+    "work": "WorkGraph",
+    "control": "Supervisor",
+    "routing": "ProviderMesh",
+    "stage": "Godot"
+  },
+  "assets": [
+    {
+      "asset_id": "asset:hero:v1",
+      "kind": "character",
+      "artifact_ref": "artifact://characters/hero-v1.glb"
+    },
+    {
+      "asset_id": "asset:shirt:black:v1",
+      "kind": "wardrobe",
+      "artifact_ref": "artifact://wardrobe/black-shirt-v1.glb"
+    },
+    {
+      "asset_id": "asset:corridor:v1",
+      "kind": "set",
+      "artifact_ref": "artifact://sets/corridor-v1.glb"
+    },
+    {
+      "asset_id": "asset:microphone:v1",
+      "kind": "prop",
+      "artifact_ref": "artifact://props/microphone-v1.glb"
+    }
+  ],
+  "entities": [
+    {
+      "entity_id": "hero",
+      "asset_id": "asset:hero:v1",
+      "persistence": "continuous"
+    },
+    {
+      "entity_id": "microphone",
+      "asset_id": "asset:microphone:v1",
+      "persistence": "continuous"
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "corridor",
+      "set_asset_id": "asset:corridor:v1",
+      "anchors": {
+        "door": [0, 0, 0],
+        "performance_mark": [1, 0, 2]
+      },
+      "godot_scene_ref": "stage://corridor.tscn"
+    }
+  ],
+  "shots": [
+    {
+      "shot_id": "FL01",
+      "sequence_index": 0,
+      "previous_shot_id": null,
+      "continuity_segment": "corridor-performance",
+      "scene_id": "corridor",
+      "placements": [
+        {"entity_id": "hero", "anchor": "door"},
+        {"entity_id": "microphone", "anchor": "performance_mark"}
+      ],
+      "continuity_state": {
+        "hero.identity": "asset:hero:v1",
+        "hero.wardrobe": "asset:shirt:black:v1",
+        "set.geometry": "asset:corridor:v1",
+        "atmosphere.time_of_day": "night"
+      },
+      "inherit_keys": [],
+      "transitions": {}
+    },
+    {
+      "shot_id": "FL02",
+      "sequence_index": 1,
+      "previous_shot_id": "FL01",
+      "continuity_segment": "corridor-performance",
+      "scene_id": "corridor",
+      "placements": [
+        {"entity_id": "hero", "anchor": "performance_mark"},
+        {"entity_id": "microphone", "anchor": "performance_mark"}
+      ],
+      "continuity_state": {
+        "hero.identity": "asset:hero:v1",
+        "hero.wardrobe": "asset:shirt:black:v1",
+        "set.geometry": "asset:corridor:v1",
+        "atmosphere.time_of_day": "night"
+      },
+      "inherit_keys": [
+        "hero.identity",
+        "hero.wardrobe",
+        "set.geometry",
+        "atmosphere.time_of_day"
+      ],
+      "transitions": {}
+    }
+  ]
+}
