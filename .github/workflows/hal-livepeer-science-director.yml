@@ -1,0 +1,45 @@
+name: HAL Livepeer Science Director
+
+on:
+  push:
+    branches:
+      - hackathon/livepeer-science-director
+    paths:
+      - "hackathons/livepeer-agent-science-director/**"
+      - ".github/workflows/hal-livepeer-science-director.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "hackathons/livepeer-agent-science-director/**"
+      - ".github/workflows/hal-livepeer-science-director.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hackathons/livepeer-agent-science-director
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Unit and syntax checks
+        run: |
+          npm test
+          npm run check
+      - name: Real Livepeer keyless smoke test
+        env:
+          LIVEPEER_MCP_URL: https://agent.livepeer.org/api/mcp
+        run: node test/livepeer.smoke.mjs
+      - name: Preserve Livepeer render evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: hal-livepeer-smoke-evidence
+          path: |
+            hackathons/livepeer-agent-science-director/artifacts/livepeer-smoke.jpg
+            hackathons/livepeer-agent-science-director/artifacts/livepeer-smoke-receipt.json
+          if-no-files-found: error
+          retention-days: 14
