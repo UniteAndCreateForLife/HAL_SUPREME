@@ -6,12 +6,14 @@ on:
     paths:
       - "services/compute_router/**"
       - "tests/test_compute_router.py"
+      - "scripts/ci_runner_receipt.py"
       - ".github/workflows/public-standard-runner-matrix.yml"
       - ".devcontainer/**"
   pull_request:
     paths:
       - "services/compute_router/**"
       - "tests/test_compute_router.py"
+      - "scripts/ci_runner_receipt.py"
       - ".github/workflows/public-standard-runner-matrix.yml"
       - ".devcontainer/**"
   workflow_dispatch:
@@ -41,8 +43,8 @@ jobs:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Install bounded test tooling
@@ -56,28 +58,11 @@ jobs:
       - name: Emit source-bound runner receipt
         env:
           SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-          RUNNER_LABEL: ${{ matrix.label }}
-        run: |
-          python - <<'PY'
-          import json, os, platform, pathlib, sys
-          path = pathlib.Path('evidence/public-standard-runners')
-          path.mkdir(parents=True, exist_ok=True)
-          receipt = {
-              'schema': 'hal.public-standard-runner.v1',
-              'source_sha': os.environ['SOURCE_SHA'],
-              'runner_label': os.environ['RUNNER_LABEL'],
-              'platform': platform.platform(),
-              'machine': platform.machine(),
-              'python': sys.version.split()[0],
-              'external_provider_call': False,
-              'paid_runner_requested': False,
-              'secrets_required': False,
-          }
-          (path / f"{os.environ['RUNNER_LABEL']}.json").write_text(
-              json.dumps(receipt, indent=2, sort_keys=True) + '\n',
-              encoding='utf-8'
-          )
-          PY
+        run: >-
+          python scripts/ci_runner_receipt.py
+          --output "evidence/public-standard-runners/${{ matrix.label }}.json"
+          --label "${{ matrix.label }}"
+          --schema "hal.public-standard-runner.v1"
       - uses: actions/upload-artifact@v4
         with:
           name: public-standard-runner-${{ matrix.label }}-${{ github.event.pull_request.head.sha || github.sha }}
