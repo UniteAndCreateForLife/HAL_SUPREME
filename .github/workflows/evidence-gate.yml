@@ -1,0 +1,43 @@
+name: Evidence Gate
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "examples/evidence_gate/**"
+      - "challenges/global-smart-campus-2026/mvp/live_model.py"
+      - "challenges/global-smart-campus-2026/public_demo/parity/**"
+      - ".github/workflows/evidence-gate.yml"
+  pull_request:
+    paths:
+      - "examples/evidence_gate/**"
+      - "challenges/global-smart-campus-2026/mvp/live_model.py"
+      - "challenges/global-smart-campus-2026/public_demo/parity/**"
+      - ".github/workflows/evidence-gate.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: "3.9"
+          - os: ubuntu-latest
+            python: "3.12"
+          - os: windows-latest
+            python: "3.12"
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Run Evidence Gate tests (includes the Campus Evidence Desk compatibility check)
+        run: python -m unittest -v examples.evidence_gate.test_evidence_gate
+      - name: Compile
+        run: python -m py_compile examples/evidence_gate/evidence_gate.py examples/evidence_gate/test_evidence_gate.py
