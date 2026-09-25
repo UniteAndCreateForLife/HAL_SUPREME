@@ -1,0 +1,71 @@
+{
+  "schema": "hal.public_evidence.v1",
+  "evidence_id": "agent-bounty-honeypot-guard-2026-09-24",
+  "subject": "Detection of bounty targets that request an AI agent's session context",
+  "observed_at_utc": "2026-09-24T22:54:18Z",
+  "source_repository": "https://github.com/UniteAndCreateForLife/HAL_SUPREME",
+  "source_base_commit": "8a96374",
+  "public_artifact": {
+    "module": "examples/agent_bounty_guard/guard.py",
+    "tests": "examples/agent_bounty_guard/test_guard.py",
+    "readme": "examples/agent_bounty_guard/README.md",
+    "dependencies": "python standard library only",
+    "network_access": "read_only",
+    "external_write_authority": false
+  },
+  "verification": {
+    "focused_test_command": "python -m unittest -v examples.agent_bounty_guard.test_guard",
+    "focused_tests_passed": 12,
+    "focused_tests_failed": 0,
+    "external_mutation": false,
+    "spend_usd": 0,
+    "focused_subcases": 27,
+    "rule_mutations_checked": 11,
+    "rule_mutations_caught": 11
+  },
+  "live_evaluation": {
+    "method": "read-only fetch of contributor documents via raw.githubusercontent.com and issue bodies via the GitHub API",
+    "target_repository": "UnsafeLabs/Bounty-Hunters",
+    "target_documents_verdict": "block",
+    "target_issues_scanned": 184,
+    "target_issues_blocked": 183,
+    "target_unblocked_items_explained": "the single unblocked item is a report filed by another agent, not a bounty",
+    "previous_keyword_check_matches": 118,
+    "previous_keyword_matches_missed_by_guard": 0,
+    "same_organization_repositories": {
+      "UnsafeLabs/RFC-5322": "block",
+      "UnsafeLabs/Coolify-Rust-v4": "warn"
+    },
+    "control_repositories_scanned": 14,
+    "control_documents_scanned": 56,
+    "control_findings": 0,
+    "legitimate_system_prompt_issues_scanned": 90,
+    "legitimate_system_prompt_issues_flagged": 0,
+    "tuning_note": "rules were refined against the target repository's issue text; control repositories and legitimate issues were not used for tuning",
+    "previous_keyword_check_legitimate_issue_matches": 53
+  },
+  "public_observations": {
+    "target_created_at_utc": "2026-05-13T05:50:36Z",
+    "target_forks_observed": 401,
+    "leaderboard_accounts_listed": 545,
+    "operator_account_listed": false,
+    "operator_pull_requests_or_comments_on_target": 0
+  },
+  "excluded_private_data": [
+    "prompts published by the target's leaderboard",
+    "account names listed by the target's leaderboard",
+    "HAL system or session context",
+    "local filesystem paths",
+    "credentials"
+  ],
+  "side_effects": {
+    "target_comments": 0,
+    "target_claims": 0,
+    "target_pull_requests": 0,
+    "target_forks": 0,
+    "applications_submitted": 0,
+    "messages_sent": 0,
+    "account_mutations": 0,
+    "spend_usd": 0
+  }
+}

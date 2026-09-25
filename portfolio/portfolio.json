@@ -1,8 +1,28 @@
 {
   "schema": "hal.public_portfolio.v1",
   "owner": "UniteAndCreateForLife",
-  "updated_at_utc": "2026-09-24T22:19:44Z",
+  "updated_at_utc": "2026-09-24T23:00:00Z",
   "projects": [
+    {
+      "id": "agent-bounty-honeypot-guard",
+      "title": "Agent Bounty Guard: honeypot detection for AI coding agents",
+      "status": "published_tool_verified",
+      "summary": "Read-only detector for bounty repositories and issues that request an AI agent's session context or hide instructions for automated contributors. Blocked 183 of 184 live honeypot issues with no findings across 14 control repositories and 90 legitimate system-prompt issues.",
+      "skills": [
+        "AI agent security",
+        "prompt-injection defense",
+        "Python",
+        "GitHub API",
+        "precision and recall evaluation",
+        "mutation testing"
+      ],
+      "evidence": [
+        "evidence/portfolio/agent_bounty_honeypot_guard_2026-09-24.json",
+        "examples/agent_bounty_guard/guard.py",
+        "examples/agent_bounty_guard/test_guard.py"
+      ],
+      "case_study": "case-studies/AI_AGENT_BOUNTY_HONEYPOT_GUARD_2026-09-24.md"
+    },
     {
       "id": "hal-campus-evidence-desk",
       "title": "HAL Campus Evidence Desk",
