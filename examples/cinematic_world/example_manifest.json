@@ -22,7 +22,21 @@
     {
       "asset_id": "asset:corridor:v1",
       "kind": "set",
-      "artifact_ref": "artifact://sets/corridor-v1.glb"
+      "artifact_ref": "artifact://sets/corridor-v1.world",
+      "environment_profile": {
+        "fidelity_target": "photoreal_from_capture",
+        "source_mode": "multi_image",
+        "source_refs": [
+          "capture://corridor/view-001",
+          "capture://corridor/view-002",
+          "capture://corridor/view-003"
+        ],
+        "visual_representation": "hybrid",
+        "visual_artifact_ref": "artifact://sets/corridor-v1.splat",
+        "collision_artifact_ref": "artifact://sets/corridor-v1-collision.glb",
+        "geometry_confidence": "reconstructed",
+        "reconstruction_provider": "example"
+      }
     },
     {
       "asset_id": "asset:microphone:v1",
@@ -47,10 +61,19 @@
       "scene_id": "corridor",
       "set_asset_id": "asset:corridor:v1",
       "anchors": {
-        "door": [0, 0, 0],
-        "performance_mark": [1, 0, 2]
+        "door": [
+          0,
+          0,
+          0
+        ],
+        "performance_mark": [
+          1,
+          0,
+          2
+        ]
       },
-      "godot_scene_ref": "stage://corridor.tscn"
+      "godot_scene_ref": "stage://corridor.tscn",
+      "environment_policy": "photoreal_from_capture"
     }
   ],
   "shots": [
@@ -61,8 +84,14 @@
       "continuity_segment": "corridor-performance",
       "scene_id": "corridor",
       "placements": [
-        {"entity_id": "hero", "anchor": "door"},
-        {"entity_id": "microphone", "anchor": "performance_mark"}
+        {
+          "entity_id": "hero",
+          "anchor": "door"
+        },
+        {
+          "entity_id": "microphone",
+          "anchor": "performance_mark"
+        }
       ],
       "continuity_state": {
         "hero.identity": "asset:hero:v1",
@@ -80,8 +109,14 @@
       "continuity_segment": "corridor-performance",
       "scene_id": "corridor",
       "placements": [
-        {"entity_id": "hero", "anchor": "performance_mark"},
-        {"entity_id": "microphone", "anchor": "performance_mark"}
+        {
+          "entity_id": "hero",
+          "anchor": "performance_mark"
+        },
+        {
+          "entity_id": "microphone",
+          "anchor": "performance_mark"
+        }
       ],
       "continuity_state": {
         "hero.identity": "asset:hero:v1",
