@@ -76,3 +76,7 @@ value separate from verified payment. Its focused tests protect the boundaries
 between preparation, submission, acceptance, award, and settlement. See the
 [case study](case-studies/REVENUE_TRUTH_CONTROL_PLANE_2026-09-24.md) and
 [machine receipt](evidence/portfolio/revenue_truth_control_plane_2026-09-24.json).
+
+## License
+
+HAL SUPREME is licensed under the [Apache License 2.0](LICENSE).
