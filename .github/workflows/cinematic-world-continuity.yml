@@ -1,0 +1,50 @@
+name: Cinematic World Continuity
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "continuity/**"
+      - "provenance/receipts.py"
+      - "renderers/pipeline.py"
+      - "qc/continuity.py"
+      - "scripts/continuity_gate.py"
+      - "schemas/cinematic_world_manifest.schema.json"
+      - "examples/cinematic_world/**"
+      - "tests/test_cinematic_continuity.py"
+      - ".github/workflows/cinematic-world-continuity.yml"
+  pull_request:
+    paths:
+      - "continuity/**"
+      - "provenance/receipts.py"
+      - "renderers/pipeline.py"
+      - "qc/continuity.py"
+      - "scripts/continuity_gate.py"
+      - "schemas/cinematic_world_manifest.schema.json"
+      - "examples/cinematic_world/**"
+      - "tests/test_cinematic_continuity.py"
+      - ".github/workflows/cinematic-world-continuity.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  continuity-contract:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.12"]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Run continuity contract tests
+        run: python -m unittest -v tests.test_cinematic_continuity
+      - name: Compile continuity modules
+        run: python -m py_compile continuity/__init__.py continuity/world_manifest.py continuity/render_binding.py provenance/receipts.py renderers/pipeline.py qc/continuity.py scripts/continuity_gate.py tests/test_cinematic_continuity.py
+      - name: Validate example manifest
+        run: python scripts/continuity_gate.py examples/cinematic_world/example_manifest.json --shot FL02
