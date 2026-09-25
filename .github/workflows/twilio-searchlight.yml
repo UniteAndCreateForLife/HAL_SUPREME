@@ -1,0 +1,88 @@
+name: Twilio Searchlight CI
+
+on:
+  push:
+    branches: ["feat/twilio-searchlight-demo"]
+    paths:
+      - "services/twilio_searchlight_demo/**"
+      - "tests/test_twilio_searchlight_*.py"
+      - ".github/workflows/twilio-searchlight.yml"
+  pull_request:
+    paths:
+      - "services/twilio_searchlight_demo/**"
+      - "tests/test_twilio_searchlight_*.py"
+      - ".github/workflows/twilio-searchlight.yml"
+
+permissions:
+  contents: read
+
+env:
+  SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: services/twilio_searchlight_demo/requirements.txt
+      - name: Install isolated dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r services/twilio_searchlight_demo/requirements.txt ruff==0.14.14
+
+      - name: Run focused tests
+        run: python -m unittest discover -s tests -p 'test_twilio_searchlight_*.py' -v
+
+      - name: Lint and format check
+        run: |
+          ruff check services/twilio_searchlight_demo tests/test_twilio_searchlight_*.py
+          ruff format --check services/twilio_searchlight_demo tests/test_twilio_searchlight_*.py
+          python -m compileall -q services/twilio_searchlight_demo
+
+      - name: Generate source-bound rehearsal and judge packet
+        run: |
+          mkdir -p evidence/twilio-searchlight-ci
+          python -m services.twilio_searchlight_demo.rehearsal --output evidence/twilio-searchlight-ci/rehearsal-receipt.json
+          python -m services.twilio_searchlight_demo.judge_packet \
+            --rehearsal evidence/twilio-searchlight-ci/rehearsal-receipt.json \
+            --json-output evidence/twilio-searchlight-ci/judge-packet.json \
+            --markdown-output evidence/twilio-searchlight-ci/judge-packet.md \
+            --html-output evidence/twilio-searchlight-ci/judge-demo.html
+          python -m services.twilio_searchlight_demo.submission_gate --judge-packet evidence/twilio-searchlight-ci/judge-packet.json --output evidence/twilio-searchlight-ci/submission-readiness.json
+      - name: Verify fail-closed evidence boundary
+        env:
+          EXPECTED_SHA: ${{ env.SOURCE_SHA }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib
+          root = pathlib.Path('evidence/twilio-searchlight-ci')
+          rehearsal = json.loads((root / 'rehearsal-receipt.json').read_text())
+          packet = json.loads((root / 'judge-packet.json').read_text())
+          readiness = json.loads((root / 'submission-readiness.json').read_text())
+          assert rehearsal['source_sha'] == os.environ['EXPECTED_SHA']
+          assert packet['source_sha'] == os.environ['EXPECTED_SHA']
+          assert readiness['source_sha'] == os.environ['EXPECTED_SHA']
+          assert rehearsal['passed'] is True
+          assert readiness['machine_evidence_ready'] is False
+          assert readiness['application_ready'] is False
+          assert readiness['submission_state'] == 'not_submitted'
+          assert 'genuine_signed_twilio_interaction_receipt_missing' in readiness['blockers']
+          for key, value in packet['boundaries'].items():
+              assert value is False, (key, value)
+          PY
+          sha256sum evidence/twilio-searchlight-ci/* > evidence/twilio-searchlight-ci/SHA256SUMS
+
+      - name: Upload source-bound evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilio-searchlight-${{ env.SOURCE_SHA }}
+          path: evidence/twilio-searchlight-ci/
+          if-no-files-found: error
+          retention-days: 30
