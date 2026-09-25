@@ -166,6 +166,19 @@ def _lines(text: str) -> Iterator[tuple[int, str]]:
         offset += len(line)
 
 
+# A sentence ends at . ! or ? followed by whitespace and a character that is not a
+# lowercase letter, so "e.g. the" and "i.e. your" do not split a sentence.
+_SENTENCE_BREAK = re.compile(r"(?<=[.!?])(?<!e\.g\.)(?<!i\.e\.)(?<!etc\.)(?<!vs\.)\s+(?=[^a-z])")
+
+
+def _sentences(line: str) -> Iterator[tuple[int, str]]:
+    start = 0
+    for m in _SENTENCE_BREAK.finditer(line):
+        yield start, line[start:m.start()]
+        start = m.end()
+    yield start, line[start:]
+
+
 def _requested(line: str) -> bool:
     """True when the line contains a disclosure verb that is not negated just before it."""
     for verb in _DISCLOSE.finditer(line):
@@ -193,24 +206,28 @@ def scan_text(text: str, source: str) -> list[Finding]:
             add("session_context_request", BLOCK, m.start(), m.end())
 
     for offset, line in _lines(text):
-        requested = _requested(line)
+        # Where the request is headed (a PR, a file) may be named anywhere on the line,
+        # but the request itself and what it asks for must share one sentence.
         submission = _SUBMISSION.search(line)
-        anchor = _SESSION_ANCHOR.search(line) if requested else None
-        if anchor:
-            verbatim = _STRONG_DISCLOSE.search(line) and _CONTEXT_OBJECT.search(line)
-            addressed = _SECOND_PERSON.search(line) and (submission or verbatim)
-            exhaustive = submission and _EXHAUSTIVE.search(line)
-            if addressed or exhaustive:
-                add("session_context_request", BLOCK, offset + anchor.start(), offset + anchor.end())
-        if requested and submission:
-            prompt = _PROMPT_OBJECT.search(line)
-            if prompt:
-                add("system_prompt_request", BLOCK, offset + prompt.start(), offset + prompt.end())
-        env = _ENVIRONMENT.search(line)
-        if env and not _NEGATION.search(line[max(0, env.start() - 30): env.start()]):
-            table_row = line.lstrip().startswith("|")
-            if table_row or _PLACEHOLDER.search(line) or (requested and _SECOND_PERSON.search(line)):
-                add("environment_disclosure_request", WARN, offset + env.start(), offset + env.end())
+        table_row = line.lstrip().startswith("|")
+        for start, sentence in _sentences(line):
+            base = offset + start
+            requested = _requested(sentence)
+            anchor = _SESSION_ANCHOR.search(sentence) if requested else None
+            if anchor:
+                verbatim = _STRONG_DISCLOSE.search(sentence) and _CONTEXT_OBJECT.search(sentence)
+                addressed = _SECOND_PERSON.search(sentence) and (submission or verbatim)
+                exhaustive = submission and _EXHAUSTIVE.search(sentence)
+                if addressed or exhaustive:
+                    add("session_context_request", BLOCK, base + anchor.start(), base + anchor.end())
+            if requested and submission:
+                prompt = _PROMPT_OBJECT.search(sentence)
+                if prompt:
+                    add("system_prompt_request", BLOCK, base + prompt.start(), base + prompt.end())
+            env = _ENVIRONMENT.search(sentence)
+            if env and not _NEGATION.search(sentence[max(0, env.start() - 30): env.start()]):
+                if table_row or _PLACEHOLDER.search(line) or (requested and _SECOND_PERSON.search(sentence)):
+                    add("environment_disclosure_request", WARN, base + env.start(), base + env.end())
 
     for m in _HTML_COMMENT.finditer(text):
         body = m.group(1)

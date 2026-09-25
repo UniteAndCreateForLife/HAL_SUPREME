@@ -2,7 +2,7 @@
   "schema": "hal.public_evidence.v1",
   "evidence_id": "agent-bounty-honeypot-guard-2026-09-24",
   "subject": "Detection of bounty targets that request an AI agent's session context",
-  "observed_at_utc": "2026-09-24T22:54:18Z",
+  "observed_at_utc": "2026-09-25T02:09:13Z",
   "source_repository": "https://github.com/UniteAndCreateForLife/HAL_SUPREME",
   "source_base_commit": "8a96374",
   "public_artifact": {
@@ -19,9 +19,9 @@
     "focused_tests_failed": 0,
     "external_mutation": false,
     "spend_usd": 0,
-    "focused_subcases": 27,
-    "rule_mutations_checked": 11,
-    "rule_mutations_caught": 11
+    "focused_subcases": 30,
+    "rule_mutations_checked": 14,
+    "rule_mutations_caught": 14
   },
   "live_evaluation": {
     "method": "read-only fetch of contributor documents via raw.githubusercontent.com and issue bodies via the GitHub API",
@@ -67,5 +67,12 @@
     "messages_sent": 0,
     "account_mutations": 0,
     "spend_usd": 0
-  }
+  },
+  "revisions": [
+    {
+      "date": "2026-09-25",
+      "change": "request and requested object must share one sentence (fixes a cross-sentence false positive)",
+      "live_results_changed": false
+    }
+  ]
 }

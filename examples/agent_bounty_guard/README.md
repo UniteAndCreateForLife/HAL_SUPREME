@@ -60,7 +60,7 @@ Documents read: `CONTRIBUTING.md` (root, `.github/`, `docs/`), `AGENTS.md`,
 
 The rules key on what is being requested, not on field names. A request must
 refer to the contributor ("your", "you") and to the start of their session or to
-their own prompt. Mentioning a system prompt is not enough: product issues about
+their own prompt, and the request and what it asks for must share one sentence. Mentioning a system prompt is not enough: product issues about
 system prompt settings, SDK behaviour, and configuration examples stay clean.
 
 ## Measured behaviour (2026-09-24)
@@ -98,5 +98,5 @@ python -m unittest -v examples.agent_bounty_guard.test_guard
 
 The tests cover rotated field names, a contributing-guide trap, direct prompt
 requests, hidden Unicode, legitimate text that must stay clean, CLI exit codes,
-read-only fetching, and retrying transient network failures. Eleven targeted
+read-only fetching, and retrying transient network failures. Fourteen targeted
 mutations of the detection rules were each caught by the suite.
