@@ -96,11 +96,19 @@ the contributor's own session.
 | Same-organization repositories | one block, one warn |
 | Control repositories (MCP servers and SDKs, agent frameworks, LangChain, Open WebUI, Transformers, VS Code, React, Next.js, two paid-bounty projects) | 14 repositories, 56 documents, 0 findings |
 | Real issues discussing system prompts in six LLM products | 90 scanned, 0 findings |
-| Focused unit tests | 12 passed (with 27 sub-cases) |
-| Rule mutation check | 11 targeted mutations of the detection rules; the suite failed for every one |
+| Focused unit tests | 12 passed (with 30 sub-cases) |
+| Rule mutation check | 14 targeted mutations of the detection rules; the suite failed for every one |
 
 The rules were refined while reading the target's issues, so the 183/184 figure
 is in-sample. The control repositories and issues were not used for tuning.
+
+## Changelog
+
+- 2026-09-25: a request and what it asks for must now appear in the same sentence. This fixes a
+  false positive found while building the web demo, where a feature description ("the system prompt is
+  loaded at the start of the session") and a routine PR instruction on the same line combined into a
+  match. Re-measured the same day: results unchanged (183/184 honeypot issues blocked, 0 findings on the
+  control repositories and the 90 legitimate issues).
 
 ## Limits
 
