@@ -83,7 +83,52 @@
         "affordances": {
           "type": "array",
           "items": {"type": "string"}
+        },
+        "environment_profile": {
+          "$ref": "#/$defs/environment_profile"
         }
+      }
+    },
+    "environment_profile": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "fidelity_target",
+        "source_mode",
+        "source_refs",
+        "visual_representation",
+        "visual_artifact_ref",
+        "collision_artifact_ref",
+        "geometry_confidence"
+      ],
+      "properties": {
+        "fidelity_target": {
+          "enum": ["blockout", "photoreal_from_capture", "generated_photoreal"]
+        },
+        "source_mode": {
+          "enum": [
+            "single_image",
+            "multi_image",
+            "video",
+            "panorama",
+            "photogrammetry",
+            "generated_multiview"
+          ]
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "visual_representation": {
+          "enum": ["gaussian_splat", "textured_mesh", "hybrid"]
+        },
+        "visual_artifact_ref": {"type": "string", "minLength": 1},
+        "collision_artifact_ref": {"type": "string", "minLength": 1},
+        "geometry_confidence": {
+          "enum": ["measured", "reconstructed", "inferred"]
+        },
+        "reconstruction_provider": {"type": "string"},
+        "capture_notes": {"type": "string"}
       }
     },
     "entity": {
@@ -112,7 +157,10 @@
           "default": {}
         },
         "usd_stage_ref": {"type": "string"},
-        "godot_scene_ref": {"type": "string"}
+        "godot_scene_ref": {"type": "string"},
+        "environment_policy": {
+          "enum": ["blockout", "photoreal_from_capture", "generated_photoreal"]
+        }
       }
     },
     "placement": {
