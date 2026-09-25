@@ -15,6 +15,23 @@ REQUIRED_AUTHORITIES = {
     "stage": "Godot",
 }
 
+ENVIRONMENT_POLICIES = {
+    "blockout",
+    "photoreal_from_capture",
+    "generated_photoreal",
+}
+ENVIRONMENT_SOURCE_MODES = {
+    "single_image",
+    "multi_image",
+    "video",
+    "panorama",
+    "photogrammetry",
+    "generated_multiview",
+}
+FINAL_CAPTURE_SOURCE_MODES = {"multi_image", "video", "photogrammetry"}
+VISUAL_REPRESENTATIONS = {"gaussian_splat", "textured_mesh", "hybrid"}
+GEOMETRY_CONFIDENCE = {"measured", "reconstructed", "inferred"}
+
 
 class ContinuityManifestError(ValueError):
     """Raised when a cinematic world manifest violates HAL continuity rules."""
@@ -33,6 +50,71 @@ def _index(items: list[Mapping[str, Any]], key: str, label: str) -> dict[str, Ma
         _require(value not in result, f"duplicate {label} {key}={value!r}")
         result[value] = item
     return result
+
+
+def _validate_environment_profile(asset_id: str, asset: Mapping[str, Any]) -> None:
+    profile = asset.get("environment_profile")
+    if profile is None:
+        return
+    _require(
+        asset.get("kind") in {"set", "environment"},
+        f"asset {asset_id!r} environment_profile is only valid for set/environment assets",
+    )
+    _require(
+        isinstance(profile, Mapping),
+        f"asset {asset_id!r} environment_profile must be a mapping",
+    )
+    fidelity = profile.get("fidelity_target")
+    _require(
+        fidelity in ENVIRONMENT_POLICIES,
+        f"asset {asset_id!r} has invalid environment fidelity_target",
+    )
+    source_mode = profile.get("source_mode")
+    _require(
+        source_mode in ENVIRONMENT_SOURCE_MODES,
+        f"asset {asset_id!r} has invalid environment source_mode",
+    )
+    source_refs = profile.get("source_refs")
+    _require(
+        isinstance(source_refs, list)
+        and all(isinstance(ref, str) and ref for ref in source_refs),
+        f"asset {asset_id!r} environment source_refs must be a list of strings",
+    )
+    visual_representation = profile.get("visual_representation")
+    _require(
+        visual_representation in VISUAL_REPRESENTATIONS,
+        f"asset {asset_id!r} has invalid visual_representation",
+    )
+    _require(
+        isinstance(profile.get("visual_artifact_ref"), str)
+        and profile["visual_artifact_ref"],
+        f"asset {asset_id!r} requires environment visual_artifact_ref",
+    )
+    _require(
+        isinstance(profile.get("collision_artifact_ref"), str)
+        and profile["collision_artifact_ref"],
+        f"asset {asset_id!r} requires a separate collision_artifact_ref",
+    )
+    confidence = profile.get("geometry_confidence")
+    _require(
+        confidence in GEOMETRY_CONFIDENCE,
+        f"asset {asset_id!r} has invalid geometry_confidence",
+    )
+
+    if fidelity == "photoreal_from_capture":
+        _require(
+            source_mode in FINAL_CAPTURE_SOURCE_MODES,
+            f"asset {asset_id!r} photoreal_from_capture requires multi_image, video, or photogrammetry input",
+        )
+        min_sources = 3 if source_mode == "multi_image" else 1
+        _require(
+            len(source_refs) >= min_sources,
+            f"asset {asset_id!r} photoreal_from_capture has insufficient source capture",
+        )
+        _require(
+            confidence in {"measured", "reconstructed"},
+            f"asset {asset_id!r} photoreal_from_capture cannot use inferred-only geometry",
+        )
 
 
 def load_world_manifest(path: str | Path) -> dict[str, Any]:
@@ -82,6 +164,7 @@ def validate_world_manifest(manifest: Mapping[str, Any]) -> None:
                 raise ContinuityManifestError(
                     f"asset {asset_id!r} artifact_sha256 is not hexadecimal"
                 ) from exc
+        _validate_environment_profile(asset_id, asset)
 
     for entity_id, entity in entities.items():
         asset_id = entity.get("asset_id")
@@ -100,6 +183,21 @@ def validate_world_manifest(manifest: Mapping[str, Any]) -> None:
         )
         anchors = scene.get("anchors", {})
         _require(isinstance(anchors, Mapping), f"scene {scene_id!r} anchors must be a mapping")
+        environment_policy = scene.get("environment_policy")
+        if environment_policy is not None:
+            _require(
+                environment_policy in ENVIRONMENT_POLICIES,
+                f"scene {scene_id!r} has invalid environment_policy",
+            )
+            profile = assets[set_asset_id].get("environment_profile")
+            _require(
+                isinstance(profile, Mapping),
+                f"scene {scene_id!r} requires an environment_profile on set asset {set_asset_id!r}",
+            )
+            _require(
+                profile.get("fidelity_target") == environment_policy,
+                f"scene {scene_id!r} environment_policy does not match set asset fidelity_target",
+            )
 
     shot_index = _index(shots, "shot_id", "shot")
     sequence = sorted(shots, key=lambda shot: shot.get("sequence_index", -1))
