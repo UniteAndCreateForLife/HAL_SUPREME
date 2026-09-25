@@ -40,7 +40,20 @@ def manifest_fixture():
             {
                 "asset_id": "asset:corridor:v1",
                 "kind": "set",
-                "artifact_ref": "artifact://corridor.glb",
+                "artifact_ref": "artifact://corridor.world",
+                "environment_profile": {
+                    "fidelity_target": "photoreal_from_capture",
+                    "source_mode": "multi_image",
+                    "source_refs": [
+                        "capture://corridor/view-001",
+                        "capture://corridor/view-002",
+                        "capture://corridor/view-003",
+                    ],
+                    "visual_representation": "hybrid",
+                    "visual_artifact_ref": "artifact://corridor.splat",
+                    "collision_artifact_ref": "artifact://corridor-collision.glb",
+                    "geometry_confidence": "reconstructed",
+                },
             },
             {
                 "asset_id": "asset:mic:v1",
@@ -68,6 +81,7 @@ def manifest_fixture():
                     "door": [0, 0, 0],
                     "mark_a": [1, 0, 2],
                 },
+                "environment_policy": "photoreal_from_capture",
             },
         ],
         "shots": [
@@ -156,6 +170,24 @@ class ManifestTests(unittest.TestCase):
             "reason": "on-screen sunrise time jump",
         }
         validate_world_manifest(manifest)
+
+    def test_photoreal_scene_rejects_single_image_inferred_geometry(self):
+        manifest = manifest_fixture()
+        profile = manifest["assets"][2]["environment_profile"]
+        profile["source_mode"] = "single_image"
+        profile["source_refs"] = ["capture://corridor/only-view"]
+        profile["geometry_confidence"] = "inferred"
+        with self.assertRaisesRegex(
+            ContinuityManifestError,
+            "requires multi_image, video, or photogrammetry",
+        ):
+            validate_world_manifest(manifest)
+
+    def test_photoreal_scene_requires_separate_visual_and_collision_assets(self):
+        manifest = manifest_fixture()
+        del manifest["assets"][2]["environment_profile"]["collision_artifact_ref"]
+        with self.assertRaisesRegex(ContinuityManifestError, "collision_artifact_ref"):
+            validate_world_manifest(manifest)
 
 
 class AuditTests(unittest.TestCase):
