@@ -1,0 +1,21 @@
+{
+  "schema_version": "hal.mcp_provider_conformance/v1",
+  "provider_id": "livepeer-creative-public",
+  "observed_at": "2026-09-24",
+  "protocol_version": "not_recorded",
+  "transport": "streamable_http",
+  "scope": "public evidence mapping only",
+  "controls": [
+    {"id":"P1","state":"documented","finding":"Public setup documents a remote Streamable HTTP MCP endpoint.","evidence":["docs/LIVEPEER_CREATIVE_MCP.md"]},
+    {"id":"P2","state":"not_observed","finding":"The public evidence does not record the negotiated MCP protocol revision.","evidence":[]},
+    {"id":"P3","state":"verified","finding":"Runtime discovery recorded a dated 125-method catalog observation.","evidence":["docs/LIVEPEER_CREATIVE_MCP.md","case-studies/CLAUDE_HAL_MCP_FABRIC_2026-09-24.md"]},
+    {"id":"P4","state":"documented","finding":"The public runbook requires current tool-schema inspection before generation.","evidence":["docs/LIVEPEER_CREATIVE_MCP.md"]},
+    {"id":"P5","state":"documented","finding":"The runbook distinguishes keyless/demo connectivity from authenticated state.","evidence":["docs/LIVEPEER_CREATIVE_MCP.md"]},
+    {"id":"H1","state":"documented","finding":"Read/discovery and spend-capable execution are treated differently.","evidence":["docs/LIVEPEER_CREATIVE_MCP.md"]},
+    {"id":"H2","state":"documented","finding":"Spend-capable calls require explicit confirmation and verified admission evidence.","evidence":["docs/LIVEPEER_CREATIVE_MCP.md"]},
+    {"id":"H3","state":"documented","finding":"The example client configuration uses a finite connection timeout.","evidence":["docs/LIVEPEER_CREATIVE_MCP.md"]},
+    {"id":"H4","state":"documented","finding":"The production policy records provider/tool choice, outputs, cost evidence when available, intent, and QC decisions.","evidence":["docs/LIVEPEER_CREATIVE_MCP.md"]},
+    {"id":"H5","state":"verified","finding":"Public architecture keeps Livepeer as a replaceable worker rather than release authority.","evidence":["docs/LIVEPEER_CREATIVE_MCP.md","case-studies/CLAUDE_HAL_MCP_FABRIC_2026-09-24.md"]},
+    {"id":"H6","state":"verified","finding":"Public evidence excludes private operational material.","evidence":["docs/LIVEPEER_CREATIVE_MCP.md","case-studies/CLAUDE_HAL_MCP_FABRIC_2026-09-24.md"]}
+  ]
+}
