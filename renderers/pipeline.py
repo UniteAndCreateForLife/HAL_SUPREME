@@ -4,6 +4,7 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
+from continuity.render_binding import resolve_render_binding
 from provenance.receipts import RenderReceipt
 from qc.motion import require_temporal_motion
 from .base import RenderRequest
@@ -22,7 +23,8 @@ def render_and_accept(
     router: CapabilityRouter,
     capability: str = "text_to_video",
 ) -> AcceptedRender:
-    """Render, normalize into HAL artifact storage, verify motion, then commit a receipt."""
+    """Bind world state, render, verify motion, then commit a provenance receipt."""
+    continuity = resolve_render_binding(request)
     decision = router.choose(capability)
     result = decision.renderer.render(request)
 
@@ -46,6 +48,8 @@ def render_and_accept(
         artifact_path=target,
         motion_evidence=motion,
         seed=result.seed,
+        continuity_fingerprint=continuity.fingerprint if continuity else None,
+        continuity_manifest_sha256=continuity.manifest_sha256 if continuity else None,
     )
     receipt_path = artifact_dir / "render.receipt.json"
     receipt.write(receipt_path)
