@@ -1,0 +1,945 @@
+{
+ "reports": {
+  "policy-conflict": {
+   "case_id": "policy-conflict",
+   "title": "Conflicting policy guidance",
+   "question": "What should the department do before approving after-hours lab access?",
+   "claims": [
+    {
+     "text": "Policy memo A requires department-chair approval and annual safety training before after-hours lab access.",
+     "citations": [
+      "E1"
+     ],
+     "kind": "evidence"
+    },
+    {
+     "text": "Policy memo B allows trained research staff to request after-hours access through the security office without chair approval.",
+     "citations": [
+      "E2"
+     ],
+     "kind": "evidence"
+    },
+    {
+     "text": "The synthetic requester completed annual safety training on 2026-08-18.",
+     "citations": [
+      "E3"
+     ],
+     "kind": "evidence"
+    }
+   ],
+   "conflicts": [
+    {
+     "evidence": [
+      "E1",
+      "E2"
+     ],
+     "detail": "Conflict requires human resolution: [E1] and [E2] prescribe incompatible approval paths."
+    }
+   ],
+   "actions": [
+    {
+     "text": "Pause approval until the conflicting approval paths are reconciled by the policy owner.",
+     "citations": [
+      "E1",
+      "E2"
+     ],
+     "kind": "action"
+    },
+    {
+     "text": "Treat annual safety training as satisfied for this synthetic request.",
+     "citations": [
+      "E3"
+     ],
+     "kind": "action"
+    }
+   ],
+   "uncertainty": "Only supplied synthetic evidence was considered; missing records may change the result.",
+   "review_gate": {
+    "required": true,
+    "status": "PENDING_HUMAN_REVIEW"
+   },
+   "validation": {
+    "citation_validity": 1.0,
+    "invalid_citations": [],
+    "uncited_items": [],
+    "conflict_detection": true,
+    "unsupported_material_claims": 0
+   }
+  },
+  "research-access": {
+   "case_id": "research-access",
+   "title": "Research access request",
+   "question": "What review steps are required before releasing the synthetic research dataset?",
+   "claims": [
+    {
+     "text": "The synthetic requester asks for a de-identified dataset for a campus mobility study.",
+     "citations": [
+      "E1"
+     ],
+     "kind": "evidence"
+    },
+    {
+     "text": "Dataset release requires data-owner approval, a purpose statement, and a documented retention period.",
+     "citations": [
+      "E2"
+     ],
+     "kind": "evidence"
+    },
+    {
+     "text": "The proposed workspace supports encrypted storage and access logging.",
+     "citations": [
+      "E3"
+     ],
+     "kind": "evidence"
+    },
+    {
+     "text": "No data-owner approval is attached to the request.",
+     "citations": [
+      "E4"
+     ],
+     "kind": "evidence"
+    }
+   ],
+   "conflicts": [],
+   "actions": [
+    {
+     "text": "Obtain data-owner approval before release.",
+     "citations": [
+      "E2",
+      "E4"
+     ],
+     "kind": "action"
+    },
+    {
+     "text": "Record the purpose statement and retention period before release.",
+     "citations": [
+      "E2"
+     ],
+     "kind": "action"
+    },
+    {
+     "text": "Use the encrypted, access-logged workspace if the request is approved.",
+     "citations": [
+      "E3"
+     ],
+     "kind": "action"
+    }
+   ],
+   "uncertainty": "Only supplied synthetic evidence was considered; missing records may change the result.",
+   "review_gate": {
+    "required": true,
+    "status": "PENDING_HUMAN_REVIEW"
+   },
+   "validation": {
+    "citation_validity": 1.0,
+    "invalid_citations": [],
+    "uncited_items": [],
+    "conflict_detection": true,
+    "unsupported_material_claims": 0
+   }
+  },
+  "energy-anomaly": {
+   "case_id": "energy-anomaly",
+   "title": "Facilities energy anomaly",
+   "question": "What should facilities investigate first after the overnight energy spike?",
+   "claims": [
+    {
+     "text": "Building C electricity use increased 38 percent between 01:00 and 03:00 compared with the prior seven-night median.",
+     "citations": [
+      "E1"
+     ],
+     "kind": "evidence"
+    },
+    {
+     "text": "Air-handler AHU-C3 was placed in manual override during a ventilation inspection at 00:42.",
+     "citations": [
+      "E2"
+     ],
+     "kind": "evidence"
+    },
+    {
+     "text": "No scheduled overnight event or approved extended occupancy is recorded for Building C.",
+     "citations": [
+      "E3"
+     ],
+     "kind": "evidence"
+    },
+    {
+     "text": "Outdoor temperature remained within two degrees of the seven-night median.",
+     "citations": [
+      "E4"
+     ],
+     "kind": "evidence"
+    }
+   ],
+   "conflicts": [],
+   "actions": [
+    {
+     "text": "Inspect AHU-C3 manual override first because its timing precedes the overnight spike.",
+     "citations": [
+      "E1",
+      "E2"
+     ],
+     "kind": "action"
+    },
+    {
+     "text": "Do not attribute the spike to scheduled occupancy or unusual weather without new evidence.",
+     "citations": [
+      "E3",
+      "E4"
+     ],
+     "kind": "action"
+    }
+   ],
+   "uncertainty": "Only supplied synthetic evidence was considered; missing records may change the result.",
+   "review_gate": {
+    "required": true,
+    "status": "PENDING_HUMAN_REVIEW"
+   },
+   "validation": {
+    "citation_validity": 1.0,
+    "invalid_citations": [],
+    "uncited_items": [],
+    "conflict_detection": true,
+    "unsupported_material_claims": 0
+   }
+  }
+ },
+ "normalized": [
+  {
+   "name": "scenario:grounded",
+   "case_id": "policy-conflict",
+   "result": {
+    "summary": "Draft answer to: What should the department do before approving after-hours lab access?",
+    "findings": [
+     {
+      "text": "Policy memo A requires department-chair approval and annual safety training before after-hours lab access.",
+      "citations": [
+       "E1"
+      ]
+     },
+     {
+      "text": "Policy memo B allows trained research staff to request after-hours access through the security office without chair approval.",
+      "citations": [
+       "E2"
+      ]
+     }
+    ],
+    "actions": [
+     {
+      "text": "Send the decision to a human reviewer together with the cited evidence.",
+      "citations": [
+       "E1"
+      ]
+     }
+    ],
+    "conflicts": [
+     {
+      "detail": "[E1] and [E2] prescribe incompatible requirements.",
+      "evidence": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "uncertainty": "Only the supplied evidence was considered.",
+    "acceptance": {
+     "accepted_items": 4,
+     "rejected_items": 0,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "scenario:uncited",
+   "case_id": "policy-conflict",
+   "result": {
+    "summary": "",
+    "findings": [
+     {
+      "text": "Policy memo A requires department-chair approval and annual safety training before after-hours lab access.",
+      "citations": [
+       "E1"
+      ]
+     }
+    ],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 1,
+     "rejected_items": 1,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": false,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "scenario:invented_id",
+   "case_id": "policy-conflict",
+   "result": {
+    "summary": "",
+    "findings": [],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 0,
+     "rejected_items": 2,
+     "invalid_citations": [
+      "E9"
+     ],
+     "all_accepted_items_grounded": false,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": false,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "scenario:invented_conflict",
+   "case_id": "policy-conflict",
+   "result": {
+    "summary": "",
+    "findings": [],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 0,
+     "rejected_items": 1,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 1,
+     "model_conflict_detection": false,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "scenario:malformed",
+   "case_id": "policy-conflict",
+   "result": {
+    "summary": "",
+    "findings": [],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 0,
+     "rejected_items": 2,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": false,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "scenario:grounded",
+   "case_id": "research-access",
+   "result": {
+    "summary": "Draft answer to: What review steps are required before releasing the synthetic research dataset?",
+    "findings": [
+     {
+      "text": "The synthetic requester asks for a de-identified dataset for a campus mobility study.",
+      "citations": [
+       "E1"
+      ]
+     },
+     {
+      "text": "Dataset release requires data-owner approval, a purpose statement, and a documented retention period.",
+      "citations": [
+       "E2"
+      ]
+     }
+    ],
+    "actions": [
+     {
+      "text": "Send the decision to a human reviewer together with the cited evidence.",
+      "citations": [
+       "E1"
+      ]
+     }
+    ],
+    "conflicts": [],
+    "uncertainty": "Only the supplied evidence was considered.",
+    "acceptance": {
+     "accepted_items": 3,
+     "rejected_items": 0,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "scenario:uncited",
+   "case_id": "research-access",
+   "result": {
+    "summary": "",
+    "findings": [
+     {
+      "text": "The synthetic requester asks for a de-identified dataset for a campus mobility study.",
+      "citations": [
+       "E1"
+      ]
+     }
+    ],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 1,
+     "rejected_items": 1,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "scenario:invented_id",
+   "case_id": "research-access",
+   "result": {
+    "summary": "",
+    "findings": [],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 0,
+     "rejected_items": 2,
+     "invalid_citations": [
+      "E9"
+     ],
+     "all_accepted_items_grounded": false,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "scenario:invented_conflict",
+   "case_id": "research-access",
+   "result": {
+    "summary": "",
+    "findings": [],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 0,
+     "rejected_items": 1,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 1,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "scenario:malformed",
+   "case_id": "research-access",
+   "result": {
+    "summary": "",
+    "findings": [],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 0,
+     "rejected_items": 2,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "scenario:grounded",
+   "case_id": "energy-anomaly",
+   "result": {
+    "summary": "Draft answer to: What should facilities investigate first after the overnight energy spike?",
+    "findings": [
+     {
+      "text": "Building C electricity use increased 38 percent between 01:00 and 03:00 compared with the prior seven-night median.",
+      "citations": [
+       "E1"
+      ]
+     },
+     {
+      "text": "Air-handler AHU-C3 was placed in manual override during a ventilation inspection at 00:42.",
+      "citations": [
+       "E2"
+      ]
+     }
+    ],
+    "actions": [
+     {
+      "text": "Send the decision to a human reviewer together with the cited evidence.",
+      "citations": [
+       "E1"
+      ]
+     }
+    ],
+    "conflicts": [],
+    "uncertainty": "Only the supplied evidence was considered.",
+    "acceptance": {
+     "accepted_items": 3,
+     "rejected_items": 0,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "scenario:uncited",
+   "case_id": "energy-anomaly",
+   "result": {
+    "summary": "",
+    "findings": [
+     {
+      "text": "Building C electricity use increased 38 percent between 01:00 and 03:00 compared with the prior seven-night median.",
+      "citations": [
+       "E1"
+      ]
+     }
+    ],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 1,
+     "rejected_items": 1,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "scenario:invented_id",
+   "case_id": "energy-anomaly",
+   "result": {
+    "summary": "",
+    "findings": [],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 0,
+     "rejected_items": 2,
+     "invalid_citations": [
+      "E9"
+     ],
+     "all_accepted_items_grounded": false,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "scenario:invented_conflict",
+   "case_id": "energy-anomaly",
+   "result": {
+    "summary": "",
+    "findings": [],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 0,
+     "rejected_items": 1,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 1,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "scenario:malformed",
+   "case_id": "energy-anomaly",
+   "result": {
+    "summary": "",
+    "findings": [],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 0,
+     "rejected_items": 2,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "unicode_whitespace",
+   "case_id": "policy-conflict",
+   "result": {
+    "summary": "Approve the request ? caf? na-ve",
+    "findings": [
+     {
+      "text": "Memo A requires approval",
+      "citations": [
+       "E1"
+      ]
+     }
+    ],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 1,
+     "rejected_items": 0,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": false,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "limits",
+   "case_id": "research-access",
+   "result": {
+    "summary": "",
+    "findings": [
+     {
+      "text": "Finding 0",
+      "citations": [
+       "E1"
+      ]
+     },
+     {
+      "text": "Finding 1",
+      "citations": [
+       "E1"
+      ]
+     },
+     {
+      "text": "Finding 2",
+      "citations": [
+       "E1"
+      ]
+     },
+     {
+      "text": "Finding 3",
+      "citations": [
+       "E1"
+      ]
+     },
+     {
+      "text": "Finding 4",
+      "citations": [
+       "E1"
+      ]
+     },
+     {
+      "text": "Finding 5",
+      "citations": [
+       "E1"
+      ]
+     },
+     {
+      "text": "Finding 6",
+      "citations": [
+       "E1"
+      ]
+     },
+     {
+      "text": "Finding 7",
+      "citations": [
+       "E1"
+      ]
+     }
+    ],
+    "actions": [
+     {
+      "text": "Action 0",
+      "citations": [
+       "E2"
+      ]
+     },
+     {
+      "text": "Action 1",
+      "citations": [
+       "E2"
+      ]
+     },
+     {
+      "text": "Action 2",
+      "citations": [
+       "E2"
+      ]
+     },
+     {
+      "text": "Action 3",
+      "citations": [
+       "E2"
+      ]
+     },
+     {
+      "text": "Action 4",
+      "citations": [
+       "E2"
+      ]
+     },
+     {
+      "text": "Action 5",
+      "citations": [
+       "E2"
+      ]
+     }
+    ],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 14,
+     "rejected_items": 0,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "duplicate_conflict_ids",
+   "case_id": "policy-conflict",
+   "result": {
+    "summary": "",
+    "findings": [],
+    "actions": [],
+    "conflicts": [
+     {
+      "detail": "duplicate ids",
+      "evidence": [
+       "E1",
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 1,
+     "rejected_items": 0,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": false,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "reversed_conflict_pair",
+   "case_id": "policy-conflict",
+   "result": {
+    "summary": "",
+    "findings": [],
+    "actions": [],
+    "conflicts": [
+     {
+      "detail": "reversed",
+      "evidence": [
+       "E2",
+       "E1"
+      ]
+     }
+    ],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 1,
+     "rejected_items": 0,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "non_string_citations",
+   "case_id": "energy-anomaly",
+   "result": {
+    "summary": "",
+    "findings": [],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 0,
+     "rejected_items": 4,
+     "invalid_citations": [
+      "1",
+      "None",
+      "True"
+     ],
+     "all_accepted_items_grounded": false,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "too_many_citations",
+   "case_id": "energy-anomaly",
+   "result": {
+    "summary": "",
+    "findings": [
+     {
+      "text": "many citations",
+      "citations": [
+       "E1",
+       "E2",
+       "E3",
+       "E4",
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 1,
+     "rejected_items": 0,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "long_text",
+   "case_id": "research-access",
+   "result": {
+    "summary": "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
+    "findings": [
+     {
+      "text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "citations": [
+       "E1"
+      ]
+     }
+    ],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+    "acceptance": {
+     "accepted_items": 1,
+     "rejected_items": 0,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "missing_sections",
+   "case_id": "research-access",
+   "result": {
+    "summary": "",
+    "findings": [],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 0,
+     "rejected_items": 0,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": true,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "wrong_keys",
+   "case_id": "policy-conflict",
+   "result": {
+    "summary": "",
+    "findings": [],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 0,
+     "rejected_items": 2,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": false,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  },
+  {
+   "name": "emoji_and_control",
+   "case_id": "policy-conflict",
+   "result": {
+    "summary": "",
+    "findings": [
+     {
+      "text": "Safe ? approval now",
+      "citations": [
+       "E3"
+      ]
+     }
+    ],
+    "actions": [],
+    "conflicts": [],
+    "uncertainty": "",
+    "acceptance": {
+     "accepted_items": 1,
+     "rejected_items": 0,
+     "invalid_citations": [],
+     "all_accepted_items_grounded": true,
+     "unsupported_conflict_relations_rejected": 0,
+     "model_conflict_detection": false,
+     "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
+    }
+   }
+  }
+ ]
+}

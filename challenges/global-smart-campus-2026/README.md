@@ -6,6 +6,12 @@ Competition entry for the Global Smart Campus Technology Innovation Challenge 20
 
 https://hal-campus-evidence-desk.therealjakobhedrich.workers.dev
 
+The public page runs the deterministic acceptance layer in the browser. Visitors can pick or edit a
+model draft (grounded, uncited, invented evidence ID, invented conflict, malformed) and see what the gate
+accepts and rejects. `public_demo/public/gate.js` is a port of `mvp/engine.py` and `mvp/live_model.py`;
+`public_demo/test/gate.test.js` and `mvp/test_gate_parity.py` hold both implementations to the same
+recorded results for 25 drafts and edge cases (`public_demo/parity/`).
+
 Public competition release and recorded demo:
 https://github.com/UniteAndCreateForLife/HAL_SUPREME/releases/tag/gsc2026-demo-v1
 
@@ -40,7 +46,7 @@ python app.py
 
 ## Validation scope
 
-The current unit suite contains **30 tests** covering deterministic grounding, privacy egress, audit integrity, role authorization, tenant isolation, and tenant-ID boundary validation. The repository CI runs the acceptance workflow on Linux x64, Linux ARM64, Windows x64, and macOS ARM64. Live NVIDIA NIM evidence is retained in `mvp/LIVE_VALIDATION_RECEIPT.json`; the public demo intentionally disables external model calls to prevent uncontrolled compute use.
+The current unit suite contains **32 tests** covering deterministic grounding, privacy egress, audit integrity, role authorization, tenant isolation, tenant-ID boundary validation, and parity with the browser gate; the browser gate has 6 more tests under `node --test`. The repository CI runs the acceptance workflow on Linux x64, Linux ARM64, Windows x64, and macOS ARM64. Live NVIDIA NIM evidence is retained in `mvp/LIVE_VALIDATION_RECEIPT.json`; the public demo intentionally disables external model calls to prevent uncontrolled compute use.
 
 Submission materials in this directory are sanitized and contain no portal password, API key, phone number, or legal-declaration acceptance.
 
