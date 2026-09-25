@@ -12,6 +12,22 @@ The versioned `hal.cinematic-world/v1` manifest binds stable asset IDs, entity I
 
 Images and footage become reusable assets before they become finished shots. Character references are reconstructed and rigged into a versioned canonical character; wardrobe is registered separately so clothing changes are intentional. Props become PBR meshes or splats with stable IDs. Locations are reconstructed into a spatial set with persistent camera scale, anchors, collision/affordance metadata, and lighting references. Every accepted asset carries lineage and, when materialized, a content hash.
 
+### Photoreal environment rule
+
+A box-model corridor is a **blockout**, never a final visible set. Production environments that declare `photoreal_from_capture` must be reconstructed from multi-image, video, or photogrammetry input. The manifest records the source capture, visual representation, visual artifact, separate collision artifact, and whether geometry is measured/reconstructed versus merely inferred.
+
+HAL uses a hybrid environment package:
+
+- **visual shell:** Gaussian splat, high-resolution textured mesh, or both, reconstructed from the approved images/video;
+- **simulation shell:** clean low-complexity mesh used invisibly for collision, navigation, anchors, ray tests, occlusion and physics;
+- **live semantic surfaces:** mirrors, windows, screens, doors, water and other elements that must respond to moving performers or lighting are explicit Godot entities instead of being baked permanently into the capture;
+- **dynamic objects:** characters and interactive props remain rigged/PBR assets with stable IDs and transforms;
+- **camera/control passes:** depth, normals, entity IDs, pose, camera matrices and motion are exported from the deterministic stage for neural finishing.
+
+This preserves the photographic appearance of a captured location without sacrificing game-engine control. A splat can provide the highest-fidelity static appearance while its invisible proxy mesh provides physical interaction; when relighting or deformation is important, a textured/PBR mesh or hybrid representation is preferred.
+
+Single-image world generation is useful for ideation and fictional spaces, but hidden geometry is necessarily inferred. It must not be labeled capture-faithful production geometry unless additional views or measured reconstruction evidence resolve the unseen space.
+
 OpenUSD is the preferred interchange/composition layer for complex scene graphs, variants, references, payloads, cameras, lights, skeletons and non-destructive overrides. Godot remains the bounded live stage. Blender is an authoring/repair surface, and Unreal can be an optional USD review/virtual-production surface; neither becomes HAL's factual authority.
 
 ## Shot compiler
@@ -30,7 +46,10 @@ Malformed outputs are valuable as negative evaluation data. A clip that changes 
 
 ## Current reconstruction adapters to evaluate
 
-- **HY-World 2.x / WorldMirror 2.x:** multi-view or video reconstruction into persistent 3D representations, useful for locations and world capture.
+- **World Labs Marble / World API:** image, multi-image and video-to-world reconstruction/generation with exportable Gaussian splats and meshes. Treat as a replaceable remote world worker.
+- **World Labs Atlas:** early-access higher-end world model for spatial reconstruction and camera-controlled generation; evaluate when access is available, never make it a required authority.
+- **HY-World 2.x / WorldMirror 2.x:** open-source multi-view or video reconstruction into persistent 3D representations, useful for locations and world capture.
+- **VGGT + COLMAP/gsplat:** open geometry bootstrap for camera intrinsics/extrinsics, depth, point maps and tracks, followed by Gaussian-splat optimization when full world-model compute is unavailable.
 - **TRELLIS.2:** image-to-PBR 3D/GLB for reusable objects and many wardrobe/prop assets.
 - **SAM 3D Objects:** real-image object reconstruction and multi-object scene extraction; useful for object discovery and initial spatial alignment.
 - **SAM 3D Body / MetaHuman-style fitting:** human body/head reconstruction candidates for canonical characters, followed by our own rig/identity validation.
