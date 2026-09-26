@@ -1,0 +1,53 @@
+{
+  "problem": "Earlier this week, HAL made a music video that passed every automated check. Its owner watched it once and called it bad.",
+  "loop_note": "Today's direction: glitchy experimental trap, lyrics by HAL in the owner's themes, emo-trap inspiration turned into musical traits. Artist names are refused in prompts.",
+  "capabilities": [
+    {
+      "capability": "minimax-music-3",
+      "use": "4 sung takes of the song",
+      "cost": "$0.92"
+    },
+    {
+      "capability": "flux-pro",
+      "use": "12 keyframes",
+      "cost": "$0.76"
+    },
+    {
+      "capability": "kling-v3-turbo-pro-i2v",
+      "use": "12 shots, 7 s each",
+      "cost": "$12.35"
+    },
+    {
+      "capability": "kontext-edit",
+      "use": "4 performance frames",
+      "cost": "$0.17"
+    },
+    {
+      "capability": "talking-head (OmniHuman)",
+      "use": "6 lip-synced clips",
+      "cost": "$5.04"
+    },
+    {
+      "capability": "ideogram-v4 + bg-remove",
+      "use": "the chrome title",
+      "cost": "$0.04"
+    },
+    {
+      "capability": "gemini-tts",
+      "use": "this narration",
+      "cost": "$0.57"
+    }
+  ],
+  "create_note": "Every call carries one session tag, so Livepeer Agent's cost report is the production's receipt: $19.85 for the whole song and video.",
+  "review_lines": [
+    "Lyrics: every take transcribed from its separated vocal. 98-100% of lines sung, word error 0.16-0.23.",
+    "Lip-sync: the audio in every returned clip is cross-correlated with the vocal segment sent. Offset 0 ms on all six.",
+    "Edit: every cut on a bar line of the song's own beat grid; no cut longer than its shot.",
+    "Master: -14 LUFS, true peak under -1 dBTP, because the raw takes clipped.",
+    "Style and timing gates for remakes: a MuQ-MuLan fingerprint against the owner's catalog, beats within 40 ms."
+  ],
+  "taste": "Today's first cut passed every check. The owner watched it and asked for lip-sync, real typography, and the look of the artists the owner follows.",
+  "taste_fix": "HAL studied those videos, re-briefed, and rebuilt the edit around a lip-synced performance. The owner's verdict counts three times as much as any score.",
+  "result_line": "Lyrics by HAL, sung by MiniMax Music 3, picture by FLUX, Kling and OmniHuman, all through Livepeer Agent. Cut on the beat by HAL Studio.",
+  "close": "Apache-2.0. Studio code, tests, and the receipt for every Livepeer Agent call are in the folder above."
+}

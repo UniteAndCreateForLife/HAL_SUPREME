@@ -1,0 +1,52 @@
+{
+  "song_bytes": 18240302,
+  "duration_s": 103.329,
+  "beat_grid": {
+    "bpm": 171.808,
+    "period_s": 0.3492271111564723,
+    "phase_s": 11.211609594655888,
+    "steadiness_ms": 4.9,
+    "beats": 260,
+    "duration_s": 103.329,
+    "tightness": 1600,
+    "self_spread_ms": 16.7,
+    "self_jitter_ms": 4.0
+  },
+  "sections": [
+    [
+      "intro",
+      0.0,
+      1.42
+    ],
+    [
+      "intro",
+      1.42,
+      18.66
+    ],
+    [
+      "verse",
+      18.66,
+      44.08
+    ],
+    [
+      "chorus",
+      44.08,
+      57.62
+    ],
+    [
+      "verse",
+      57.62,
+      79.32
+    ],
+    [
+      "chorus",
+      79.32,
+      92.94
+    ],
+    [
+      "outro",
+      92.94,
+      103.329
+    ]
+  ]
+}

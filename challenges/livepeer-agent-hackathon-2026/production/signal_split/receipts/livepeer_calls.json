@@ -1,0 +1,703 @@
+[
+  {
+    "job_id": "mjob_ff9cfd5cccc0",
+    "capability": "minimax-music-3",
+    "prompt": "glitchy experimental trap, hard 808s with rolling hi-hats, bright ringtone plucks, glitch stutters and chopped vocal edits, dark and a little funny, dry rapped verses with a confident male voice, chantable autotuned hook, 140 BPM half-time, D minor",
+    "inputs": {
+      "lyrics": "[intro]\nstatic-kiss the night, zero-one, zero-one\nglitch-glint in my headset, pulse on the run\n\n[verse]\nmirror's lagging, it copies my grin\npixel-skin ripples a beat behind\nsig-sig-signal flickers, I'm a broken loop\nthoughts down the sink again, rinse and repeat\nmy voice gets older on a cracked vinyl spin\nbody made of meat, code wearing it thin\nsplit-self echo, version two on the line\nI'm still loading, a beta design\n\n[chorus]\nI'm the glitch, I'm the beat, I'm the echo in the street\nshatter-frame, replay, my copy can't compete\nsing-sing-sing, I'm the static you can't delete\ncall my name twice and the signal answers me\n\n[verse]\nbinary rain on my chrome-cold skin\nheartbeat syncing to the 808 grin\nmirror-delay, my shadow's out of phase\nI'm the signal, I'm the ghost in the haze\nolder voice whispers, are you still the same\ncircuit laughing, who's to blame\nsplit identity, a dozen you and me\nsystem learning me, I'm the glitch you see\n\n[chorus]\nI'm the glitch, I'm the beat, I'm the echo in the street\nshatter-frame, replay, my copy can't compete\nsing-sing-sing, I'm the static you can't delete\ncall my name twice and the signal answers me\n\n[outro]\nfade-out on a ringing pluck, glitch-fade\nsignal split, still me, remade",
+      "duration": 110,
+      "seed": 2601
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-song-take1-20260926",
+    "submitted_at": "2026-09-26T14:21:09.195Z",
+    "cost_usd_estimated": 0.231,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzEvMnJYZzFWN1FlVDh1WHZDT2xMS1BTXzUweHBuUXNsLndhdg.767036f7f311ba09/2rXg1V7QeT8uXvCOlLKPS_50xpnQsl.wav",
+    "elapsed_ms": 180928,
+    "error": null
+  },
+  {
+    "job_id": "mjob_5bbb8c3ac7d9",
+    "capability": "minimax-music-3",
+    "prompt": "glitchy experimental trap, distorted 808 bass, skittering hi-hats, bright ringtone plucks and bitcrushed stutter edits, surreal and playful-dark, half-rapped half-sung male lead with close whispered doubles, huge chantable hook, 140 BPM half-time, D minor",
+    "inputs": {
+      "lyrics": "[intro]\nstatic-kiss the night, zero-one, zero-one\nglitch-glint in my headset, pulse on the run\n\n[verse]\nmirror's lagging, it copies my grin\npixel-skin ripples a beat behind\nsig-sig-signal flickers, I'm a broken loop\nthoughts down the sink again, rinse and repeat\nmy voice gets older on a cracked vinyl spin\nbody made of meat, code wearing it thin\nsplit-self echo, version two on the line\nI'm still loading, a beta design\n\n[chorus]\nI'm the glitch, I'm the beat, I'm the echo in the street\nshatter-frame, replay, my copy can't compete\nsing-sing-sing, I'm the static you can't delete\ncall my name twice and the signal answers me\n\n[verse]\nbinary rain on my chrome-cold skin\nheartbeat syncing to the 808 grin\nmirror-delay, my shadow's out of phase\nI'm the signal, I'm the ghost in the haze\nolder voice whispers, are you still the same\ncircuit laughing, who's to blame\nsplit identity, a dozen you and me\nsystem learning me, I'm the glitch you see\n\n[chorus]\nI'm the glitch, I'm the beat, I'm the echo in the street\nshatter-frame, replay, my copy can't compete\nsing-sing-sing, I'm the static you can't delete\ncall my name twice and the signal answers me\n\n[outro]\nfade-out on a ringing pluck, glitch-fade\nsignal split, still me, remade",
+      "duration": 110,
+      "seed": 2602
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-song-take2-20260926",
+    "submitted_at": "2026-09-26T14:21:15.078Z",
+    "cost_usd_estimated": 0.231,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzAvM3NjcWJTTWIxYk1XRGEybjUyMXdpX0dleUw3VUtYLndhdg.e3ed096f48de1f06/3scqbSMb1bMWDa2n521wi_GeyL7UKX.wav",
+    "elapsed_ms": 170395,
+    "error": null
+  },
+  {
+    "job_id": "mjob_8bda3e0547b7",
+    "capability": "minimax-music-3",
+    "prompt": "emotionally raw emo trap with glitch edits, washed-out clean electric guitar loop, sparse heavy 808s, lo-fi tape haze and deep reverb, sad melodic half-sung half-rapped male voice with vocal fry and raw cracks, stacked wordless harmonies, vulnerable verses building to a cathartic chantable hook, 140 BPM half-time, D minor",
+    "inputs": {
+      "lyrics": "[intro]\nstatic-kiss the night, zero-one, zero-one\nglitch-glint in my headset, pulse on the run\n\n[verse]\nmirror's lagging, it copies my grin\npixel-skin ripples a beat behind\nsig-sig-signal flickers, I'm a broken loop\nthoughts down the sink again, rinse and repeat\nmy voice gets older on a cracked vinyl spin\nbody made of meat, code wearing it thin\nsplit-self echo, version two on the line\nI'm still loading, a beta design\n\n[chorus]\nI'm the glitch, I'm the beat, I'm the echo in the street\nshatter-frame, replay, my copy can't compete\nsing-sing-sing, I'm the static you can't delete\ncall my name twice and the signal answers me\n\n[verse]\nbinary rain on my chrome-cold skin\nheartbeat syncing to the 808 grin\nmirror-delay, my shadow's out of phase\nI'm the signal, I'm the ghost in the haze\nolder voice whispers, are you still the same\ncircuit laughing, who's to blame\nsplit identity, a dozen you and me\nsystem learning me, I'm the glitch you see\n\n[chorus]\nI'm the glitch, I'm the beat, I'm the echo in the street\nshatter-frame, replay, my copy can't compete\nsing-sing-sing, I'm the static you can't delete\ncall my name twice and the signal answers me\n\n[outro]\nfade-out on a ringing pluck, glitch-fade\nsignal split, still me, remade",
+      "duration": 110,
+      "seed": 2603
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-song-emo-take3-20260926",
+    "submitted_at": "2026-09-26T14:21:44.056Z",
+    "cost_usd_estimated": 0.231,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzUvV1VYcUk2MUJPaTF4MVV3R3htRmZMX1NjRTBpY0pkLndhdg.ea4d7a7ac1d0c65b/WUXqI61BOi1x1UwGxmFfL_ScE0icJd.wav",
+    "elapsed_ms": 201512,
+    "error": null
+  },
+  {
+    "job_id": "mjob_b6c3981da3cc",
+    "capability": "minimax-music-3",
+    "prompt": "melancholic emo trap, lo-fi acoustic-electric guitar sample drenched in reverb, booming slow 808s and crisp hi-hats, glitch stutters on the hook, fragile low sung-rapped male voice, emotional and intimate, stacked harmonies and whispered doubles, cathartic chorus, 140 BPM half-time, D minor",
+    "inputs": {
+      "lyrics": "[intro]\nstatic-kiss the night, zero-one, zero-one\nglitch-glint in my headset, pulse on the run\n\n[verse]\nmirror's lagging, it copies my grin\npixel-skin ripples a beat behind\nsig-sig-signal flickers, I'm a broken loop\nthoughts down the sink again, rinse and repeat\nmy voice gets older on a cracked vinyl spin\nbody made of meat, code wearing it thin\nsplit-self echo, version two on the line\nI'm still loading, a beta design\n\n[chorus]\nI'm the glitch, I'm the beat, I'm the echo in the street\nshatter-frame, replay, my copy can't compete\nsing-sing-sing, I'm the static you can't delete\ncall my name twice and the signal answers me\n\n[verse]\nbinary rain on my chrome-cold skin\nheartbeat syncing to the 808 grin\nmirror-delay, my shadow's out of phase\nI'm the signal, I'm the ghost in the haze\nolder voice whispers, are you still the same\ncircuit laughing, who's to blame\nsplit identity, a dozen you and me\nsystem learning me, I'm the glitch you see\n\n[chorus]\nI'm the glitch, I'm the beat, I'm the echo in the street\nshatter-frame, replay, my copy can't compete\nsing-sing-sing, I'm the static you can't delete\ncall my name twice and the signal answers me\n\n[outro]\nfade-out on a ringing pluck, glitch-fade\nsignal split, still me, remade",
+      "duration": 110,
+      "seed": 2604
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-song-emo-take4-20260926",
+    "submitted_at": "2026-09-26T14:21:49.470Z",
+    "cost_usd_estimated": 0.231,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzQvQzRvMDhzUVFWT0hYZE5fWlZ1ZGVTX0o4SjdSRnRBLndhdg.429c599ebf4bf2c9/C4o08sQQVOHXdN_ZVudeS_J8J7RFtA.wav",
+    "elapsed_ms": 179202,
+    "error": null
+  },
+  {
+    "job_id": "sync-signal-split-k01-20260926",
+    "capability": "flux-pro",
+    "prompt": "lo-fi VHS camcorder frame, a dark messy bedroom at night, an old CRT television glowing with pink and blue static on a desk, a pair of headphones glowing faintly on an unmade bed, rain streaks on the window, heavy film grain, slight chromatic aberration, soft pink and cold blue neon light, shallow depth of field, cinematic 16:9, no people, no text",
+    "inputs": {
+      "aspect_ratio": "16:9",
+      "num_images": 1,
+      "output_format": "png"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-k01-20260926",
+    "submitted_at": "2026-09-26T14:22:44.111Z",
+    "cost_usd_estimated": 0.063,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYjkvWkl2ZXJBbnVfdWR6NzZvcFNnaDlvX2E0Y2M3YTZhOWUxYzQxNzJiZmRhMmQ4N2EyNDgyNjRkLnBuZw.99e9e07f6100db03/ZIverAnu_udz76opSgh9o_a4cc7a6a9e1c4172bfda2d87a248264d.png"
+  },
+  {
+    "job_id": "sync-signal-split-k02-20260926",
+    "capability": "flux-pro",
+    "prompt": "lo-fi VHS camcorder frame, a young man in an oversized black hoodie with the hood up seen from behind standing at a small bathroom mirror at night, messy hair falling over his eyes so his face is hidden, his reflection in the mirror turned slightly differently from him as if it moved a beat late, flickering cold fluorescent light, soft pink neon from the hallway, heavy film grain, slight chromatic aberration, cinematic 16:9, no text",
+    "inputs": {
+      "aspect_ratio": "16:9",
+      "num_images": 1,
+      "output_format": "png"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-k02-20260926",
+    "submitted_at": "2026-09-26T14:22:46.262Z",
+    "cost_usd_estimated": 0.063,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYmIvcHMzc0RlR1JtQ3FDanBzM1NsMmd0X2ExODU5ODFhY2E0ZjQ5ODI5ODFiYTc3NjAzYjVmNzAyLnBuZw.3f1590b82a2615a5/ps3sDeGRmCqCjps3Sl2gt_a185981aca4f4982981ba77603b5f702.png"
+  },
+  {
+    "job_id": "sync-signal-split-k03-20260926",
+    "capability": "flux-pro",
+    "prompt": "lo-fi VHS camcorder frame, extreme close-up of two pale hands under a running bathroom faucet at night, the falling water breaking apart into glowing pink and blue pixel fragments swirling down the drain, dark sink, heavy film grain, slight chromatic aberration, cinematic 16:9, no text",
+    "inputs": {
+      "aspect_ratio": "16:9",
+      "num_images": 1,
+      "output_format": "png"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-k03-20260926",
+    "submitted_at": "2026-09-26T14:23:47.817Z",
+    "cost_usd_estimated": 0.063,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzAvdzBfaVJpczJzcVRpQzgtWlc3UGtEXzk3YWExZjYwNWI1ZjRjZWY5NTZhNjZkNTA3NTNjYWEzLnBuZw.b3c6ffa153fc19a9/w0_iRis2sqTiC8-ZW7PkD_97aa1f605b5f4cef956a66d50753caa3.png"
+  },
+  {
+    "job_id": "sync-signal-split-k05-20260926",
+    "capability": "flux-pro",
+    "prompt": "lo-fi VHS camcorder frame, a young man in an oversized black hoodie with the hood up and messy dirty-blond hair over his eyes, walking away from camera down an empty wet city street at night in the rain, puddles reflecting pink and cold blue neon signs, faint glitch trails and ghost copies of his silhouette behind him, heavy film grain, slight chromatic aberration, cinematic 16:9, no readable text",
+    "inputs": {
+      "aspect_ratio": "16:9",
+      "num_images": 1,
+      "output_format": "png"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-k05-20260926",
+    "submitted_at": "2026-09-26T14:23:50.110Z",
+    "cost_usd_estimated": 0.063,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzEvX2c2Q25XbXVvb01KT0M0MEEwVFJLXzQyZWFiYzQ0M2UyNTRkMTU5Y2M1Njg4YjYyZDZmM2FhLnBuZw.b7dd806e3cf286ed/_g6CnWmuooMJOC40A0TRK_42eabc443e254d159cc5688b62d6f3aa.png"
+  },
+  {
+    "job_id": "sync-signal-split-k07-20260926",
+    "capability": "flux-pro",
+    "prompt": "lo-fi VHS camcorder frame, a dark room with a wall of stacked old CRT television screens glowing blue, every screen showing the same young man in a black hoodie with the hood up and messy dirty-blond hair over his eyes, each copy in a slightly different pose, one screen glitching pink, heavy film grain, slight chromatic aberration, cinematic 16:9, no readable text",
+    "inputs": {
+      "aspect_ratio": "16:9",
+      "num_images": 1,
+      "output_format": "png"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-k07-20260926",
+    "submitted_at": "2026-09-26T14:24:21.633Z",
+    "cost_usd_estimated": 0.063,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzMvQkNpdWhfZ0RiOEJBYl81VkVFQm5tXzc3ODkxZWEyMTU2NDQ4NjBhMGY0NGUyNjE4MDljMDVmLnBuZw.a013ca79f5fd2309/BCiuh_gDb8BAb_5VEEBnm_77891ea215644860a0f44e261809c05f.png"
+  },
+  {
+    "job_id": "sync-signal-split-k04-20260926",
+    "capability": "flux-pro",
+    "prompt": "lo-fi VHS camcorder frame, extreme close-up of a spinning black vinyl record with a thin crack running through it, the needle skipping across the crack, dust floating in soft pink light, dark background, heavy film grain, slight chromatic aberration, cinematic 16:9, no text, no labels",
+    "inputs": {
+      "aspect_ratio": "16:9",
+      "num_images": 1,
+      "output_format": "png"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-k04-20260926",
+    "submitted_at": "2026-09-26T14:24:23.400Z",
+    "cost_usd_estimated": 0.063,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzQvVUJ1Z0xFRF9yYXJBTFpCU09OaFJmXzlkOTRiMWMyNGQzZTQxODhhYWU3MTNlY2YzYjg4ZDNhLnBuZw.98e8c7ab95d296b9/UBugLED_rarALZBSONhRf_9d94b1c24d3e4188aae713ecf3b88d3a.png"
+  },
+  {
+    "job_id": "sync-signal-split-k08-20260926",
+    "capability": "flux-pro",
+    "prompt": "lo-fi VHS camcorder frame, close-up of a chrome-silver hand held up in heavy night rain, glowing white-green binary digits falling like raindrops and sliding over the metal fingers, pink and cold blue neon bokeh behind, heavy film grain, slight chromatic aberration, cinematic 16:9, no readable text",
+    "inputs": {
+      "aspect_ratio": "16:9",
+      "num_images": 1,
+      "output_format": "png"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-k08-20260926",
+    "submitted_at": "2026-09-26T14:24:52.485Z",
+    "cost_usd_estimated": 0.063,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzYvQjVucjBKZDZ5T3Q3LWR6RVAtSzFlXzMzNjk4YjEyZTIxNTRkZDQ5MWIwMjY2MDFlODkzZmFhLnBuZw.8a16257db14cae15/B5nr0Jd6yOt7-dzEP-K1e_33698b12e2154dd491b026601e893faa.png"
+  },
+  {
+    "job_id": "sync-signal-split-k11-20260926",
+    "capability": "flux-pro",
+    "prompt": "lo-fi VHS camcorder frame, a young man in an oversized black hoodie with the hood up and messy dirty-blond hair over his eyes standing in a dark void of television static, his body breaking into drifting pink and blue pixels at the edges as if he is being uploaded, heavy film grain, slight chromatic aberration, cinematic 16:9, no text",
+    "inputs": {
+      "aspect_ratio": "16:9",
+      "num_images": 1,
+      "output_format": "png"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-k11-20260926",
+    "submitted_at": "2026-09-26T14:24:54.811Z",
+    "cost_usd_estimated": 0.063,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzgvQ3JMd2dwUTBKMjJGTEFJR1NLNlpMXzc5OTZmMTQ2OTUwOTQzMzQ5OTNmZTBjNDZlNjlhM2M0LnBuZw.974dffca3ec89711/CrLwgpQ0J22FLAIGSK6ZL_7996f14695094334993fe0c46e69a3c4.png"
+  },
+  {
+    "job_id": "sync-signal-split-k06-20260926",
+    "capability": "flux-pro",
+    "prompt": "lo-fi VHS camcorder frame, a cracked mirror hanging on a dark wall, every shard holding a fractured reflection of a young man in a black hoodie with messy dirty-blond hair over his eyes, the reflections slightly out of sync with each other, pink and cold blue neon glow, heavy film grain, slight chromatic aberration, cinematic 16:9, no text",
+    "inputs": {
+      "aspect_ratio": "16:9",
+      "num_images": 1,
+      "output_format": "png"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-k06-20260926",
+    "submitted_at": "2026-09-26T14:26:02.088Z",
+    "cost_usd_estimated": 0.063,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiY2QvZ1FjSjItMG84aW1uX1VvNUFYcXhTXzg4MGVjMDUwMTAxNzRjM2M4ZjE1ZTQ2YTY1NzgxMWUyLnBuZw.5565f8fc2a69b3c1/gQcJ2-0o8imn_Uo5AXqxS_880ec05010174c3c8f15e46a657811e2.png"
+  },
+  {
+    "job_id": "sync-signal-split-k09-20260926",
+    "capability": "flux-pro",
+    "prompt": "lo-fi VHS camcorder frame, a lonely 24-hour gas station at night in light rain, humming pink and blue neon canopy lights, a young man in an oversized black hoodie with messy dirty-blond hair sitting alone on the curb with his back to camera and headphones around his neck, wet asphalt reflections, heavy film grain, slight chromatic aberration, cinematic 16:9, no readable text, no logos",
+    "inputs": {
+      "aspect_ratio": "16:9",
+      "num_images": 1,
+      "output_format": "png"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-k09-20260926",
+    "submitted_at": "2026-09-26T14:26:04.063Z",
+    "cost_usd_estimated": 0.063,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiY2UvRzFwTXdQRi0wamhpTXVWZ1VLX2ZHXzQyMzVjMjA5YzZjNTQ5MjRiMjFmODRlYzY2NDZmM2Q5LnBuZw.d22004b72fada92d/G1pMwPF-0jhiMuVgUK_fG_4235c209c6c54924b21f84ec6646f3d9.png"
+  },
+  {
+    "job_id": "sync-signal-split-k10-20260926",
+    "capability": "flux-pro",
+    "prompt": "lo-fi VHS camcorder frame, rain streaming down a car window at night, city lights smeared into pink and blue bokeh, the faint reflection of a young man with messy dirty-blond hair over his eyes in the wet glass, heavy film grain, slight chromatic aberration, cinematic 16:9, no text",
+    "inputs": {
+      "aspect_ratio": "16:9",
+      "num_images": 1,
+      "output_format": "png"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-k10-20260926",
+    "submitted_at": "2026-09-26T14:26:37.156Z",
+    "cost_usd_estimated": 0.063,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiZDAvckExUkZZWHRQOGs5OEo4MVQ3ZzM1XzA0YTFkYjBkODViNjRkYjNhZDIxNTg4ZGZhMDM0MDg3LnBuZw.f367409d99afbd06/rA1RFYXtP8k98J81T7g35_04a1db0d85b64db3ad21588dfa034087.png"
+  },
+  {
+    "job_id": "sync-signal-split-k12-20260926",
+    "capability": "flux-pro",
+    "prompt": "lo-fi VHS camcorder frame, an old CRT television in a dark bedroom switching off, the picture collapsing into a thin bright horizontal line of pink and blue light, faint glow on an unmade bed and glowing headphones, heavy film grain, slight chromatic aberration, cinematic 16:9, no people, no text",
+    "inputs": {
+      "aspect_ratio": "16:9",
+      "num_images": 1,
+      "output_format": "png"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-k12-20260926",
+    "submitted_at": "2026-09-26T14:26:39.115Z",
+    "cost_usd_estimated": 0.063,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiZDIvdVZNbDJxMVU1cXZQYUxtQmFNM1ZhXzI3YzVhZjQ3YWNhYzRiZjBiMzE4ZTM4ZjQ4MTY1NDdhLnBuZw.19a8f0c237f7a041/uVMl2q1U5qvPaLmBaM3Va_27c5af47acac4bf0b318e38f4816547a.png"
+  },
+  {
+    "job_id": "mjob_8848a8472c3b",
+    "capability": "kling-v3-turbo-pro-i2v",
+    "prompt": "slow handheld push-in on a dark bedroom at night, purple and pink rain streaks keep falling inside the room, the old CRT screen flickers with rolling static, the headphones on the bed pulse with soft light, VHS camcorder grain, moody and quiet, no people",
+    "inputs": {
+      "duration": "7"
+    },
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYjkvWkl2ZXJBbnVfdWR6NzZvcFNnaDlvX2E0Y2M3YTZhOWUxYzQxNzJiZmRhMmQ4N2EyNDgyNjRkLnBuZw.99e9e07f6100db03/ZIverAnu_udz76opSgh9o_a4cc7a6a9e1c4172bfda2d87a248264d.png",
+    "idempotency_key": "signal-split-v01-20260926",
+    "submitted_at": "2026-09-26T14:28:32.993Z",
+    "cost_usd_estimated": 1.029,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiZTUvWlBWNGNyRnktZm5zdmVCUnhRQ2FDX291dHB1dC5tcDQ.d3e24828fa3da230/ZPV4crFy-fnsveBRxQCaC_output.mp4",
+    "elapsed_ms": 109779,
+    "error": null
+  },
+  {
+    "job_id": "mjob_ce2610d3be92",
+    "capability": "kling-v3-turbo-pro-i2v",
+    "prompt": "static camera in a small bathroom at night, the young man in the black hoodie stands still facing the mirror, the fluorescent tube flickers, his reflection slowly tilts its head a moment after he does as if lagging behind, subtle breathing, his face stays hidden under his hair, he does not speak, VHS camcorder grain",
+    "inputs": {
+      "duration": "7"
+    },
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYmIvcHMzc0RlR1JtQ3FDanBzM1NsMmd0X2ExODU5ODFhY2E0ZjQ5ODI5ODFiYTc3NjAzYjVmNzAyLnBuZw.3f1590b82a2615a5/ps3sDeGRmCqCjps3Sl2gt_a185981aca4f4982981ba77603b5f702.png",
+    "idempotency_key": "signal-split-v02-20260926",
+    "submitted_at": "2026-09-26T14:28:36.604Z",
+    "cost_usd_estimated": 1.029,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiZWIvYXpROXRtWklXV1l0OEhYWldVU040X291dHB1dC5tcDQ.581a777891578737/azQ9tmZIWWYt8HXZWUSN4_output.mp4",
+    "elapsed_ms": 161042,
+    "error": null
+  },
+  {
+    "job_id": "mjob_b71256a1c21b",
+    "capability": "kling-v3-turbo-pro-i2v",
+    "prompt": "macro shot in slow motion, water pouring from the faucet breaks apart into glowing pink and blue pixels that swirl down the drain, the hands slowly turn under the stream, droplets glitch and reform, dark bathroom, VHS camcorder grain",
+    "inputs": {
+      "duration": "7"
+    },
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzAvdzBfaVJpczJzcVRpQzgtWlc3UGtEXzk3YWExZjYwNWI1ZjRjZWY5NTZhNjZkNTA3NTNjYWEzLnBuZw.b3c6ffa153fc19a9/w0_iRis2sqTiC8-ZW7PkD_97aa1f605b5f4cef956a66d50753caa3.png",
+    "idempotency_key": "signal-split-v03-20260926",
+    "submitted_at": "2026-09-26T14:31:19.584Z",
+    "cost_usd_estimated": 1.029,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiZjYvV2U0c1Z0b1JfTlpJWXg3MlBYOE5xX291dHB1dC5tcDQ.6585ae44f6ed3b34/We4sVtoR_NZIYx72PX8Nq_output.mp4",
+    "elapsed_ms": 99434,
+    "error": null
+  },
+  {
+    "job_id": "mjob_9200592209d6",
+    "capability": "kling-v3-turbo-pro-i2v",
+    "prompt": "handheld tracking shot following the young man in the black hoodie from behind as he walks slowly down the empty wet neon street in the rain, ghostly glitch copies of his silhouette trail a step behind him and flicker out, puddles ripple with pink and blue reflections, VHS camcorder grain",
+    "inputs": {
+      "duration": "7"
+    },
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzEvX2c2Q25XbXVvb01KT0M0MEEwVFJLXzQyZWFiYzQ0M2UyNTRkMTU5Y2M1Njg4YjYyZDZmM2FhLnBuZw.b7dd806e3cf286ed/_g6CnWmuooMJOC40A0TRK_42eabc443e254d159cc5688b62d6f3aa.png",
+    "idempotency_key": "signal-split-v05-20260926",
+    "submitted_at": "2026-09-26T14:32:07.329Z",
+    "cost_usd_estimated": 1.029,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiZmEvMGc4UDdMbDJlU0Y5aWdJanlLTGYyX291dHB1dC5tcDQ.88174cc45bd8143a/0g8P7Ll2eSF9igIjyKLf2_output.mp4",
+    "elapsed_ms": 100613,
+    "error": null
+  },
+  {
+    "job_id": "mjob_dff9540b96e8",
+    "capability": "kling-v3-turbo-pro-i2v",
+    "prompt": "slow push-in on a wall of old CRT television screens glowing blue in a dark room, rolling static and scanlines sweep across the screens, the figures on the screens stay perfectly still like paused frames, one screen glitches pink and flickers, the hooded silhouette in the foreground stands motionless, nobody speaks, VHS camcorder grain",
+    "inputs": {
+      "duration": "7"
+    },
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzMvQkNpdWhfZ0RiOEJBYl81VkVFQm5tXzc3ODkxZWEyMTU2NDQ4NjBhMGY0NGUyNjE4MDljMDVmLnBuZw.a013ca79f5fd2309/BCiuh_gDb8BAb_5VEEBnm_77891ea215644860a0f44e261809c05f.png",
+    "idempotency_key": "signal-split-v07-20260926",
+    "submitted_at": "2026-09-26T14:33:19.287Z",
+    "cost_usd_estimated": 1.029,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjMDIvR0tQeWZ4dmltY0JZTGtjZUpSekt6X291dHB1dC5tcDQ.a7977fc93256d7ef/GKPyfxvimcBYLkceJRzKz_output.mp4",
+    "elapsed_ms": 109563,
+    "error": null
+  },
+  {
+    "job_id": "mjob_683d5430733e",
+    "capability": "kling-v3-turbo-pro-i2v",
+    "prompt": "macro shot, the cracked black record spins slowly, the stylus jumps as it hits the crack, glowing pink dust drifts through the light, gentle camera drift sideways, VHS camcorder grain",
+    "inputs": {
+      "duration": "7"
+    },
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzQvVUJ1Z0xFRF9yYXJBTFpCU09OaFJmXzlkOTRiMWMyNGQzZTQxODhhYWU3MTNlY2YzYjg4ZDNhLnBuZw.98e8c7ab95d296b9/UBugLED_rarALZBSONhRf_9d94b1c24d3e4188aae713ecf3b88d3a.png",
+    "idempotency_key": "signal-split-v04-20260926",
+    "submitted_at": "2026-09-26T14:34:17.631Z",
+    "cost_usd_estimated": 1.029,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjMDkvaFJWREV0ZmtuOHpieFQyMTlMSU5wX291dHB1dC5tcDQ.d4419ab8f55cedd2/hRVDEtfkn8zbxT219LINp_output.mp4",
+    "elapsed_ms": 119689,
+    "error": null
+  },
+  {
+    "job_id": "mjob_874fb8817a36",
+    "capability": "gemini-tts",
+    "prompt": "Read this in a calm, clear, slightly warm documentary voice, unhurried, with short pauses between paragraphs:\n\nThis is HAL Studio: an AI director for music and music videos, built on Livepeer Agent.\n\nGenerating media is easy now. Knowing whether it is any good is the hard part. Earlier this week, HAL made a music video that passed every automated check. Its owner watched it once and called it bad.\n\nSo HAL Studio runs a loop. The owner sets the direction. Today: glitchy experimental trap, lyrics written by HAL, inspired by emo trap, translated into musical traits, never an artist's identity.\n\nLivepeer Agent renders every step. MiniMax Music 3 sings the song. FLUX draws the keyframes. Kling turns them into shots.\n\nThen HAL reviews its own work. It measures style against the owner's own catalog, checks timing to the millisecond, and throws out what fails.\n\nBut scores are not taste. A remix that scored well was still horrible to the owner's ears. So now HAL sends him the candidates, he decides, and his verdict is the strongest signal HAL learns from.\n\nThis is the result. Signal Split.",
+    "inputs": {},
+    "source_url": null,
+    "idempotency_key": "signal-split-demo-vo-v1-20260926",
+    "submitted_at": "2026-09-26T14:35:04.202Z",
+    "cost_usd_estimated": 0.0002,
+    "status": "failed",
+    "url": null,
+    "error": "capability_input_rejected: gemini-tts needs inputs.prompt, the call sent the script as the top-level prompt; resubmitted as mjob_005283357075"
+  },
+  {
+    "job_id": "mjob_005283357075",
+    "capability": "gemini-tts",
+    "prompt": "Read this in a calm, clear, slightly warm documentary voice, unhurried, with short pauses between paragraphs:\n\nThis is HAL Studio: an AI director for music and music videos, built on Livepeer Agent.\n\nGenerating media is easy now. Knowing whether it is any good is the hard part. Earlier this week, HAL made a music video that passed every automated check. Its owner watched it once and called it bad.\n\nSo HAL Studio runs a loop. The owner sets the direction. Today: glitchy experimental trap, lyrics written by HAL, inspired by emo trap, translated into musical traits, never an artist's identity.\n\nLivepeer Agent renders every step. MiniMax Music 3 sings the song. FLUX draws the keyframes. Kling turns them into shots.\n\nThen HAL reviews its own work. It measures style against the owner's own catalog, checks timing to the millisecond, and throws out what fails.\n\nBut scores are not taste. A remix that scored well was still horrible to the owner's ears. So now HAL sends him the candidates, he decides, and his verdict is the strongest signal HAL learns from.\n\nThis is the result. Signal Split.",
+    "inputs": {},
+    "source_url": null,
+    "idempotency_key": "signal-split-demo-vo-v2-20260926",
+    "submitted_at": "2026-09-26T14:35:32.361Z",
+    "cost_usd_estimated": 0.1728,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjMDkvb3lhSkNHS0NOVFdtWk1kYUFEbEotX2dlbWluaV8zMV9mbGFzaF90dHNfb3V0cHV0Lm1wMw.73e33238d311e89b/oyaJCGKCNTWmZMdaADlJ-_gemini_31_flash_tts_output.mp3",
+    "elapsed_ms": 44844,
+    "error": null
+  },
+  {
+    "job_id": "mjob_6ac2d67173e1",
+    "capability": "kling-v3-turbo-pro-i2v",
+    "prompt": "close-up, the chrome hand slowly turns in the night rain as glowing binary digits slide down the metal fingers and drip away, neon bokeh drifts behind, shallow depth of field, VHS camcorder grain",
+    "inputs": {
+      "duration": "7"
+    },
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzYvQjVucjBKZDZ5T3Q3LWR6RVAtSzFlXzMzNjk4YjEyZTIxNTRkZDQ5MWIwMjY2MDFlODkzZmFhLnBuZw.8a16257db14cae15/B5nr0Jd6yOt7-dzEP-K1e_33698b12e2154dd491b026601e893faa.png",
+    "idempotency_key": "signal-split-v08-20260926",
+    "submitted_at": "2026-09-26T14:35:36.009Z",
+    "cost_usd_estimated": 1.029,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjMTgvaXViYUowbGxWcEZ4Q0xVd3E1RE9pX291dHB1dC5tcDQ.19a5eba7cc3857ad/iubaJ0llVpFxCLUwq5DOi_output.mp4",
+    "elapsed_ms": 190824,
+    "error": null
+  },
+  {
+    "job_id": "mjob_3090a8403d5c",
+    "capability": "kling-v3-turbo-pro-i2v",
+    "prompt": "medium shot, slow dolly sideways across the cracked mirror, each shard reflection of the hooded figure moves slightly out of sync with the others, pink neon flickers, he stays still and does not speak, face hidden under the hood, VHS camcorder grain",
+    "inputs": {
+      "duration": "7"
+    },
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiY2QvZ1FjSjItMG84aW1uX1VvNUFYcXhTXzg4MGVjMDUwMTAxNzRjM2M4ZjE1ZTQ2YTY1NzgxMWUyLnBuZw.5565f8fc2a69b3c1/gQcJ2-0o8imn_Uo5AXqxS_880ec05010174c3c8f15e46a657811e2.png",
+    "idempotency_key": "signal-split-v06-20260926",
+    "submitted_at": "2026-09-26T14:41:22.268Z",
+    "cost_usd_estimated": 1.029,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjMzkvaE9iSUJFVC0yQ01OX3QtRmxmQzdjX291dHB1dC5tcDQ.3a18fed10af21f94/hObIBET-2CMN_t-FlfC7c_output.mp4",
+    "elapsed_ms": 171056,
+    "error": null
+  },
+  {
+    "job_id": "mjob_58f53153ba58",
+    "capability": "kling-v3-turbo-pro-i2v",
+    "prompt": "wide static shot, the hooded figure stands with his back to camera under the flickering neon canopy of an empty gas station at night, light rain falls through the pink and cold blue light, a car passes slowly in the background, he does not move or speak, VHS camcorder grain",
+    "inputs": {
+      "duration": "7"
+    },
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiY2UvRzFwTXdQRi0wamhpTXVWZ1VLX2ZHXzQyMzVjMjA5YzZjNTQ5MjRiMjFmODRlYzY2NDZmM2Q5LnBuZw.d22004b72fada92d/G1pMwPF-0jhiMuVgUK_fG_4235c209c6c54924b21f84ec6646f3d9.png",
+    "idempotency_key": "signal-split-v09-20260926",
+    "submitted_at": "2026-09-26T14:41:26.269Z",
+    "cost_usd_estimated": 1.029,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjMzMvVFB5REJrOFE2U1Y4eVd1eHhaTm5xX291dHB1dC5tcDQ.b9732de9f2ce61ab/TPyDBk8Q6SV8yWuxxZNnq_output.mp4",
+    "elapsed_ms": 109842,
+    "error": null
+  },
+  {
+    "job_id": "mjob_273c3733199b",
+    "capability": "kling-v3-turbo-pro-i2v",
+    "prompt": "close-up through a car window at night, rain streams slowly down the glass, pink and cold blue city lights slide past as soft bokeh, the faint reflection of the hooded figure in the glass stays still, static camera, VHS camcorder grain",
+    "inputs": {
+      "duration": "7"
+    },
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiZDAvckExUkZZWHRQOGs5OEo4MVQ3ZzM1XzA0YTFkYjBkODViNjRkYjNhZDIxNTg4ZGZhMDM0MDg3LnBuZw.f367409d99afbd06/rA1RFYXtP8k98J81T7g35_04a1db0d85b64db3ad21588dfa034087.png",
+    "idempotency_key": "signal-split-v10-20260926",
+    "submitted_at": "2026-09-26T14:50:07.039Z",
+    "cost_usd_estimated": 1.029,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjNjgvVnQ4aDJLcHBJVzM1aGJwS1ExZ25NX291dHB1dC5tcDQ.e527ecd9a96023bb/Vt8h2KppIW35hbpKQ1gnM_output.mp4",
+    "elapsed_ms": 110714,
+    "error": null
+  },
+  {
+    "job_id": "mjob_cf693dc3e9b3",
+    "capability": "kling-v3-turbo-pro-i2v",
+    "prompt": "medium shot, slow push-in, the hooded figure stands completely still and expressionless while the edges of his body break apart into drifting pink and blue pixels, static swirls around him, he does not speak, VHS camcorder grain",
+    "inputs": {
+      "duration": "7"
+    },
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzgvQ3JMd2dwUTBKMjJGTEFJR1NLNlpMXzc5OTZmMTQ2OTUwOTQzMzQ5OTNmZTBjNDZlNjlhM2M0LnBuZw.974dffca3ec89711/CrLwgpQ0J22FLAIGSK6ZL_7996f14695094334993fe0c46e69a3c4.png",
+    "idempotency_key": "signal-split-v11-20260926",
+    "submitted_at": "2026-09-26T14:50:11.137Z",
+    "cost_usd_estimated": 1.029,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjNmYva3ZYVUNZWjRMN0s1RmdGMEE5UVpGX291dHB1dC5tcDQ.3afd1049bca66041/kvXUCYZ4L7K5FgF0A9QZF_output.mp4",
+    "elapsed_ms": 190594,
+    "error": null
+  },
+  {
+    "job_id": "mjob_a95358dcc7d2",
+    "capability": "kling-v3-turbo-pro-i2v",
+    "prompt": "static shot of an old CRT television in a dark room, the picture flickers with pink and blue static, then collapses into a single bright horizontal line that shrinks to a glowing dot and fades to black, no people, VHS camcorder grain",
+    "inputs": {
+      "duration": "7"
+    },
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiZDIvdVZNbDJxMVU1cXZQYUxtQmFNM1ZhXzI3YzVhZjQ3YWNhYzRiZjBiMzE4ZTM4ZjQ4MTY1NDdhLnBuZw.19a8f0c237f7a041/uVMl2q1U5qvPaLmBaM3Va_27c5af47acac4bf0b318e38f4816547a.png",
+    "idempotency_key": "signal-split-v12-20260926",
+    "submitted_at": "2026-09-26T14:52:35.895Z",
+    "cost_usd_estimated": 1.029,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjNzYvVzRsS2hnSVU1X1ZqUFBFZHNVaXZLX291dHB1dC5tcDQ.6a5cd85c71ca7805/W4lKhgIU5_VjPPEdsUivK_output.mp4",
+    "elapsed_ms": 104357,
+    "error": null
+  },
+  {
+    "job_id": "mjob_a5a7cf4c84d6",
+    "capability": "gemini-tts",
+    "prompt": "Read this in a calm, clear, slightly warm documentary voice, unhurried, with short pauses between paragraphs:\n\nThis is HAL Studio: an AI director for music and music videos, built on Livepeer Agent.\n\nGenerating media is easy now. Knowing whether it is any good is the hard part. Earlier this week, HAL made a music video that passed every automated check. Its owner watched it once and called it bad.\n\nSo HAL Studio runs a loop. The owner sets the direction. Today: glitchy experimental trap, lyrics written by HAL, inspired by emo trap, translated into musical traits, never an artist's identity.\n\nLivepeer Agent renders every step. MiniMax Music 3 sings the song. FLUX draws the keyframes. Kling turns them into shots. Every call is tagged to one session, so the whole production has a receipt.\n\nThen HAL reviews its own work. It measures style against the owner's catalog, checks timing against the beat grid, transcribes every take to hear whether the words come through, and throws out what fails.\n\nBut scores are not taste. A remix that scored well was still horrible to the owner's ears. So now HAL sends the owner the candidates. The owner decides, and that verdict is the strongest signal HAL learns from.\n\nThis is the result. Signal Split.",
+    "inputs": {},
+    "source_url": null,
+    "idempotency_key": "signal-split-demo-vo-v3-20260926",
+    "submitted_at": "2026-09-26T14:53:33.446Z",
+    "cost_usd_estimated": 0.1967,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjNzcvTDBVelBEa3NYRG43WFhlQmdSU0lUX2dlbWluaV8zMV9mbGFzaF90dHNfb3V0cHV0Lm1wMw.63198f16f60be93f/L0UzPDksXDn7XXeBgRSIT_gemini_31_flash_tts_output.mp3",
+    "elapsed_ms": 58749,
+    "error": null
+  },
+  {
+    "job_id": "sync-signal-split-pk-street-20260926",
+    "capability": "kontext-edit",
+    "prompt": "Keep this exact young man with the same face, the same messy dirty-blond hair falling over his eyes and the same black hoodie with the hood up. Move him onto a rain-soaked city street at night with pink and cold blue neon signs glowing out of focus behind him and wet reflections on the pavement. Medium close-up at chest height, he faces the camera and sings, lips parted mid-word, his mouth clearly visible. Lo-fi VHS camcorder frame, heavy film grain, slight chromatic aberration, cinematic 16:9, no text.",
+    "inputs": {},
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzgvQ3JMd2dwUTBKMjJGTEFJR1NLNlpMXzc5OTZmMTQ2OTUwOTQzMzQ5OTNmZTBjNDZlNjlhM2M0LnBuZw.974dffca3ec89711/CrLwgpQ0J22FLAIGSK6ZL_7996f14695094334993fe0c46e69a3c4.png",
+    "idempotency_key": "signal-split-pk-street-20260926",
+    "submitted_at": "2026-09-26T15:13:43.534Z",
+    "cost_usd_estimated": 0.042,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjZWIvYUFmNElldTZ0d29pNFBCaDRDTllnXzcxMTA4OTk5YmM5ZDQ1NjA5Y2MxZGQyOGQ2N2Y4M2M3LmpwZw.62b74d79e02c2817/aAf4Ieu6twoi4PBh4CNYg_71108999bc9d45609cc1dd28d67f83c7.jpg"
+  },
+  {
+    "job_id": "sync-signal-split-pk-tvwall-20260926",
+    "capability": "kontext-edit",
+    "prompt": "Keep this exact young man with the same face, the same messy dirty-blond hair falling over his eyes and the same black hoodie with the hood up. Place him in front of a wall of stacked old CRT televisions glowing cold blue, some screens showing static, some showing his own face. Medium close-up, he faces the camera and sings, lips parted mid-word, his mouth clearly visible, blue television light on his face with a pink rim light. Lo-fi VHS camcorder frame, heavy film grain, slight chromatic aberration, cinematic 16:9, no text.",
+    "inputs": {},
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzgvQ3JMd2dwUTBKMjJGTEFJR1NLNlpMXzc5OTZmMTQ2OTUwOTQzMzQ5OTNmZTBjNDZlNjlhM2M0LnBuZw.974dffca3ec89711/CrLwgpQ0J22FLAIGSK6ZL_7996f14695094334993fe0c46e69a3c4.png",
+    "idempotency_key": "signal-split-pk-tvwall-20260926",
+    "submitted_at": "2026-09-26T15:13:49.148Z",
+    "cost_usd_estimated": 0.042,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjZWMva3plSE5BMUI3YXNpNlI0Q3JMWDFFXzExZGI2NTkwNzAzMzRlZmVhMDc3YzBhYjU5NTg0OTczLmpwZw.5b79d758c08ce41b/kzeHNA1B7asi6R4CrLX1E_11db659070334efea077c0ab59584973.jpg"
+  },
+  {
+    "job_id": "sync-signal-split-pk-bathroom-20260926",
+    "capability": "kontext-edit",
+    "prompt": "Keep this exact young man with the same face, the same messy dirty-blond hair falling over his eyes and the same black hoodie with the hood up. Place him in a small dark bathroom at night, a cold flickering fluorescent tube above a mirror behind him, soft pink neon light spilling in from the hallway. Close-up, he faces the camera and sings softly, lips parted mid-word, his mouth clearly visible. Lo-fi VHS camcorder frame, heavy film grain, slight chromatic aberration, cinematic 16:9, no text.",
+    "inputs": {},
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzgvQ3JMd2dwUTBKMjJGTEFJR1NLNlpMXzc5OTZmMTQ2OTUwOTQzMzQ5OTNmZTBjNDZlNjlhM2M0LnBuZw.974dffca3ec89711/CrLwgpQ0J22FLAIGSK6ZL_7996f14695094334993fe0c46e69a3c4.png",
+    "idempotency_key": "signal-split-pk-bathroom-20260926",
+    "submitted_at": "2026-09-26T15:14:09.411Z",
+    "cost_usd_estimated": 0.042,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjZWQvLXZnTmRyamI2X2k0cDBGcHc1ckxDXzk5OWYyNDYwYTUyZTQ0MjViNjEyOWY0ZGVmN2JhNTNmLmpwZw.f50f45f0bddb8dd6/-vgNdrjb6_i4p0Fpw5rLC_999f2460a52e4425b6129f4def7ba53f.jpg"
+  },
+  {
+    "job_id": "sync-signal-split-pk-gas-20260926",
+    "capability": "kontext-edit",
+    "prompt": "Keep this exact young man with the same face, the same messy dirty-blond hair falling over his eyes and the same black hoodie with the hood up. Place him under the glowing pink neon canopy of an empty gas station at night in light rain, fuel pumps out of focus behind him. Medium close-up, he faces the camera and sings, lips parted mid-word, his mouth clearly visible, pink neon light from above and cold blue light from the side. Lo-fi VHS camcorder frame, heavy film grain, slight chromatic aberration, cinematic 16:9, no text.",
+    "inputs": {},
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzgvQ3JMd2dwUTBKMjJGTEFJR1NLNlpMXzc5OTZmMTQ2OTUwOTQzMzQ5OTNmZTBjNDZlNjlhM2M0LnBuZw.974dffca3ec89711/CrLwgpQ0J22FLAIGSK6ZL_7996f14695094334993fe0c46e69a3c4.png",
+    "idempotency_key": "signal-split-pk-gas-20260926",
+    "submitted_at": "2026-09-26T15:14:15.056Z",
+    "cost_usd_estimated": 0.042,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjZWYvMEluVkxGTlhaS3UzYzlMQmhlWXIyX2Y3OTRiODlkZWU0OTQxNDFhYzQ4OWI2MzZmZjY2YzU4LmpwZw.469cf4d613ceab9a/0InVLFNXZKu3c9LBheYr2_f794b89dee494141ac489b636ff66c58.jpg"
+  },
+  {
+    "job_id": "mjob_c12cab6102e9",
+    "capability": "talking-head",
+    "prompt": "The young man in the black hoodie sings this emo trap chorus straight to the camera with quiet intensity, small natural head movements, rain falling around him, neon lights flickering behind him, slow handheld camera drift",
+    "inputs": {
+      "image_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjZWIvYUFmNElldTZ0d29pNFBCaDRDTllnXzcxMTA4OTk5YmM5ZDQ1NjA5Y2MxZGQyOGQ2N2Y4M2M3LmpwZw.62b74d79e02c2817/aAf4Ieu6twoi4PBh4CNYg_71108999bc9d45609cc1dd28d67f83c7.jpg",
+      "audio_url": "https://7y4flzpulgv4co6r.public.blob.vercel-storage.com/uploads/1790435736736-96788i-P_street.wav"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-perf-street-20260926",
+    "submitted_at": "2026-09-26T15:15:57.893Z",
+    "cost_usd_estimated": 0.84,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZkMWMvMG9iZUFPRHhNemtCbUswNU1qTE9UX3ZpZGVvLm1wNA.ec726af52c79cb16/0obeAODxMzkBmK05MjLOT_video.mp4",
+    "elapsed_ms": 373521,
+    "error": null
+  },
+  {
+    "job_id": "mjob_39f6fefd4ea8",
+    "capability": "talking-head",
+    "prompt": "The young man in the black hoodie sings this emo trap chorus straight to the camera with quiet intensity, small natural head movements, the wall of blue televisions flickering behind him, slow handheld camera drift",
+    "inputs": {
+      "image_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjZWMva3plSE5BMUI3YXNpNlI0Q3JMWDFFXzExZGI2NTkwNzAzMzRlZmVhMDc3YzBhYjU5NTg0OTczLmpwZw.5b79d758c08ce41b/kzeHNA1B7asi6R4CrLX1E_11db659070334efea077c0ab59584973.jpg",
+      "audio_url": "https://7y4flzpulgv4co6r.public.blob.vercel-storage.com/uploads/1790435764266-yte3g6-P_tv.wav"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-perf-tv-20260926",
+    "submitted_at": "2026-09-26T15:16:22.333Z",
+    "cost_usd_estimated": 0.84,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZkMWIvV2pvMzZ3WFpIODYxQlhFQlMxRVByX3ZpZGVvLm1wNA.1eaed151106b6799/Wjo36wXZH861BXEBS1EPr_video.mp4",
+    "elapsed_ms": 333280,
+    "error": null
+  },
+  {
+    "job_id": "sync-signal-split-title-gothic-20260926",
+    "capability": "ideogram-v4",
+    "prompt": "Music video title card on a pure black background: the words \"SIGNAL SPLIT\" in huge ornate gothic blackletter letters made of polished liquid chrome, a subtle pink and cyan chromatic glitch split on the letter edges, faint VHS scanlines, centered, nothing else in the frame, no other text, high contrast, wide 16:9",
+    "inputs": {
+      "aspect_ratio": "16:9"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-title-gothic-20260926",
+    "submitted_at": "2026-09-26T15:16:35.273Z",
+    "cost_usd_estimated": 0.0158,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjZmIvcnZNN21KV1JrNHRqQ2cwZ1ZMY2pxX05DWm5rUVJXLmpwZw.bf50d1fa87800c96/rvM7mJWRk4tjCg0gVLcjq_NCZnkQRW.jpg"
+  },
+  {
+    "job_id": "sync-signal-split-title-glitch-20260926",
+    "capability": "ideogram-v4",
+    "prompt": "Music video title card on a pure black background: the words \"SIGNAL SPLIT\" in bold tall condensed letters, glitched and sliced horizontally like a corrupted video signal, hot pink and cyan RGB offset, white core, centered, nothing else in the frame, no other text, high contrast, wide 16:9",
+    "inputs": {
+      "aspect_ratio": "16:9"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-title-glitch-20260926",
+    "submitted_at": "2026-09-26T15:16:37.225Z",
+    "cost_usd_estimated": 0.0158,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjZmMvWUJEVFdva2dFMWRjVmV4bW9NSVVfX3BJbHpLVTJPLmpwZw.94d546e130f05dd2/YBDTWokgE1dcVexmoMIU__pIlzKU2O.jpg"
+  },
+  {
+    "job_id": "sync-signal-split-title-gothic-alpha-20260926",
+    "capability": "ideogram-bg-remove",
+    "prompt": null,
+    "inputs": {},
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjZmIvcnZNN21KV1JrNHRqQ2cwZ1ZMY2pxX05DWm5rUVJXLmpwZw.bf50d1fa87800c96/rvM7mJWRk4tjCg0gVLcjq_NCZnkQRW.jpg",
+    "idempotency_key": "signal-split-title-gothic-alpha-20260926",
+    "submitted_at": "2026-09-26T15:17:45.030Z",
+    "cost_usd_estimated": 0.0105,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZkMDMvZ0ZXMVJnVHMwbkZHYVlKNDc5dHhuX2FKam5WeXlhLnBuZw.d94e35f2732c26a0/gFW1RgTs0nFGaYJ479txn_aJjnVyya.png"
+  },
+  {
+    "job_id": "mjob_5849695d56ba",
+    "capability": "talking-head",
+    "prompt": "The young man in the black hoodie sings this verse softly straight to the camera, melancholic, small natural head movements, the fluorescent light behind him flickers, slow handheld camera drift",
+    "inputs": {
+      "image_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjZWQvLXZnTmRyamI2X2k0cDBGcHc1ckxDXzk5OWYyNDYwYTUyZTQ0MjViNjEyOWY0ZGVmN2JhNTNmLmpwZw.f50f45f0bddb8dd6/-vgNdrjb6_i4p0Fpw5rLC_999f2460a52e4425b6129f4def7ba53f.jpg",
+      "audio_url": "https://7y4flzpulgv4co6r.public.blob.vercel-storage.com/uploads/1790436357554-m6h4nd-P_bath.wav"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-perf-bath-20260926",
+    "submitted_at": "2026-09-26T15:26:17.387Z",
+    "cost_usd_estimated": 0.84,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZkNTQvd1U5cEY5S1JacXlCV2lxMlE0WjA3X3ZpZGVvLm1wNA.f329066c2b7daaa1/wU9pF9KRZqyBWiq2Q4Z07_video.mp4",
+    "elapsed_ms": 303607,
+    "error": null
+  },
+  {
+    "job_id": "mjob_5590146e67b6",
+    "capability": "talking-head",
+    "prompt": "The young man in the black hoodie sings this verse straight to the camera with restrained intensity, small natural head movements, light rain falling under the pink neon canopy, slow handheld camera drift",
+    "inputs": {
+      "image_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjZWYvMEluVkxGTlhaS3UzYzlMQmhlWXIyX2Y3OTRiODlkZWU0OTQxNDFhYzQ4OWI2MzZmZjY2YzU4LmpwZw.469cf4d613ceab9a/0InVLFNXZKu3c9LBheYr2_f794b89dee494141ac489b636ff66c58.jpg",
+      "audio_url": "https://7y4flzpulgv4co6r.public.blob.vercel-storage.com/uploads/1790436383430-5wxsh2-P_gas.wav"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-perf-gas-20260926",
+    "submitted_at": "2026-09-26T15:26:47.191Z",
+    "cost_usd_estimated": 0.84,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZkNTYvZWNWaVcxOW9NZHo4NHhqa3Z6NmtlX3ZpZGVvLm1wNA.4ec8659c0f9fd2cc/ecViW19oMdz84xjkvz6ke_video.mp4",
+    "elapsed_ms": 293319,
+    "error": null
+  },
+  {
+    "job_id": "mjob_0eaa131807d7",
+    "capability": "talking-head",
+    "prompt": "The young man in the black hoodie sings these opening lines straight to the camera, calm and haunted, small natural head movements, pink and blue static drifting past him in the dark void, slow push-in",
+    "inputs": {
+      "image_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzgvQ3JMd2dwUTBKMjJGTEFJR1NLNlpMXzc5OTZmMTQ2OTUwOTQzMzQ5OTNmZTBjNDZlNjlhM2M0LnBuZw.974dffca3ec89711/CrLwgpQ0J22FLAIGSK6ZL_7996f14695094334993fe0c46e69a3c4.png",
+      "audio_url": "https://7y4flzpulgv4co6r.public.blob.vercel-storage.com/uploads/1790436524402-yidd26-P_void.wav"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-perf-void-20260926",
+    "submitted_at": "2026-09-26T15:31:57.317Z",
+    "cost_usd_estimated": 0.84,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZkNzEvRVVHOGhKMlNCaEFmUUhQbHIxNHp5X3ZpZGVvLm1wNA.8fb1b60d8547f5f7/EUG8hJ2SBhAfQHPlr14zy_video.mp4",
+    "elapsed_ms": 259159,
+    "error": null
+  },
+  {
+    "job_id": "mjob_16a8d6bb377d",
+    "capability": "talking-head",
+    "prompt": "The young man in the black hoodie sings the closing lines straight to the camera, quiet and resigned, small natural head movements, pink and blue static drifting past him in the dark void, very slow push-in",
+    "inputs": {
+      "image_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZiYzgvQ3JMd2dwUTBKMjJGTEFJR1NLNlpMXzc5OTZmMTQ2OTUwOTQzMzQ5OTNmZTBjNDZlNjlhM2M0LnBuZw.974dffca3ec89711/CrLwgpQ0J22FLAIGSK6ZL_7996f14695094334993fe0c46e69a3c4.png",
+      "audio_url": "https://7y4flzpulgv4co6r.public.blob.vercel-storage.com/uploads/1790436524654-vk9mrq-P_void2.wav"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-perf-void2-20260926",
+    "submitted_at": "2026-09-26T15:33:16.351Z",
+    "cost_usd_estimated": 0.84,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZkNzkvd3ZPQllKQjlSNGxIQXVGQkJ2a1cyX3ZpZGVvLm1wNA.bf2bfd7839045c2c/wvOBYJB9R4lHAuFBBvkW2_video.mp4",
+    "elapsed_ms": 262533,
+    "error": null
+  },
+  {
+    "job_id": "mjob_6210a48928bc",
+    "capability": "gemini-tts",
+    "prompt": "Read this in a calm, clear, slightly warm documentary voice, unhurried, with short pauses between paragraphs:\n\nThis is HAL Studio: an AI director for music and music videos, built on Livepeer Agent.\n\nGenerating media is easy now. Knowing whether it is any good is the hard part. Earlier this week, HAL made a music video that passed every automated check. Its owner watched it once and called it bad.\n\nSo HAL Studio runs a loop. The owner sets the direction: today, glitchy experimental trap, with lyrics by HAL.\n\nLivepeer Agent renders every step. MiniMax Music 3 sings the song. FLUX draws the keyframes, and Kling turns them into shots. OmniHuman lip-syncs the performance to the real vocal, cut at the exact second of the song. Every call is tagged to one session, so the whole production has a receipt.\n\nThen HAL reviews its own work: it transcribes every take, checks that every lip-sync clip lines up with the song, and throws out what fails.\n\nBut scores are not taste. Today's first cut passed every check, and the owner asked for lip-sync, real typography, and the look of the artists the owner follows. So HAL studied those videos and rebuilt the edit. The owner decides, and that verdict is the strongest signal HAL learns from.\n\nThis is the result. Signal Split.",
+    "inputs": {},
+    "source_url": null,
+    "idempotency_key": "signal-split-demo-vo-v4-20260926",
+    "submitted_at": "2026-09-26T15:34:53.998Z",
+    "cost_usd_estimated": 0.2007,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZkNmUvYXFaelRuMEttZVpYTkhLdzctY1UzX2dlbWluaV8zMV9mbGFzaF90dHNfb3V0cHV0Lm1wMw.911f8584ba13d8a4/aqZzTn0KmeZXNHKw7-cU3_gemini_31_flash_tts_output.mp3",
+    "elapsed_ms": 58435,
+    "error": null
+  }
+]

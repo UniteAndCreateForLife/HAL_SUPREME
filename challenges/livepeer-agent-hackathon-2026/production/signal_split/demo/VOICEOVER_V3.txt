@@ -1,0 +1,13 @@
+This is HAL Studio: an AI director for music and music videos, built on Livepeer Agent.
+
+Generating media is easy now. Knowing whether it is any good is the hard part. Earlier this week, HAL made a music video that passed every automated check. Its owner watched it once and called it bad.
+
+So HAL Studio runs a loop. The owner sets the direction: today, glitchy experimental trap, with lyrics by HAL.
+
+Livepeer Agent renders every step. MiniMax Music 3 sings the song. FLUX draws the keyframes, and Kling turns them into shots. OmniHuman lip-syncs the performance to the real vocal, cut at the exact second of the song. Every call is tagged to one session, so the whole production has a receipt.
+
+Then HAL reviews its own work: it transcribes every take, checks that every lip-sync clip lines up with the song, and throws out what fails.
+
+But scores are not taste. Today's first cut passed every check, and the owner asked for lip-sync, real typography, and the look of the artists the owner follows. So HAL studied those videos and rebuilt the edit. The owner decides, and that verdict is the strongest signal HAL learns from.
+
+This is the result. Signal Split.

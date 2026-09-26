@@ -1,0 +1,288 @@
+{
+  "song": "../song/C_emo_trap.wav",
+  "duration_s": 103.329,
+  "fps": 24,
+  "width": 1920,
+  "height": 1080,
+  "cuts": [
+    {
+      "id": "01_intro",
+      "section": "intro",
+      "occurrence": 0,
+      "start_s": 0.0,
+      "end_s": 4.576,
+      "source": "../shots/V01.mp4",
+      "in_s": 0.0
+    },
+    {
+      "id": "02_intro",
+      "section": "intro",
+      "occurrence": 0,
+      "start_s": 4.576,
+      "end_s": 10.164,
+      "source": "../performance/P_void.mp4",
+      "in_s": 0.246,
+      "performance": "P_void"
+    },
+    {
+      "id": "03_intro",
+      "section": "intro",
+      "occurrence": 0,
+      "start_s": 10.164,
+      "end_s": 15.752,
+      "source": "../shots/V08.mp4",
+      "in_s": 0.0
+    },
+    {
+      "id": "04_intro",
+      "section": "intro",
+      "occurrence": 0,
+      "start_s": 15.752,
+      "end_s": 18.545,
+      "source": "../shots/V01.mp4",
+      "in_s": 4.196
+    },
+    {
+      "id": "05_verse",
+      "section": "verse",
+      "occurrence": 0,
+      "start_s": 18.545,
+      "end_s": 24.133,
+      "source": "../performance/P_bath.mp4",
+      "in_s": 0.245,
+      "performance": "P_bath"
+    },
+    {
+      "id": "06_verse",
+      "section": "verse",
+      "occurrence": 0,
+      "start_s": 24.133,
+      "end_s": 29.721,
+      "source": "../shots/V03.mp4",
+      "in_s": 0.0
+    },
+    {
+      "id": "07_verse",
+      "section": "verse",
+      "occurrence": 0,
+      "start_s": 29.721,
+      "end_s": 35.308,
+      "source": "../shots/V04.mp4",
+      "in_s": 0.0
+    },
+    {
+      "id": "08_verse",
+      "section": "verse",
+      "occurrence": 0,
+      "start_s": 35.308,
+      "end_s": 40.896,
+      "source": "../shots/V06.mp4",
+      "in_s": 0.0
+    },
+    {
+      "id": "09_verse",
+      "section": "verse",
+      "occurrence": 0,
+      "start_s": 40.896,
+      "end_s": 43.69,
+      "source": "../shots/V02.mp4",
+      "in_s": 4.196
+    },
+    {
+      "id": "10_chorus",
+      "section": "chorus",
+      "occurrence": 0,
+      "start_s": 43.69,
+      "end_s": 46.484,
+      "source": "../performance/P_street.mp4",
+      "in_s": 0.25,
+      "performance": "P_street"
+    },
+    {
+      "id": "11_chorus",
+      "section": "chorus",
+      "occurrence": 0,
+      "start_s": 46.484,
+      "end_s": 49.277,
+      "source": "../shots/V06.mp4",
+      "in_s": 4.196
+    },
+    {
+      "id": "12_chorus",
+      "section": "chorus",
+      "occurrence": 0,
+      "start_s": 49.277,
+      "end_s": 52.071,
+      "source": "../performance/P_street.mp4",
+      "in_s": 5.837,
+      "performance": "P_street"
+    },
+    {
+      "id": "13_chorus",
+      "section": "chorus",
+      "occurrence": 0,
+      "start_s": 52.071,
+      "end_s": 54.865,
+      "source": "../shots/V07.mp4",
+      "in_s": 0.0
+    },
+    {
+      "id": "14_chorus",
+      "section": "chorus",
+      "occurrence": 0,
+      "start_s": 54.865,
+      "end_s": 57.659,
+      "source": "../performance/P_street.mp4",
+      "in_s": 11.425,
+      "performance": "P_street"
+    },
+    {
+      "id": "15_verse",
+      "section": "verse",
+      "occurrence": 1,
+      "start_s": 57.659,
+      "end_s": 63.246,
+      "source": "../shots/V08.mp4",
+      "in_s": 1.402
+    },
+    {
+      "id": "16_verse",
+      "section": "verse",
+      "occurrence": 1,
+      "start_s": 63.246,
+      "end_s": 68.834,
+      "source": "../performance/P_gas.mp4",
+      "in_s": 5.836,
+      "performance": "P_gas"
+    },
+    {
+      "id": "17_verse",
+      "section": "verse",
+      "occurrence": 1,
+      "start_s": 68.834,
+      "end_s": 74.422,
+      "source": "../shots/V10.mp4",
+      "in_s": 1.402
+    },
+    {
+      "id": "18_verse",
+      "section": "verse",
+      "occurrence": 1,
+      "start_s": 74.422,
+      "end_s": 80.009,
+      "source": "../shots/V07.mp4",
+      "in_s": 1.402
+    },
+    {
+      "id": "19_chorus",
+      "section": "chorus",
+      "occurrence": 1,
+      "start_s": 80.009,
+      "end_s": 82.803,
+      "source": "../performance/P_tv.mp4",
+      "in_s": 0.249,
+      "performance": "P_tv"
+    },
+    {
+      "id": "20_chorus",
+      "section": "chorus",
+      "occurrence": 1,
+      "start_s": 82.803,
+      "end_s": 85.597,
+      "source": "../shots/V06.mp4",
+      "in_s": 4.196
+    },
+    {
+      "id": "21_chorus",
+      "section": "chorus",
+      "occurrence": 1,
+      "start_s": 85.597,
+      "end_s": 88.391,
+      "source": "../performance/P_tv.mp4",
+      "in_s": 5.837,
+      "performance": "P_tv"
+    },
+    {
+      "id": "22_chorus",
+      "section": "chorus",
+      "occurrence": 1,
+      "start_s": 88.391,
+      "end_s": 91.185,
+      "source": "../shots/V07.mp4",
+      "in_s": 4.196
+    },
+    {
+      "id": "23_chorus",
+      "section": "chorus",
+      "occurrence": 1,
+      "start_s": 91.185,
+      "end_s": 93.978,
+      "source": "../performance/P_tv.mp4",
+      "in_s": 11.425,
+      "performance": "P_tv"
+    },
+    {
+      "id": "24_outro",
+      "section": "outro",
+      "occurrence": 0,
+      "start_s": 93.978,
+      "end_s": 99.566,
+      "source": "../performance/P_void2.mp4",
+      "in_s": 0.248,
+      "performance": "P_void2"
+    },
+    {
+      "id": "25_outro",
+      "section": "outro",
+      "occurrence": 0,
+      "start_s": 99.566,
+      "end_s": 103.329,
+      "source": "../shots/V12.mp4",
+      "in_s": 3.227
+    }
+  ],
+  "overlays": [],
+  "beat_grid": {
+    "bpm": 171.808,
+    "period_s": 0.3492271111564723,
+    "phase_s": 11.211609594655888,
+    "steadiness_ms": 4.9,
+    "beats": 260,
+    "duration_s": 103.329,
+    "tightness": 1600,
+    "self_spread_ms": 16.7,
+    "self_jitter_ms": 4.0
+  },
+  "sections": [
+    [
+      "intro",
+      1.3,
+      19.02
+    ],
+    [
+      "verse",
+      19.02,
+      44.08
+    ],
+    [
+      "chorus",
+      44.08,
+      57.62
+    ],
+    [
+      "verse",
+      57.62,
+      79.32
+    ],
+    [
+      "chorus",
+      79.32,
+      92.94
+    ],
+    [
+      "outro",
+      92.94,
+      103.329
+    ]
+  ]
+}

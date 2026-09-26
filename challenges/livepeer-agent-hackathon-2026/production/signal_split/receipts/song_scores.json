@@ -1,0 +1,30 @@
+{
+  "A_glitch_trap": {
+    "coverage": 1.0,
+    "reached_wer": 0.218,
+    "PQ": 7.69,
+    "CE": 6.47,
+    "CU": 7.29
+  },
+  "B_glitch_trap": {
+    "coverage": 1.0,
+    "reached_wer": 0.177,
+    "PQ": 7.6,
+    "CE": 6.43,
+    "CU": 7.09
+  },
+  "C_emo_trap": {
+    "coverage": 1.0,
+    "reached_wer": 0.227,
+    "PQ": 8.09,
+    "CE": 7.33,
+    "CU": 7.79
+  },
+  "D_emo_trap": {
+    "coverage": 0.982,
+    "reached_wer": 0.157,
+    "PQ": 8.03,
+    "CE": 7.19,
+    "CU": 7.72
+  }
+}
