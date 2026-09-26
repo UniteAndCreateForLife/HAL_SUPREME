@@ -104,8 +104,9 @@
       "occurrence": 0,
       "start_s": 46.484,
       "end_s": 49.277,
-      "source": "../shots/V06.mp4",
-      "in_s": 4.196
+      "source": "../performance/P_streetfish.mp4",
+      "in_s": 3.044,
+      "performance": "P_streetfish"
     },
     {
       "id": "12_chorus",
@@ -189,8 +190,9 @@
       "occurrence": 1,
       "start_s": 82.803,
       "end_s": 85.597,
-      "source": "../shots/V06.mp4",
-      "in_s": 4.196
+      "source": "../performance/P_tvfish.mp4",
+      "in_s": 3.043,
+      "performance": "P_tvfish"
     },
     {
       "id": "21_chorus",
@@ -208,7 +210,7 @@
       "occurrence": 1,
       "start_s": 88.391,
       "end_s": 91.185,
-      "source": "../shots/V07.mp4",
+      "source": "../shots/V06.mp4",
       "in_s": 4.196
     },
     {

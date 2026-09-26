@@ -91,3 +91,13 @@ def test_performance_cuts_play_the_clip_at_the_song_time_they_cover():
         assert cut["source"].endswith("P.mp4") and abs(cut["in_s"] - (cut["start_s"] - 43.44)) < 1e-6
     assert [(c["start_s"], c["end_s"]) for c in out] == [(c["start_s"], c["end_s"]) for c in cuts]  # boundaries never move
     assert all(not c.get("performance") for c in out if c["end_s"] <= 43.67 or c["start_s"] >= 57.68)
+
+
+def test_a_second_angle_takes_listed_positions_without_touching_the_first():
+    cuts = edl.plan(103.329, grid(171.81), SPANS)
+    base = {"source": "../performance/A.mp4", "start_s": 43.69, "end_s": 57.66, "file_offset_s": 43.44}
+    out = edl.perform(cuts, [{**base, "name": "A", "replace": "odd"},
+                             {**base, "name": "B", "source": "../performance/B.mp4", "replace": [1]}])
+    inside = [c for c in out if c["start_s"] >= 43.67 and c["end_s"] <= 57.68]
+    assert [c.get("performance") for c in inside][:3] == ["A", "B", "A"]
+    assert abs(inside[1]["in_s"] - (inside[1]["start_s"] - 43.44)) < 1e-6

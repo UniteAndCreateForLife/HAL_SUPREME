@@ -1,12 +1,14 @@
 """Master the song, cut the SIGNAL SPLIT music video from its EDL, grade it, set the typography, and check the result.
 
-Usage: python tools/finish_signal_split.py <edl.json> <out.mp4> [typography_dir]
+Usage: python tools/finish_signal_split.py <edl.json> <out.mp4> [typography_dir] [drums.wav]
 
-1. Master: two-pass EBU R128 loudness normalisation to -14 LUFS with a -1.5 dBTP ceiling (the raw takes peak above
-   0 dBTP, which clips after AAC encoding).
+1. Master: master_song.py (corrective EQ, width above the bass, glue compression, a soft clipper, an oversampled limiter)
+   to -10 LUFS with true peak near -3 dBTP, so AAC encoding stays under 0 dBFS.
 2. Cut: assemble_music_video_v1 (hard cuts on the EDL, B-roll and lip-synced performance, the master as the only audio).
 3. Grade: one two-tone pass for the whole video (teal shadows, pink highlights, deeper blacks, a one-pixel chroma split,
    fine grain, a vignette) and a fade to black on the closing shot.
+3b. Beat effects (beat_fx.py, with the drum stem): zoom punches on kicks and shakes on snares in the choruses, glitch
+   transitions at section changes, slow push-ins on B-roll, handheld drift on performance.
 4. Typography: every event in <typography_dir>/events.json (title, word hits, typed line) overlaid at its start time;
    the end card (the last line typed on black, then credits) is appended after the song as its own silent clip.
 5. QC: duration against the song, loudness and true peak of the final audio, a contact sheet."""
@@ -67,13 +69,16 @@ def end_clip(typography: Path, event: dict, out: Path) -> None:
                     "-c:v", "libx264", "-crf", "17", "-c:a", "aac", "-b:a", "320k", str(out)], check=True)
 
 
-def main(edl_path: Path, out: Path, typography: Path | None = None) -> dict:
+def main(edl_path: Path, out: Path, typography: Path | None = None, drums: Path | None = None) -> dict:
     edl_path, out = edl_path.resolve(), out.resolve()  # ffmpeg's concat list resolves relative paths against itself
     edl = json.loads(edl_path.read_text(encoding="utf-8"))
     base = edl_path.parent
     song = (base / edl["song"]).resolve()
-    mastered = song.with_name(song.stem + "_master.wav")
-    measured = master(song, mastered)
+    mastered = song.with_name(song.stem + "_master_v2.wav")
+    from master_song import master as master_release
+    mastering = master_release(song, mastered, -10.0)
+    measured = {"input_i": mastering["input"]["integrated_lufs"], "input_tp": mastering["input"]["true_peak_dbtp"],
+                "input_lra": mastering["input"]["lra_lu"]}
     duration = edl["duration_s"]
     edl["song"], edl["overlays"] = str(mastered), []
     cut_edl = edl_path.with_name(edl_path.stem + "_final.json")
@@ -85,6 +90,13 @@ def main(edl_path: Path, out: Path, typography: Path | None = None) -> dict:
     grade = f"{GRADE},fade=t=out:st={duration - 1.2:.3f}:d=1.2"  # the closing shot ends on a dot; finish it to black
     subprocess.run([*FF, "-loglevel", "error", "-i", str(raw), "-vf", grade, "-c:v", "libx264", "-crf", "16", "-preset", "medium",
                     "-pix_fmt", "yuv420p", "-c:a", "copy", str(graded)], check=True)
+    if drums:  # kick and snare hits from the drum stem drive zoom punches, shakes and section glitches
+        from beat_fx import plan as fx_plan, render as fx_render
+        with_fx = work / "fx.mp4"
+        fx_report = fx_render(graded, fx_plan(edl, drums), with_fx)
+        graded = with_fx
+    else:
+        fx_report = None
     events = json.loads((typography / "events.json").read_text(encoding="utf-8")) if typography else []
     overlays = [event for event in events if event["name"] != "endcard"]
     titled = work / "titled.mp4"
@@ -108,15 +120,16 @@ def main(edl_path: Path, out: Path, typography: Path | None = None) -> dict:
     subprocess.run([*FF, "-loglevel", "error", "-i", str(out), "-vf",
                     f"select='{middles}',scale=384:-2,tile=5x{-(-len(edl['cuts']) // 5)}", "-frames:v", "1", "-update", "1",
                     str(sheet)], check=True)
-    receipt = {"schema": "hal.signal-split.finish.v2", "edl": str(cut_edl), "song": str(song), "master": str(mastered),
+    receipt = {"schema": "hal.signal-split.finish.v3", "edl": str(cut_edl), "song": str(song), "master": str(mastered),
                "master_measured_input": {k: measured[k] for k in ("input_i", "input_tp", "input_lra")},
                "output": str(out), "output_sha256": sha256(out), "duration_s": round(probe_duration(out), 3),
                "song_duration_s": duration, "final_audio": loudness(out), "cuts": len(edl["cuts"]),
                "performance_cuts": sum(1 for c in edl["cuts"] if c.get("performance")), "grade": GRADE,
-               "typography_events": [e["name"] for e in events], "contact_sheet": str(sheet)}
+               "typography_events": [e["name"] for e in events], "beat_fx": fx_report, "contact_sheet": str(sheet)}
     out.with_suffix(".receipt.json").write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
     return receipt
 
 
 if __name__ == "__main__":
-    print(json.dumps(main(Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3]) if len(sys.argv) > 3 else None), indent=2))
+    print(json.dumps(main(Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3]) if len(sys.argv) > 3 else None,
+                          Path(sys.argv[4]) if len(sys.argv) > 4 else None), indent=2))

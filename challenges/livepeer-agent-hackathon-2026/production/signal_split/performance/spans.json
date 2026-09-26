@@ -1,11 +1,75 @@
 {
   "note": "Lip-synced performance clips (OmniHuman talking-head on Livepeer Agent). Each clip was rendered from the vocal stem cut at song time start-0.25 to end+0.25, so a cut at song time T plays the clip from T - file_offset_s.",
   "spans": [
-    {"name": "P_void", "source": "../performance/P_void.mp4", "start_s": 4.58, "end_s": 15.75, "file_offset_s": 4.33, "replace": "first"},
-    {"name": "P_bath", "source": "../performance/P_bath.mp4", "start_s": 18.55, "end_s": 29.72, "file_offset_s": 18.30, "replace": "first"},
-    {"name": "P_street", "source": "../performance/P_street.mp4", "start_s": 43.69, "end_s": 57.66, "file_offset_s": 43.44, "replace": "odd"},
-    {"name": "P_gas", "source": "../performance/P_gas.mp4", "start_s": 57.66, "end_s": 68.83, "file_offset_s": 57.41, "replace": "last"},
-    {"name": "P_tv", "source": "../performance/P_tv.mp4", "start_s": 80.01, "end_s": 93.98, "file_offset_s": 79.76, "replace": "odd"},
-    {"name": "P_void2", "source": "../performance/P_void2.mp4", "start_s": 93.98, "end_s": 99.57, "file_offset_s": 93.73, "replace": "all"}
+    {
+      "name": "P_void",
+      "source": "../performance/P_void.mp4",
+      "start_s": 4.58,
+      "end_s": 15.75,
+      "file_offset_s": 4.33,
+      "replace": "first"
+    },
+    {
+      "name": "P_bath",
+      "source": "../performance/P_bath.mp4",
+      "start_s": 18.55,
+      "end_s": 29.72,
+      "file_offset_s": 18.3,
+      "replace": "first"
+    },
+    {
+      "name": "P_street",
+      "source": "../performance/P_street.mp4",
+      "start_s": 43.69,
+      "end_s": 57.66,
+      "file_offset_s": 43.44,
+      "replace": "odd"
+    },
+    {
+      "name": "P_streetfish",
+      "source": "../performance/P_streetfish.mp4",
+      "start_s": 43.69,
+      "end_s": 57.66,
+      "file_offset_s": 43.44,
+      "replace": [
+        1
+      ],
+      "note": "second angle: wide-lens close-up, same vocal segment"
+    },
+    {
+      "name": "P_gas",
+      "source": "../performance/P_gas.mp4",
+      "start_s": 57.66,
+      "end_s": 68.83,
+      "file_offset_s": 57.41,
+      "replace": "last"
+    },
+    {
+      "name": "P_tv",
+      "source": "../performance/P_tv.mp4",
+      "start_s": 80.01,
+      "end_s": 93.98,
+      "file_offset_s": 79.76,
+      "replace": "odd"
+    },
+    {
+      "name": "P_tvfish",
+      "source": "../performance/P_tvfish.mp4",
+      "start_s": 80.01,
+      "end_s": 93.98,
+      "file_offset_s": 79.76,
+      "replace": [
+        1
+      ],
+      "note": "second angle: wide-lens close-up, same vocal segment"
+    },
+    {
+      "name": "P_void2",
+      "source": "../performance/P_void2.mp4",
+      "start_s": 93.98,
+      "end_s": 99.57,
+      "file_offset_s": 93.73,
+      "replace": "all"
+    }
   ]
 }

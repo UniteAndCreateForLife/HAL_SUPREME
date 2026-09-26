@@ -699,5 +699,63 @@
     "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZkNmUvYXFaelRuMEttZVpYTkhLdzctY1UzX2dlbWluaV8zMV9mbGFzaF90dHNfb3V0cHV0Lm1wMw.911f8584ba13d8a4/aqZzTn0KmeZXNHKw7-cU3_gemini_31_flash_tts_output.mp3",
     "elapsed_ms": 58435,
     "error": null
+  },
+  {
+    "job_id": "sync-signal-split-pk-streetfish-20260926",
+    "capability": "kontext-edit",
+    "prompt": "Same young man, same face, same messy dirty-blond hair and black hoodie with the hood up, same rainy neon street at night. Change the shot to an extreme close-up through a wide fisheye lens held very close to his face, slightly low angle, he leans into the lens and sings with intensity, mouth open mid-word and clearly visible, the neon street curving around the edges of the frame. Lo-fi VHS camcorder frame, heavy film grain, slight chromatic aberration, cinematic 16:9, no text.",
+    "inputs": {},
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjZWIvYUFmNElldTZ0d29pNFBCaDRDTllnXzcxMTA4OTk5YmM5ZDQ1NjA5Y2MxZGQyOGQ2N2Y4M2M3LmpwZw.62b74d79e02c2817/aAf4Ieu6twoi4PBh4CNYg_71108999bc9d45609cc1dd28d67f83c7.jpg",
+    "idempotency_key": "signal-split-pk-streetfish-20260926",
+    "submitted_at": "2026-09-26T16:00:53.404Z",
+    "cost_usd_estimated": 0.042,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZlMDYvYzBqcndUUVRHMkRDMlR2aV9CcTZwX2RiYTkyNmU5MGJkYTRkZDNhY2QwNDQxZDljYzRjM2EwLmpwZw.5c77ac170a171927/c0jrwTQTG2DC2Tvi_Bq6p_dba926e90bda4dd3acd0441d9cc4c3a0.jpg"
+  },
+  {
+    "job_id": "sync-signal-split-pk-tvfish-20260926",
+    "capability": "kontext-edit",
+    "prompt": "Same young man, same face, same messy dirty-blond hair and black hoodie with the hood up, same wall of glowing blue CRT televisions behind him. Change the shot to an extreme close-up through a wide fisheye lens held very close to his face, slightly high angle looking down, he looks up into the lens and sings with intensity, mouth open mid-word and clearly visible, the televisions bending around the edges of the frame. Lo-fi VHS camcorder frame, heavy film grain, slight chromatic aberration, cinematic 16:9, no text.",
+    "inputs": {},
+    "source_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZjZWMva3plSE5BMUI3YXNpNlI0Q3JMWDFFXzExZGI2NTkwNzAzMzRlZmVhMDc3YzBhYjU5NTg0OTczLmpwZw.5b79d758c08ce41b/kzeHNA1B7asi6R4CrLX1E_11db659070334efea077c0ab59584973.jpg",
+    "idempotency_key": "signal-split-pk-tvfish-20260926",
+    "submitted_at": "2026-09-26T16:00:58.068Z",
+    "cost_usd_estimated": 0.042,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZlMDgvaS1odGJmWTQydDc5VGo3SmprRFZiXzhkZWVmMzY0NDRiZDRlNTY4YjI4OGViOWUwNTAxYjI0LmpwZw.c8de6f2653638401/i-htbfY42t79Tj7JjkDVb_8deef36444bd4e568b288eb9e0501b24.jpg"
+  },
+  {
+    "job_id": "mjob_cd9819ab27f5",
+    "capability": "talking-head",
+    "prompt": "Extreme fisheye close-up: the young man in the black hoodie leans into the lens and sings this chorus with raw intensity, energetic head movement, rain and neon behind him, handheld camera shake",
+    "inputs": {
+      "image_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZlMDYvYzBqcndUUVRHMkRDMlR2aV9CcTZwX2RiYTkyNmU5MGJkYTRkZDNhY2QwNDQxZDljYzRjM2EwLmpwZw.5c77ac170a171927/c0jrwTQTG2DC2Tvi_Bq6p_dba926e90bda4dd3acd0441d9cc4c3a0.jpg",
+      "audio_url": "https://7y4flzpulgv4co6r.public.blob.vercel-storage.com/uploads/1790435736736-96788i-P_street.wav"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-perf-streetfish-20260926",
+    "submitted_at": "2026-09-26T16:01:51.903Z",
+    "cost_usd_estimated": 0.84,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZlMzAveEYyV3VQeVNTX2hXdkFiSV9UcUFvX3ZpZGVvLm1wNA.2db6398782ce4edd/xF2WuPySS_hWvAbI_TqAo_video.mp4",
+    "elapsed_ms": 370173,
+    "error": null
+  },
+  {
+    "job_id": "mjob_eb345e22ecc5",
+    "capability": "talking-head",
+    "prompt": "Extreme fisheye close-up: the young man in the black hoodie looks up into the lens and sings this chorus with raw intensity, energetic head movement, glowing televisions behind him, handheld camera shake",
+    "inputs": {
+      "image_url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZlMDgvaS1odGJmWTQydDc5VGo3SmprRFZiXzhkZWVmMzY0NDRiZDRlNTY4YjI4OGViOWUwNTAxYjI0LmpwZw.c8de6f2653638401/i-htbfY42t79Tj7JjkDVb_8deef36444bd4e568b288eb9e0501b24.jpg",
+      "audio_url": "https://7y4flzpulgv4co6r.public.blob.vercel-storage.com/uploads/1790435764266-yte3g6-P_tv.wav"
+    },
+    "source_url": null,
+    "idempotency_key": "signal-split-perf-tvfish-20260926",
+    "submitted_at": "2026-09-26T16:01:55.574Z",
+    "cost_usd_estimated": 0.84,
+    "status": "done",
+    "url": "https://agent.livepeer.org/a/aHR0cHM6Ly92M2IuZmFsLm1lZGlhL2ZpbGVzL2IvMGFhYmZlMmQvMXJib0VVcFdQbWgtbEFQZUY1Z3FHX3ZpZGVvLm1wNA.d0cd6f3af44eb79d/1rboEUpWPmh-lAPeF5gqG_video.mp4",
+    "elapsed_ms": 340363,
+    "error": null
   }
 ]

@@ -19,13 +19,13 @@
     },
     {
       "capability": "kontext-edit",
-      "use": "4 performance frames",
-      "cost": "$0.17"
+      "use": "6 performance frames",
+      "cost": "$0.25"
     },
     {
       "capability": "talking-head (OmniHuman)",
-      "use": "6 lip-synced clips",
-      "cost": "$5.04"
+      "use": "8 lip-synced clips, 2 angles",
+      "cost": "$6.72"
     },
     {
       "capability": "ideogram-v4 + bg-remove",
@@ -38,16 +38,16 @@
       "cost": "$0.57"
     }
   ],
-  "create_note": "Every call carries one session tag, so Livepeer Agent's cost report is the production's receipt: $19.85 for the whole song and video.",
+  "create_note": "Every call carries one session tag, so Livepeer Agent's cost report is the production's receipt: $21.61 for the whole song and video, 49 calls.",
   "review_lines": [
     "Lyrics: every take transcribed from its separated vocal. 98-100% of lines sung, word error 0.16-0.23.",
-    "Lip-sync: the audio in every returned clip is cross-correlated with the vocal segment sent. Offset 0 ms on all six.",
+    "Lip-sync: the audio in every returned clip is cross-correlated with the vocal segment sent. Offset 0 ms on all eight.",
     "Edit: every cut on a bar line of the song's own beat grid; no cut longer than its shot.",
-    "Master: -14 LUFS, true peak under -1 dBTP, because the raw takes clipped.",
+    "Master: EQ, width, glue compression, a soft clipper and an oversampled limiter to -10 LUFS, peaks safe after AAC.",
     "Style and timing gates for remakes: a MuQ-MuLan fingerprint against the owner's catalog, beats within 40 ms."
   ],
   "taste": "Today's first cut passed every check. The owner watched it and asked for lip-sync, real typography, and the look of the artists the owner follows.",
-  "taste_fix": "HAL studied those videos, re-briefed, and rebuilt the edit around a lip-synced performance. The owner's verdict counts three times as much as any score.",
+  "taste_fix": "HAL studied those videos and rebuilt the edit: lip-synced performance from two angles, a real master, kick-and-snare effects. The owner's verdict counts three times as much as any score.",
   "result_line": "Lyrics by HAL, sung by MiniMax Music 3, picture by FLUX, Kling and OmniHuman, all through Livepeer Agent. Cut on the beat by HAL Studio.",
   "close": "Apache-2.0. Studio code, tests, and the receipt for every Livepeer Agent call are in the folder above."
 }

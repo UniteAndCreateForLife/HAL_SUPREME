@@ -18,6 +18,7 @@ from pathlib import Path
 
 FF = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y"]
 W, H, FPS = 1920, 1080, 24
+COLD_OPEN = (43.62, 5.66)  # music-video seconds: the glitch into chorus one, the "GLITCH" hit, the close-up angle
 
 
 def duration(path: Path) -> float:
@@ -108,7 +109,7 @@ def main(slides: Path, voiceover: Path, video: Path, evidence: Path, bed: Path, 
     subprocess.run([*FF, "-f", "concat", "-safe", "0", "-i", str(listing), "-c", "copy", str(picture)], check=True)
     length = duration(picture)
     narrated = work / "narrated.mp4"
-    mix = (f"[1:a]loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,apad[v];"
+    mix = (f"[1:a]loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000,apad[v];"  # 4 LU under the -10 LUFS song master
            f"[2:a]aresample=48000,volume=-14.4dB,afade=t=in:d=1.5,afade=t=out:st={length - 2.5:.2f}:d=2.5[b];"
            f"[v][b]amix=inputs=2:duration=first:normalize=0,atrim=0:{length:.3f}[a]")
     subprocess.run([*FF, "-i", str(picture), "-i", str(voiceover), "-i", str(bed), "-filter_complex", mix,
@@ -120,8 +121,13 @@ def main(slides: Path, voiceover: Path, video: Path, evidence: Path, bed: Path, 
     close_a = work / "08_close_a.mp4"
     subprocess.run([*FF, "-i", str(close), "-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo", "-shortest", "-c:v", "copy",
                     "-c:a", "aac", "-b:a", "192k", str(close_a)], check=True)
+    cold = work / "cold_open.mp4"  # the first chorus hit, before any explanation
+    start, seconds = COLD_OPEN
+    subprocess.run([*FF, "-ss", f"{start:.3f}", "-t", f"{seconds:.3f}", "-i", str(mv), "-af",
+                    f"afade=t=out:st={seconds - 0.35:.3f}:d=0.35", "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p",
+                    "-c:a", "aac", "-b:a", "192k", "-ar", "48000", str(cold)], check=True)
     final_list = work / "final.txt"
-    final_list.write_text("".join(f"file '{p.as_posix()}'\n" for p in (narrated, mv, close_a)), encoding="utf-8")
+    final_list.write_text("".join(f"file '{p.as_posix()}'\n" for p in (cold, narrated, mv, close_a)), encoding="utf-8")
     subprocess.run([*FF, "-f", "concat", "-safe", "0", "-i", str(final_list), "-c:v", "libx264", "-crf", "20",
                     "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", str(out)], check=True)
     receipt = {"out": str(out), "seconds": round(duration(out), 2), "voiceover_s": round(vo, 2),

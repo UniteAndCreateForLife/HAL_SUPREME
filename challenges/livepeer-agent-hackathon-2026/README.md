@@ -50,18 +50,19 @@ The demo production, SIGNAL SPLIT, used these capabilities. The counts and costs
 | `minimax-music-3` | 4 sung takes of the song | 4 | $0.92 |
 | `flux-pro` | 12 keyframes | 12 | $0.76 |
 | `kling-v3-turbo-pro-i2v` | 12 shots, 7 s each | 12 | $12.35 |
-| `kontext-edit` | 4 performance frames of the same character | 4 | $0.17 |
-| `talking-head` (OmniHuman 1.5) | 6 lip-synced performance clips | 6 | $5.04 |
+| `kontext-edit` | 6 performance frames of the same character | 6 | $0.25 |
+| `talking-head` (OmniHuman 1.5) | 8 lip-synced performance clips | 8 | $6.72 |
 | `ideogram-v4` | 2 title designs | 2 | $0.03 |
 | `ideogram-bg-remove` | the title, cut out | 1 | $0.01 |
 | `gemini-tts` | demo narration: one malformed call, two drafts, the final | 4 | $0.57 |
 
-**Total: $19.85 (45 calls, one failed at $0.0002) for the whole song and video.**
+**Total: $21.61 (49 calls, one failed at $0.0002) for the whole song and video.**
 
 - **Song.** `minimax-music-3` sang four takes from HAL's lyrics: two glitch trap and two emo trap.
 - **Picture.** `flux-pro` drew twelve keyframes with repeated continuity tokens (wardrobe, palette, VHS grain), and
   `kling-v3-turbo-pro-i2v` turned each one into a 7-second shot from a shot-native prompt.
-- **Performance.** `kontext-edit` put the same character into four locations from the video, singing. The song's vocal
+- **Performance.** `kontext-edit` put the same character into four locations from the video, singing, and made two
+  wide-lens close-ups for a second camera angle in the choruses. The song's vocal
   stem was cut at exact song times (start − 0.25 s to end + 0.25 s) and uploaded with `create_upload_url`, then
   `talking-head` (OmniHuman 1.5) lip-synced each location to its segment. HAL cross-correlated the audio returned in
   each clip against the segment it sent. The offset was 0 ms, so a cut at song time T plays the clip from
@@ -86,10 +87,19 @@ The demo production, SIGNAL SPLIT, used these capabilities. The counts and costs
     never follows itself.
   - B-roll matches the lyric: "thoughts down the sink" plays over the sink shot, "binary rain on my chrome-cold skin"
     over the chrome hand.
-  - Lip-synced performance takes every other bar in the choruses and part of each verse: 10 of 25 cuts, 39 seconds.
+  - Lip-synced performance takes 12 of 25 cuts (45 seconds). The choruses cut between two camera angles on the beat.
 - **Finish** ([`tools/finish_signal_split.py`](production/signal_split/tools/finish_signal_split.py)):
-  - Mastering is two-pass EBU R128 to −14 LUFS with a −1.5 dBTP ceiling, because the raw takes peaked above 0 dBTP.
+  - The mastering chain ([`master_song.py`](production/signal_split/tools/master_song.py)) follows the take's measured
+    faults. The raw take was heavy at 250–500 Hz, dipped at 2–4 kHz, had little air, a narrow image and a 17 dB crest.
+    The chain adds corrective EQ, width above a mono bass, 2.5:1 glue compression and a soft clipper, then a 4×
+    oversampled limiter doing about 4 dB of work. The result is −10 LUFS with peaks still under 0 dBFS after AAC
+    encoding.
   - One two-tone grade covers every shot: teal shadows, pink highlights, deeper blacks, grain and a vignette.
+  - Beat effects ([`beat_fx.py`](production/signal_split/tools/beat_fx.py)) are driven by kick and snare hits picked
+    from the drum stem. The choruses get a zoom punch on every kick and a shake with a colour split on every snare.
+    Section changes get a glitch transition. B-roll gets a slow push-in and performance a handheld drift.
+    Shot matching pulls each cut's exposure halfway toward the median of all cuts. The measured spread was 11 to 62 mean
+    luma, so the cut no longer jumps from near-black to bright.
   - The typography is overlaid, and the end card (the last line typed on black, then credits) plays after the song.
 
 ## Run it
@@ -105,7 +115,7 @@ cd production/signal_split
 python tools/fetch_media.py                                     # download every rendered asset listed in the receipts
 python tools/build_signal_split_edl.py song/C_emo_trap.wav lyrics.txt edl/C_emo_trap_perf.json performance/spans.json
 python tools/make_typography.py edl/C_emo_trap.words.json 103.329 typography
-python tools/finish_signal_split.py edl/C_emo_trap_perf.json out/SIGNAL_SPLIT.mp4 typography
+python tools/finish_signal_split.py edl/C_emo_trap_perf.json out/SIGNAL_SPLIT.mp4 typography drums.wav
 ```
 
 To render new media, connect Livepeer Agent to a supported AI client (see Livepeer Agent's Get Started page) and make
@@ -141,6 +151,8 @@ fit, timing gate, clean edit and mix).
   `fetch_media.py` works only while they last.
 - **The character is generated.** The lip-synced performer is a generated character, not the owner, and the singing
   voice is MiniMax Music 3's.
+- **The beat effects need a drum stem.** `drums.wav` is the song's instrumental stem; HAL makes it with Demucs, and
+  it is not in the repo. Without it the finish skips the beat effects.
 - **The take choice was provisional.** HAL picked take C (the owner can swap to A, B or D).
 - **The lip-sync is visually checked, not measured.** It is timed to the vocal, but mouth accuracy was checked by eye.
   There is no automatic lip-reading score yet.

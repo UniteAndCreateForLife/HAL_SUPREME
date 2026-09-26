@@ -1,19 +1,59 @@
 {
   "source": "livepeer-raw get_cost_report(scope=session, session_id=livepeer-hackathon-20260926, group_by=capability, since=24h)",
-  "read_at_utc": "2026-09-26T16:05Z",
-  "total_cost_usd": 19.8483,
-  "ledger_rows": 53,
+  "read_at_utc": "2026-09-26T16:45Z",
+  "total_cost_usd": 21.6123,
+  "ledger_rows": 59,
   "failed_job_count": 1,
   "failed_cost_usd": 0.0002,
   "note": "calls are counted from receipts/livepeer_calls.json; the ledger lists more rows than calls for some synchronous capabilities",
   "groups": [
-    {"capability": "kling-v3-turbo-pro-i2v", "calls": 12, "cost_usd": 12.348, "use": "12 image-to-video shots, 7 s each"},
-    {"capability": "talking-head", "calls": 6, "cost_usd": 5.04, "use": "6 lip-synced performance clips (OmniHuman 1.5)"},
-    {"capability": "minimax-music-3", "calls": 4, "cost_usd": 0.924, "use": "4 sung takes of the song"},
-    {"capability": "flux-pro", "calls": 12, "cost_usd": 0.756, "use": "12 keyframes"},
-    {"capability": "gemini-tts", "calls": 4, "cost_usd": 0.5702, "use": "demo narration: one malformed call, two drafts, the final"},
-    {"capability": "kontext-edit", "calls": 4, "cost_usd": 0.168, "use": "4 performance frames of the same character"},
-    {"capability": "ideogram-v4", "calls": 2, "cost_usd": 0.0316, "use": "2 title designs"},
-    {"capability": "ideogram-bg-remove", "calls": 1, "cost_usd": 0.0105, "use": "the title cut out"}
+    {
+      "capability": "kling-v3-turbo-pro-i2v",
+      "calls": 12,
+      "cost_usd": 12.348,
+      "use": "12 image-to-video shots, 7 s each"
+    },
+    {
+      "capability": "talking-head",
+      "calls": 8,
+      "cost_usd": 6.72,
+      "use": "8 lip-synced performance clips (OmniHuman 1.5), two angles in each chorus"
+    },
+    {
+      "capability": "minimax-music-3",
+      "calls": 4,
+      "cost_usd": 0.924,
+      "use": "4 sung takes of the song"
+    },
+    {
+      "capability": "flux-pro",
+      "calls": 12,
+      "cost_usd": 0.756,
+      "use": "12 keyframes"
+    },
+    {
+      "capability": "gemini-tts",
+      "calls": 4,
+      "cost_usd": 0.5702,
+      "use": "demo narration: one malformed call, two drafts, the final"
+    },
+    {
+      "capability": "kontext-edit",
+      "calls": 6,
+      "cost_usd": 0.252,
+      "use": "6 performance frames of the same character (4 locations + 2 wide-lens close-ups)"
+    },
+    {
+      "capability": "ideogram-v4",
+      "calls": 2,
+      "cost_usd": 0.0316,
+      "use": "2 title designs"
+    },
+    {
+      "capability": "ideogram-bg-remove",
+      "calls": 1,
+      "cost_usd": 0.0105,
+      "use": "the title cut out"
+    }
   ]
 }

@@ -33,7 +33,7 @@ SHOTS = {
     ("verse", 0): ["V02", "V03", "V04", "V06"],  # mirror lagging / sink / cracked vinyl / split-self
     ("chorus", 0): ["V05", "V06", "V11", "V07", "V04"],  # street / shatter-frame / static / signal answers
     ("verse", 1): ["V08", "V09", "V10", "V07"],  # binary rain / ghost in the haze / older voice / a dozen you and me
-    ("chorus", 1): ["V05", "V06", "V11", "V07", "V02"],
+    ("chorus", 1): ["V05", "V11", "V07", "V06", "V02"],  # the 4th line lands on the cracked mirror, not the TV wall again
     ("outro", 0): ["V11", "V01"],
 }
 BARS_PER_CUT = {"chorus": 1}  # everything else cuts every two bars
@@ -204,12 +204,16 @@ def perform(cuts: list[dict], spans: list[dict], tolerance: float = 0.02) -> lis
 
     A span's clip was rendered from the vocal stem starting at file_offset_s of song time, so a cut at song time T plays
     the clip from T - file_offset_s and the mouth stays on the words. `replace` picks which of the cuts inside the span
-    become performance: first, last, odd (1st, 3rd, ...), or all. Cut boundaries never move."""
+    become performance: first, last, odd (1st, 3rd, ...), even (2nd, 4th, ...), all, or a list of positions. Cut boundaries never move."""
     out = [dict(cut) for cut in cuts]
     for span in spans:
         inside = [i for i, cut in enumerate(out) if cut["start_s"] >= span["start_s"] - tolerance
                   and cut["end_s"] <= span["end_s"] + tolerance]
-        pick = {"first": inside[:1], "last": inside[-1:], "odd": inside[::2], "all": inside}[span["replace"]]
+        rule = span["replace"]
+        if isinstance(rule, list):  # explicit positions among the cuts inside the span, e.g. [1] for a second camera angle
+            pick = [inside[k] for k in rule if 0 <= k < len(inside)]
+        else:
+            pick = {"first": inside[:1], "last": inside[-1:], "odd": inside[::2], "even": inside[1::2], "all": inside}[rule]
         for i in pick:
             out[i]["source"] = span["source"]
             out[i]["in_s"] = round(out[i]["start_s"] - span["file_offset_s"], 3)

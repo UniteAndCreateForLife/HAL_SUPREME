@@ -172,7 +172,7 @@ def lipsync(out: Path) -> None:
     lags = range(-40, 41)
     score = [np.corrcoef(a[max(0, -l):n - max(0, l)], b[max(0, l):n - max(0, -l)])[0, 1] for l in lags]
     best = int(np.argmax(score))
-    draw.text((left, top + 2 * (height + 60) + 10), f"offset {lags[best] * 5} ms · correlation {score[best]:.2f} · the same check passed on all six clips",
+    draw.text((left, top + 2 * (height + 60) + 10), f"offset {lags[best] * 5} ms · correlation {score[best]:.2f} · the same check passed on all eight clips",
               font=face(38, bold=True), fill=INK)
     image.save(out / "lipsync.jpg", quality=92)
 
