@@ -46,7 +46,7 @@ python app.py
 
 ## Validation scope
 
-The current unit suite contains **32 tests** covering deterministic grounding, privacy egress, audit integrity, role authorization, tenant isolation, tenant-ID boundary validation, and parity with the browser gate; the browser gate has 6 more tests under `node --test`. The repository CI runs the acceptance workflow on Linux x64, Linux ARM64, Windows x64, and macOS ARM64. Live NVIDIA NIM evidence is retained in `mvp/LIVE_VALIDATION_RECEIPT.json`; the public demo intentionally disables external model calls to prevent uncontrolled compute use.
+The current unit suite contains **33 tests** covering deterministic grounding, privacy egress, audit integrity, role authorization, tenant isolation, tenant-ID boundary validation, and parity with the browser gate; the browser gate has 6 more tests under `node --test`. The repository CI runs the acceptance workflow on Linux x64, Linux ARM64, Windows x64, and macOS ARM64. Live NVIDIA NIM evidence is retained in `mvp/LIVE_VALIDATION_RECEIPT.json`; the public demo intentionally disables external model calls to prevent uncontrolled compute use.
 
 Submission materials in this directory are sanitized and contain no portal password, API key, phone number, or legal-declaration acceptance.
 

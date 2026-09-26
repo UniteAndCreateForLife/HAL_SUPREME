@@ -155,7 +155,7 @@ def normalize_synthesis(case: dict[str, Any], payload: dict[str, Any]) -> dict[s
         for row in rejected
         for item in row.get("invalid_citations", [])
     })
-    accepted_pairs = {tuple(sorted(conflict["evidence"])) for conflict in conflicts}
+    accepted_pairs = {tuple(sorted(set(conflict["evidence"]))) for conflict in conflicts}
     return {
         "summary": _bounded_text(payload.get("summary"), 900),
         "findings": findings,

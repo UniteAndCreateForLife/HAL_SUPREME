@@ -72,6 +72,18 @@ class CampusEvidenceDeskTests(unittest.TestCase):
         self.assertEqual(result["acceptance"]["unsupported_conflict_relations_rejected"], 1)
         self.assertTrue(result["acceptance"]["model_conflict_detection"])
 
+    def test_model_acceptance_detects_conflict_with_repeated_evidence_ids(self):
+        case = self.cases[0]
+        payload = {
+            "findings": [],
+            "actions": [],
+            "conflicts": [{"detail": "Policies conflict.", "evidence": ["E1", "E1", "E2"]}],
+        }
+        result = normalize_synthesis(case, payload)
+        self.assertEqual(len(result["conflicts"]), 1)
+        self.assertEqual(result["acceptance"]["unsupported_conflict_relations_rejected"], 0)
+        self.assertTrue(result["acceptance"]["model_conflict_detection"])
+
     def test_model_acceptance_never_mutates_case_evidence(self):
         case = self.cases[1]
         before = [dict(item) for item in case["evidence"]]
