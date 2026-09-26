@@ -150,7 +150,7 @@
     }
     const rejected = [...rejectedFindings, ...rejectedActions, ...rejectedConflicts, ...rejectedRelations];
     const invalid = [...new Set(rejected.flatMap(row => row.invalid_citations || []))].sort();
-    const acceptedPairs = new Set(conflicts.map(x => pairKey(x.evidence)));
+    const acceptedPairs = new Set(conflicts.map(x => pairKey([...new Set(x.evidence)])));
     return {
       summary: boundedText(own(body, 'summary'), 900),
       findings,

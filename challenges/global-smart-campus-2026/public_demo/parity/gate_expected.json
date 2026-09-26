@@ -758,7 +758,7 @@
      "invalid_citations": [],
      "all_accepted_items_grounded": true,
      "unsupported_conflict_relations_rejected": 0,
-     "model_conflict_detection": false,
+     "model_conflict_detection": true,
      "policy": "Only model items with supplied evidence IDs and seeded-valid conflict relations survive the deterministic acceptance layer."
     }
    }
