@@ -7,7 +7,7 @@ the song, the keyframes, the shots, the lip-synced performance, the title art an
 own work before a person sees it, and learns from what the owner keeps and rejects. It is part of
 [HAL SUPREME](../../README.md), an open agent system that one independent artist builds and runs on a home PC.
 
-Demo video: `DEMO_VIDEO_URL`
+Demo video (3:30): https://youtu.be/PoMpCf94Yks
 
 ## Why this should exist
 
