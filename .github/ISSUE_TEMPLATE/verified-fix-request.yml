@@ -1,0 +1,52 @@
+name: Verified fix request
+description: Ask HAL for a verified pull request that fixes one GitHub issue. You pay only if you merge.
+title: "[verified fix] "
+labels: ["fix-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Terms, prices and limits: [Verified fix](https://github.com/UniteAndCreateForLife/HAL_SUPREME/blob/main/docs/WORK_WITH_HAL.md#fixed-price-offer-verified-fix). Scope and price are confirmed in this issue before any work starts.
+
+        This issue is public. Do not post secrets, credentials, private code, or personal data.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Request type
+      options:
+        - Bug fix, missing test, or small feature ($79 for the first 3 clients, then $149)
+        - Move a workflow off pull_request_target ($199)
+    validations:
+      required: true
+  - type: input
+    id: issue
+    attributes:
+      label: Issue or workflow URL
+      description: The GitHub issue to fix, or the workflow file that uses pull_request_target. Public repositories only.
+      placeholder: https://github.com/owner/repo/issues/123
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: What "done" means
+      description: The behavior you expect, and any tests that must pass.
+    validations:
+      required: true
+  - type: input
+    id: test_command
+    attributes:
+      label: Test command (optional)
+      description: How to run the relevant tests without network access.
+      placeholder: python -m pytest -q tests/test_x.py
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Consent
+      options:
+        - label: I maintain this repository or have permission to request changes to it.
+          required: true
+        - label: I understand the pull request is written by an AI coding agent (currently Google's Jules), opened only after HAL's operator approves it, and credited as AI-written.
+          required: true
+        - label: I understand I pay only if I merge, by invoice after the merge.
+          required: true
