@@ -1,0 +1,12 @@
+{
+  "R1_take1": {
+    "lines_heard": "31/36",
+    "words_aligned": 0.89,
+    "vocals": "D:\\HAL_SUPREME\\temp\\opencode\\demucs_out\\htdemucs\\R1_take1_demucs_input\\vocals.wav"
+  },
+  "R2_take2": {
+    "lines_heard": "32/36",
+    "words_aligned": 0.845,
+    "vocals": "D:\\HAL_SUPREME\\temp\\opencode\\demucs_out\\htdemucs\\R2_take2_demucs_input\\vocals.wav"
+  }
+}

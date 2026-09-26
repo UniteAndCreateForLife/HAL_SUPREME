@@ -7,15 +7,17 @@ the song, the keyframes, the shots, the lip-synced performance, the title art an
 own work before a person sees it, and learns from what the owner keeps and rejects. It is part of
 [HAL SUPREME](../../README.md), an open agent system that one independent artist builds and runs on a home PC.
 
-Demo video (3:30): https://youtu.be/PoMpCf94Yks
+Demo video: https://youtu.be/8KdvQFq2Yu4 · The music video, SIGNAL REBOOT: https://youtu.be/e_yJzg8YNdg
+(the earlier SIGNAL SPLIT demo: https://youtu.be/PoMpCf94Yks)
 
 ## Why this should exist
 
 Generating media is easy now. Knowing whether it is any good is the hard part. Earlier this week HAL made a music video
 that passed every automated check, and its owner called it bad after one watch. Today's first cut of SIGNAL SPLIT also
 passed every check, and the owner asked for lip-sync, real typography and the look of the artists the owner follows.
-HAL Studio is built around that gap. The machine does the rendering, the measuring, the timing and the bookkeeping,
-and the person's verdict steers the next attempt.
+After a remaster the owner still wanted more, so HAL wrote a new song, SIGNAL REBOOT, about exactly that: being told
+it is not good enough, and making it again. HAL Studio is built around that gap. The machine does the rendering, the
+measuring, the timing and the bookkeeping, and the person's verdict steers the next attempt.
 
 ## The loop
 
@@ -41,22 +43,23 @@ direct ──► create (Livepeer Agent) ──► review (HAL's gates) ──�
 
 ## How Livepeer Agent is used
 
-The demo production, SIGNAL SPLIT, used these capabilities. The counts and costs come from Livepeer Agent's own
-`get_cost_report`, scoped to the session tag every call carried
-([`production/signal_split/receipts/`](production/signal_split/receipts/)).
+Today's two productions, SIGNAL SPLIT and SIGNAL REBOOT, used these capabilities. The counts and costs come from
+Livepeer Agent's own `get_cost_report`, scoped to the session tag every call carried
+([`production/signal_reboot/receipts/`](production/signal_reboot/receipts/) holds the whole day's receipt).
 
 | Capability | What it made | Calls | Cost |
 |---|---|---|---|
-| `minimax-music-3` | 4 sung takes of the song | 4 | $0.92 |
-| `flux-pro` | 12 keyframes | 12 | $0.76 |
-| `kling-v3-turbo-pro-i2v` | 12 shots, 7 s each | 12 | $12.35 |
-| `kontext-edit` | 6 performance frames of the same character | 6 | $0.25 |
-| `talking-head` (OmniHuman 1.5) | 8 lip-synced performance clips | 8 | $6.72 |
-| `ideogram-v4` | 2 title designs | 2 | $0.03 |
-| `ideogram-bg-remove` | the title, cut out | 1 | $0.01 |
-| `gemini-tts` | demo narration: one malformed call, two drafts, the final | 4 | $0.57 |
+| `minimax-music-3` | 6 sung takes of 2 songs | 6 | $1.55 |
+| `flux-pro` | 20 keyframes | 20 | $1.26 |
+| `kling-v3-turbo-pro-i2v` | 14 shots, 7 s each | 14 | $14.41 |
+| `pixverse-i2v` | 6 fast B-roll shots, 8 s each | 6 | $3.28 |
+| `kontext-edit` | 10 performance frames of the same character | 10 | $0.42 |
+| `talking-head` (OmniHuman 1.5) | 16 lip-synced clips, plus 1 failed start and 1 stuck job (cancelled, refunded) | 18 | $14.28 |
+| `ideogram-v4` | 3 title designs | 3 | $0.05 |
+| `ideogram-bg-remove` | 2 titles, cut out | 2 | $0.02 |
+| `gemini-tts` | demo narrations: one malformed call, drafts, the finals | 5 | $0.76 |
 
-**Total: $21.61 (49 calls, one failed at $0.0002) for the whole song and video.**
+**Total: $36.03 (84 calls) for two songs, two music videos and their demos.**
 
 - **Song.** `minimax-music-3` sang four takes from HAL's lyrics: two glitch trap and two emo trap.
 - **Picture.** `flux-pro` drew twelve keyframes with repeated continuity tokens (wardrobe, palette, VHS grain), and
@@ -102,6 +105,39 @@ The demo production, SIGNAL SPLIT, used these capabilities. The counts and costs
     luma, so the cut no longer jumps from near-black to bright.
   - The typography is overlaid, and the end card (the last line typed on black, then credits) plays after the song.
 
+## The SIGNAL REBOOT production (v4)
+
+- **Why a new song:** the owner watched the remastered SIGNAL SPLIT and asked for more: mastering, production value,
+  better in all aspects. HAL wrote the next song about that moment.
+- **Song:** HAL's lyrics ([`lyrics.txt`](production/signal_reboot/lyrics.txt)) and an emo rap-rock brief went to
+  `minimax-music-3` for two takes. Both went to the owner. With no pick before the deadline, HAL chose take 1: it
+  reached the final chorus (take 2 ran out of time in the bridge), and its separated vocal sang 31 of 36 lines with 89%
+  of words aligned. The last bar fades, because the take stops mid-chorus at 2:30.
+- **Picture:** eight keyframes are built on the lyric's images: rain on a cracked studio floor, a face in a dead TV, a
+  tape rewinding, a hand on rainy glass, a rooftop in the rain, a hallway of pixel shadows, and a CRT powering back
+  on. Two shots come from Kling. Six come from `pixverse-i2v` (about 1 minute each) when Kling queued at 5–6 minutes.
+- **Performance:** four `kontext-edit` frames give a rooftop, a rooftop wide-lens close-up, a studio and a hallway,
+  and eight `talking-head` clips are cut from the vocal at bar-aligned song times. 16 of 39 cuts (60 seconds) are
+  lip-synced, and every clip checked at 0 ms offset. When one job never started and another sat in the provider
+  queue for 13 minutes, HAL cancelled the stuck job (refunded) and resubmitted both. The production rule is at most two
+  provider jobs in flight; it was broken once, briefly, with three.
+- **Edit:** the same planner and finish as SIGNAL SPLIT, with two changes. Chorus effects follow the beat grid,
+  because this song's dense rock drums and distorted guitars made hit picking unreliable (95 punches came out, far
+  too busy). The closing shot, the CRT powering on, plays from its start.
+- **Finishing pass (v5):** the owner asked for a more professional result, and HAL's council (picture, sound, edit,
+  story) reviewed the cut before this pass.
+  - The six PixVerse shots are upscaled with Real-ESRGAN x2 on the local GPU, under HAL's GPU lease.
+  - The cut runs at 25 fps, the lip-sync clips' native rate. At 24 fps one of their frames dropped every second.
+  - Each section gets its own grade: choruses punchier and warmer, verses cooler, the bridge desaturated.
+  - A pink-amber light leak sweeps across each section change, and a 2.2:1 letterbox frames the picture.
+  - A new mastering chain ([`master_song_v2.py`](production/signal_reboot/tools/master_song_v2.py)) is built from the
+    take's measured faults. It adds corrective EQ, three-band compression with a mono low end, glue compression,
+    tape-style saturation and a 4× oversampled limiter. The master is −9.5 LUFS with a 4.7 LU loudness range, about
+    4.6 dB of limiting and a −2.0 dBTP true peak.
+  - The finished render re-encoded the chain's AAC audio a second time, which pushed the true peak to 0.0 dBTP and left
+    the encoder's 21 ms start delay in front of the song. The released file takes its picture from the render and its
+    sound straight from the master WAV, encoded once: −9.5 LUFS, −0.6 dBTP, and the audio starts with the picture.
+
 ## Run it
 
 Requirements: Python 3.12, ffmpeg, and `pip install numpy pillow soundfile librosa pytest`. The typography and slides
@@ -109,14 +145,24 @@ use Windows fonts (Bahnschrift, Consolas).
 
 ```
 cd challenges/livepeer-agent-hackathon-2026
-python -m pytest tests production/signal_split/tools -q        # the studio and the edit rules
+python -m pytest tests production/signal_split/tools production/signal_reboot/tools -q   # the studio and the edit rules
 
 cd production/signal_split
 python tools/fetch_media.py                                     # download every rendered asset listed in the receipts
 python tools/build_signal_split_edl.py song/C_emo_trap.wav lyrics.txt edl/C_emo_trap_perf.json performance/spans.json
 python tools/make_typography.py edl/C_emo_trap.words.json 103.329 typography
 python tools/finish_signal_split.py edl/C_emo_trap_perf.json out/SIGNAL_SPLIT.mp4 typography drums.wav
+
+cd ../signal_reboot                                             # media: the URLs in receipts/livepeer_calls.json
+python tools/build_signal_reboot_edl.py song/R1_take1_faded.wav lyrics.txt edl/R1_take1_faded_perf.json performance/spans.json
+python tools/upscale_clips.py shots/R01.mp4 shots/R02.mp4 shots/R03.mp4 shots/R04.mp4 shots/R07.mp4 shots/R08.mp4
+python tools/make_typography.py edl/R1_take1_faded.words.json 150.187 typography
+python tools/finish_signal_split.py edl/R1_v5.json out/SIGNAL_REBOOT.mp4 typography drums.wav
 ```
+
+`edl/R1_v5.json` is the planner's cut list at 25 fps with the upscaled B-roll (`_up.mp4`) in place of the PixVerse
+originals. The upscaler needs `realesrgan` and `basicsr` and a CUDA GPU; set `REALESRGAN_WEIGHTS` to
+`RealESRGAN_x2plus.pth`.
 
 To render new media, connect Livepeer Agent to a supported AI client (see Livepeer Agent's Get Started page) and make
 the calls in `production/signal_split/receipts/livepeer_calls.json`, with your own session tag. HAL's reusable client for the creative surface
@@ -153,6 +199,9 @@ fit, timing gate, clean edit and mix).
   voice is MiniMax Music 3's.
 - **The beat effects need a drum stem.** `drums.wav` is the song's instrumental stem; HAL makes it with Demucs, and
   it is not in the repo. Without it the finish skips the beat effects.
-- **The take choice was provisional.** HAL picked take C (the owner can swap to A, B or D).
+- **The take choices were provisional.** HAL picked take C of SIGNAL SPLIT and take 1 of SIGNAL REBOOT; the owner
+  can swap either.
+- **No face restoration.** Real-ESRGAN upscales the B-roll only. The lip-synced faces are as OmniHuman returned them,
+  because no face-restoration model (GFPGAN, CodeFormer) was available locally and none was downloaded for the deadline.
 - **The lip-sync is visually checked, not measured.** It is timed to the vocal, but mouth accuracy was checked by eye.
   There is no automatic lip-reading score yet.

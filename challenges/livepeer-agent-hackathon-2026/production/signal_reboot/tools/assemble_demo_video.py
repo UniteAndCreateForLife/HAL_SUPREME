@@ -17,8 +17,8 @@ import sys
 from pathlib import Path
 
 FF = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y"]
-W, H, FPS = 1920, 1080, 24
-COLD_OPEN = (43.62, 5.66)  # music-video seconds: the glitch into chorus one, the "GLITCH" hit, the close-up angle
+W, H, FPS = 1920, 1080, 25  # the music video's rate (the lip-sync clips are 25 fps), so no frame is dropped
+COLD_OPEN = (44.98, 5.50)  # music-video seconds: the glitch into chorus one and the first "signal reboot"
 
 
 def duration(path: Path) -> float:
@@ -80,7 +80,7 @@ def main(slides: Path, voiceover: Path, video: Path, evidence: Path, bed: Path, 
     work = out.parent / (out.stem + "_work")
     work.mkdir(parents=True, exist_ok=True)
     vo = duration(voiceover)
-    script = Path(__file__).resolve().parents[1] / "demo" / os.environ.get("DEMO_SCRIPT", "VOICEOVER_V3.txt")
+    script = Path(__file__).resolve().parents[1] / "demo" / os.environ.get("DEMO_SCRIPT", "VOICEOVER_V4.txt")
     try:
         marks = paragraph_marks_from_text(voiceover, script)
     except Exception as error:  # noqa: BLE001 (no Whisper here: fall back to the longest pauses)
@@ -109,7 +109,7 @@ def main(slides: Path, voiceover: Path, video: Path, evidence: Path, bed: Path, 
     subprocess.run([*FF, "-f", "concat", "-safe", "0", "-i", str(listing), "-c", "copy", str(picture)], check=True)
     length = duration(picture)
     narrated = work / "narrated.mp4"
-    mix = (f"[1:a]loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000,apad[v];"  # 4 LU under the -10 LUFS song master
+    mix = (f"[1:a]loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000,apad[v];"  # about 4 LU under the song master
            f"[2:a]aresample=48000,volume=-14.4dB,afade=t=in:d=1.5,afade=t=out:st={length - 2.5:.2f}:d=2.5[b];"
            f"[v][b]amix=inputs=2:duration=first:normalize=0,atrim=0:{length:.3f},aformat=channel_layouts=stereo[a]")  # stereo like every other part
     subprocess.run([*FF, "-i", str(picture), "-i", str(voiceover), "-i", str(bed), "-filter_complex", mix,

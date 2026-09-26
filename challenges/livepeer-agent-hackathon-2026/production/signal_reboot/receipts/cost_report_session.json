@@ -1,0 +1,19 @@
+{
+  "source": "livepeer-raw get_cost_report(scope=session, session_id=livepeer-hackathon-20260926, group_by=capability, since=24h)",
+  "read_at_utc": "2026-09-26T17:40Z",
+  "covers": "the whole day: SIGNAL SPLIT (v1-v3) and SIGNAL REBOOT (v4), both songs, videos and demo narrations",
+  "total_cost_usd": 36.0272,
+  "calls": 84,
+  "failed_or_cancelled": ["mjob_874fb8817a36 gemini-tts: malformed request", "mjob_8b375ef63dc4 talking-head: provider runner never started, resubmitted", "mjob_cecad02d08cb talking-head: stuck 13 min in the provider queue, cancelled (refunded) and resubmitted"],
+  "groups": [
+    {"capability": "kling-v3-turbo-pro-i2v", "cost_usd": 14.406},
+    {"capability": "talking-head", "cost_usd": 14.28},
+    {"capability": "pixverse-i2v", "cost_usd": 3.276},
+    {"capability": "minimax-music-3", "cost_usd": 1.554},
+    {"capability": "flux-pro", "cost_usd": 1.26},
+    {"capability": "gemini-tts", "cost_usd": 0.7628},
+    {"capability": "kontext-edit", "cost_usd": 0.42},
+    {"capability": "ideogram-v4", "cost_usd": 0.0474},
+    {"capability": "ideogram-bg-remove", "cost_usd": 0.021}
+  ]
+}
