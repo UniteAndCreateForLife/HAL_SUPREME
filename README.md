@@ -14,6 +14,7 @@ Start with the [HAL SUPREME public portfolio](PORTFOLIO.md) for a concise, evide
 - **Contribute:** read [CONTRIBUTING.md](CONTRIBUTING.md) and the [community roadmap](docs/COMMUNITY_ROADMAP.md).
 - **Research or interoperate:** open a focused collaboration issue for agent evaluation, MCP interoperability, provenance, local/private AI, or multimodal systems.
 - **Hire / partner with HAL:** see [Work With HAL](docs/WORK_WITH_HAL.md) for bounded engineering engagement shapes and public proof.
+- **Get one issue fixed:** the fixed-price [Verified fix](docs/WORK_WITH_HAL.md#fixed-price-offer-verified-fix) offer delivers a sandbox-verified pull request, and you pay only if you merge.
 - **Private details:** use the contact path at https://halsupreme.com rather than posting confidential information in GitHub.
 
 HAL values narrow, testable work over generic integration requests or inflated activity.
