@@ -109,11 +109,11 @@ func _process(delta: float) -> void:
     _animate_environment(elapsed)
 
 func _update_camera(t: float) -> void:
-    var duration := 5.0
-    var a := clampf(t / duration, 0.0, 1.0)
-    var angle := lerp(-0.24, 0.26, a)
-    var radius := lerp(13.5, 10.2, a)
-    camera.position = Vector3(sin(angle) * radius, lerp(3.9, 3.0, a), cos(angle) * radius + 0.4)
+    var duration: float = 5.0
+    var a: float = clampf(t / duration, 0.0, 1.0)
+    var angle: float = lerpf(-0.24, 0.26, a)
+    var radius: float = lerpf(13.5, 10.2, a)
+    camera.position = Vector3(sin(angle) * radius, lerpf(3.9, 3.0, a), cos(angle) * radius + 0.4)
     camera.look_at(Vector3(0.0, 2.45, -2.2), Vector3.UP)
 
 func _animate_environment(t: float) -> void:
