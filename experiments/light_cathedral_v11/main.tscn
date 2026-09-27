@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://cathedral_full_environment_v11.glb" id="1_env"]
+[ext_resource type="Script" path="res://main.gd" id="2_script"]
+
+[node name="NativeCathedralProof" type="Node3D"]
+script = ExtResource("2_script")
+
+[node name="CathedralEnvironment" parent="." instance=ExtResource("1_env")]
