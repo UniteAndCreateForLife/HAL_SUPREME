@@ -95,6 +95,31 @@ Limits:
 - your sign-in flow is not changed;
 - a focused fix, not a penetration test.
 
+## Fixed-price offer: Booking and no-show automation
+
+**For a one-person or small appointment business** that loses hours to back-and-forth messages and empty slots: mobile groomers, detailers, cleaners, trainers, tutors. It is built from our Lovable Challenge app for a one-van dog groomer: [live demo](https://lupe-wags-books.lovable.app) (fictional business, simulated messages) and [a video of its latest fix](https://youtu.be/cMa5e84sDf8). The app's code is in a separate private repository; the demo and the video are public.
+
+What it does:
+- Booking page: customers pick a time that fits your rules (which areas you serve on which days, how long each kind of visit takes), then get an instant confirmation and a private link to confirm, reschedule or cancel. Two languages.
+- The evening before: every customer gets a check. Visits nobody confirms are released, and each freed slot is offered to the longest-waiting person on your waitlist who fits.
+- Offers have a deadline: an unanswered offer goes to the next person, and anything still unconfirmed in the morning is released, so you only go to confirmed visits.
+- Owner dashboard: today's visits, the week, the waitlist and every message sent.
+- Customer data is read and written only through the server, never straight from the browser.
+
+How it works:
+1. A plan first: your rules, areas, visit types and messages. Nothing is built until you approve it.
+2. HAL builds it with Lovable and AI coding agents, reviewed by a person, on your own Lovable account, so you own the app and the data. The scheduling rules get automated tests.
+3. Request it through [Contra](https://contra.com/s/AZBOlNUs-booking-and-no-show-automation-for-a-one-person-service-business).
+
+Price:
+- **$499** for the first 3 clients, in exchange for an honest public review; **$999** after that.
+- Invoiced once it is live on your account and you have approved it.
+
+Limits:
+- one business and one booking flow, up to two languages;
+- real text messages are not built yet: sending by SMS needs your own SMS provider account (you pay its fees), and that connection is built as part of the job; email is the alternative;
+- no deposits or payments, no medical or legal records, no integration with an existing booking system.
+
 ## Strong-fit paid engineering
 
 ### Agent reliability audit

@@ -14,6 +14,8 @@ PUBLIC_TEXT_PATHS = (
     REPO_ROOT / "case-studies",
     REPO_ROOT / "docs" / "PUBLIC_WORK_LOG.md",
     REPO_ROOT / "docs" / "PUBLIC_WORK_POLICY.md",
+    REPO_ROOT / "docs" / "WORK_WITH_HAL.md",
+    REPO_ROOT / "docs" / "samples",
     REPO_ROOT / "evidence" / "portfolio",
     REPO_ROOT / "plugins" / "livepeer-creative-mcp",
     PORTFOLIO_PATH,
