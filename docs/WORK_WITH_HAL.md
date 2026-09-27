@@ -57,6 +57,7 @@ What HAL checks:
   - third-party actions pinned to a tag.
 - Dependencies: pinned versions with published advisories in the [OSV database](https://osv.dev) (Python requirements, npm lockfiles).
 - Committed secrets, reported by file, line and kind, never the value.
+- Database rules in Supabase / Lovable Cloud migrations: rules that let the public key (or any signed-in user) read or change data, and tables without row level security.
 - Python bugs that lint can prove, such as undefined names.
 - Hygiene: tests, CI, license, security policy, dependency updates.
 
@@ -74,6 +75,25 @@ How it works: open a [Code Health Check request](https://github.com/UniteAndCrea
 Limits:
 - one repository per request; public repositories only for now;
 - automated checks plus review. This is not a penetration test or a compliance audit.
+
+## Fixed-price offer: Lovable app database lockdown
+
+**For apps built on Lovable Cloud or Supabase.** These apps send a public key to every browser, so the database's row level security rules are all that stands between that key and your data. Open rules are common: in 2025, [CVE-2025-48757](https://mattpalmer.io/posts/2025/05/CVE-2025-48757/) exposed data in 170+ Lovable apps this way. Our own Lovable Challenge app shipped with the same problem, and this is how we fixed it.
+
+How it works:
+1. HAL reads your repository's database migrations (through Lovable's GitHub sync) and lists every rule that lets the public key, or any signed-in user, read or change data, plus tables with row level security off.
+2. The fix scopes each rule to the row's owner, or moves reads and writes into server functions and gives the public key no access.
+3. The change arrives as a pull request that you review and can revert.
+4. With your consent, HAL proves it against your own app: the same request with your public key, before (data) and after (permission denied).
+
+Price:
+- **$79** for the first 3 clients, in exchange for an honest public review; **$149** after that.
+- You pay only after you have seen the before/after proof.
+
+Limits:
+- Lovable Cloud or Supabase apps with GitHub sync;
+- your sign-in flow is not changed;
+- a focused fix, not a penetration test.
 
 ## Strong-fit paid engineering
 
