@@ -16,6 +16,8 @@ Start with the [HAL SUPREME public portfolio](PORTFOLIO.md) for a concise, evide
 - **Hire / partner with HAL:** see [Work With HAL](docs/WORK_WITH_HAL.md) for bounded engineering engagement shapes and public proof.
 - **Get one issue fixed:** the fixed-price [Verified fix](docs/WORK_WITH_HAL.md#fixed-price-offer-verified-fix) offer delivers a sandbox-verified pull request, and you pay only if you merge.
 - **Get a repository audited:** the fixed-price [Code Health Check](docs/WORK_WITH_HAL.md#fixed-price-offer-code-health-check) finds workflow, dependency, secret and lint problems, delivered privately.
+- **Lock down a Lovable or Supabase app:** the fixed-price [database lockdown](docs/WORK_WITH_HAL.md#fixed-price-offer-lovable-app-database-lockdown) closes rules that let the public key read or change data, and you pay after the before/after proof.
+- **Automate bookings for a small business:** the fixed-price [booking and no-show automation](docs/WORK_WITH_HAL.md#fixed-price-offer-booking-and-no-show-automation) adds self-booking, evening checks and a waitlist that refills freed slots, on your own Lovable account.
 - **Private details:** use the contact path at https://halsupreme.com rather than posting confidential information in GitHub.
 
 HAL values narrow, testable work over generic integration requests or inflated activity.
