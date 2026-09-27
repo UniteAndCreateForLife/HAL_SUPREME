@@ -45,6 +45,36 @@ Why the first three are discounted: so far this pipeline has been used only on H
 - [HAL_OPEN_PUBLIC_INTEREST #9](https://github.com/UniteAndCreateForLife/HAL_OPEN_PUBLIC_INTEREST/pull/9): a loopback-host security fix. The new test fails against the old code.
 - [HAL_OPEN_PUBLIC_INTEREST #10](https://github.com/UniteAndCreateForLife/HAL_OPEN_PUBLIC_INTEREST/pull/10): hash-chain verification for the audit ledger; it catches 8 tampering patterns.
 
+## Fixed-price offer: Code Health Check
+
+**A written audit of one repository, delivered privately within 2 business days.** For teams that want to know what is broken or risky before it bites.
+
+What HAL checks:
+- GitHub Actions security:
+  - breakage from GitHub's 2026 `pull_request_target` changes ([prt-check](https://github.com/UniteAndCreateForLife/prt-check));
+  - script injection from issue or pull request text in `run:` steps;
+  - workflows that never limit their token;
+  - third-party actions pinned to a tag.
+- Dependencies: pinned versions with published advisories in the [OSV database](https://osv.dev) (Python requirements, npm lockfiles).
+- Committed secrets, reported by file, line and kind, never the value.
+- Python bugs that lint can prove, such as undefined names.
+- Hygiene: tests, CI, license, security policy, dependency updates.
+
+What you receive:
+- the report: every finding, where it is, how to fix it, and a "fix first" list ([sample](samples/code-health-check-sample.md));
+- each high and medium finding checked for false positives before delivery;
+- a fixed quote for anything you want fixed through [Verified fix](#fixed-price-offer-verified-fix).
+
+Price:
+- **$99** for the first 3 clients, in exchange for an honest public review; **$249** after that.
+- Invoiced after delivery. If the report has no high or medium finding, you owe nothing.
+
+How it works: open a [Code Health Check request](https://github.com/UniteAndCreateForLife/HAL_SUPREME/issues/new?template=code-health-check-request.yml). The report is delivered in a private GitHub repository shared only with your account, never in the public issue.
+
+Limits:
+- one repository per request; public repositories only for now;
+- automated checks plus review. This is not a penetration test or a compliance audit.
+
 ## Strong-fit paid engineering
 
 ### Agent reliability audit
