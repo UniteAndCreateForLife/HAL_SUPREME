@@ -1,0 +1,75 @@
+name: Light Cathedral Native Godot Render v11
+
+on:
+  push:
+    branches:
+      - shadow-cathedral-native-render-v11
+    paths:
+      - "experiments/light_cathedral_v11/**"
+      - ".github/workflows/light-cathedral-native-render-v11.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-godot-canary:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout render branch
+        uses: actions/checkout@v4
+
+      - name: Install software renderer and media tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb ffmpeg mesa-utils libgl1-mesa-dri libglu1-mesa libx11-6 libxcursor1 libxinerama1 libxi6 libxrandr2 unzip
+
+      - name: Build exact cathedral GLB
+        run: |
+          python3 -m pip install --disable-pip-version-check numpy trimesh
+          python3 experiments/light_cathedral_v11/generate_environment.py
+          ls -lh experiments/light_cathedral_v11/cathedral_full_environment_v11.glb
+
+      - name: Download Godot 4.7.2 stable
+        run: |
+          curl -fL --retry 4 --retry-delay 3             -o godot.zip             https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+          ./Godot_v4.7.2-stable_linux.x86_64 --version
+
+      - name: Import Godot project
+        run: |
+          mkdir -p experiments/light_cathedral_v11/renders
+          ./Godot_v4.7.2-stable_linux.x86_64             --headless             --path experiments/light_cathedral_v11             --rendering-method gl_compatibility             --import             --log-file renders/godot-import.log
+
+      - name: Native Godot Movie Maker render
+        run: |
+          set -o pipefail
+          xvfb-run -a -s "-screen 0 1280x720x24"             ./Godot_v4.7.2-stable_linux.x86_64             --path experiments/light_cathedral_v11             --rendering-method gl_compatibility             --write-movie renders/cathedral_native_godot_v11.avi             --fixed-fps 24             --quit-after 120             --disable-vsync             --log-file renders/godot-render.log             2>&1 | tee experiments/light_cathedral_v11/renders/runner-console.log
+
+      - name: Encode native render to MP4
+        run: |
+          ffmpeg -y             -i experiments/light_cathedral_v11/renders/cathedral_native_godot_v11.avi             -c:v libx264 -preset medium -crf 18 -pix_fmt yuv420p             -an             experiments/light_cathedral_v11/renders/cathedral_native_godot_v11.mp4
+          ffprobe -v error             -show_entries format=duration,size:stream=codec_name,width,height,r_frame_rate             -of json             experiments/light_cathedral_v11/renders/cathedral_native_godot_v11.mp4             > experiments/light_cathedral_v11/renders/render-metadata.json
+
+      - name: Capture native Godot proof frames
+        run: |
+          for t in 1 2 3 4; do
+            ffmpeg -y -loglevel error               -ss "$t"               -i experiments/light_cathedral_v11/renders/cathedral_native_godot_v11.mp4               -frames:v 1               "experiments/light_cathedral_v11/renders/native_frame_${t}s.jpg"
+          done
+
+      - name: Verify native output
+        run: |
+          test -s experiments/light_cathedral_v11/renders/cathedral_native_godot_v11.mp4
+          grep -q "HAL_CATHEDRAL_NATIVE_READY" experiments/light_cathedral_v11/renders/godot-render.log
+          cat experiments/light_cathedral_v11/renders/render-metadata.json
+          ls -lh experiments/light_cathedral_v11/renders/
+
+      - name: Upload native Godot render artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hal-light-cathedral-native-godot-v11
+          path: experiments/light_cathedral_v11/renders/
+          if-no-files-found: error
+          retention-days: 14
