@@ -24,6 +24,9 @@ on:
       - "docs/LIVEPEER_CREATIVE_MCP.md"
       - ".github/workflows/livepeer-creative-mcp.yml"
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest

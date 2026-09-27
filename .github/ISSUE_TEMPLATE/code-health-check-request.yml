@@ -1,0 +1,34 @@
+name: Code Health Check request
+description: Ask HAL for a written audit of one public repository, delivered privately.
+title: "[health check] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Terms, prices and limits: [Code Health Check](https://github.com/UniteAndCreateForLife/HAL_SUPREME/blob/main/docs/WORK_WITH_HAL.md#fixed-price-offer-code-health-check). The report is delivered in a private repository shared with your GitHub account, never in this issue.
+
+        This issue is public. Do not post secrets, credentials, private code, or personal data.
+  - type: input
+    id: repository
+    attributes:
+      label: Repository URL
+      description: One public GitHub repository.
+      placeholder: https://github.com/owner/repo
+    validations:
+      required: true
+  - type: textarea
+    id: focus
+    attributes:
+      label: Anything you're worried about (optional)
+      description: For example, a workflow that fails for contributors, or dependencies you suspect are old.
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Consent
+      options:
+        - label: I maintain this repository or have permission to request an audit of it.
+          required: true
+        - label: I understand the report comes from automated checks and AI-assisted review, not a penetration test.
+          required: true
+        - label: I understand the price ($99 for the first 3 clients, then $249), invoiced after delivery, and that I owe nothing if the report has no high or medium finding.
+          required: true
