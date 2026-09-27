@@ -12,7 +12,7 @@ Read-only audit by HAL SUPREME: nothing in the repository was changed. Findings 
 
 1. **Script injection: untrusted event text is interpolated into a shell script** (high): Pass the value through an environment variable (env: TITLE: ${{ github.event.issue.title }}) and use "$TITLE" in the script.
 2. **Fork pull request code checkout that actions/checkout now refuses (PRT002)** (high): Run fork code on `pull_request` without secrets. Add `allow-unsafe-pr-checkout: true` only when the checked-out files are read as data.
-3. **1 Python lint finding that are usually real bugs** (medium): Fix each; most are one-line changes.
+3. **1 Python lint finding that is usually a real bug** (medium): Fix each; most are one-line changes.
 4. **2 pinned dependencies have known vulnerabilities** (medium): Upgrade each to a fixed version (the advisory lists it) and re-run the tests.
 5. **No tests found** (medium): Start with tests for the most-used paths and run them in CI.
 
@@ -34,7 +34,7 @@ Checks out pull request code (${{ github.event.pull_request.head.sha }}) in a pu
 
 - `.github/workflows/preview.yml:9`
 
-### [MEDIUM] 1 Python lint finding that are usually real bugs
+### [MEDIUM] 1 Python lint finding that is usually a real bug
 
 Undefined names, redefinitions and syntax errors (ruff's pyflakes rules) fail at run time, often only on the branch that is not tested.
 
