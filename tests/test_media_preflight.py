@@ -5,9 +5,12 @@ import unittest
 from pathlib import Path
 
 from qc.media_preflight import (
+    MediaAuditPolicy,
     MediaPreflightError,
+    evaluate_audit_evidence,
     evaluate_probe,
     probe_media,
+    require_audit_preflight,
     require_media_preflight,
 )
 from qc.motion import MotionEvidenceError
@@ -130,6 +133,55 @@ class MediaPreflightTests(unittest.TestCase):
     def test_missing_file_fails_before_external_tools(self):
         with self.assertRaisesRegex(MediaPreflightError, "does not exist"):
             require_media_preflight(Path("definitely-not-here.mp4"))
+
+
+def good_audits():
+    return {
+        "picture": {"failed_shots": 0, "minimum_text_height_px": 32},
+        "audio": {
+            "integrated_lufs": -16.0,
+            "true_peak_dbtp": -1.2,
+            "minimum_dialogue_margin_db": 8.5,
+        },
+        "story": {"blind_viewer_pass": True},
+        "provenance": {"complete": True, "receipt_count": 4},
+    }
+
+
+class ProductionAuditPreflightTests(unittest.TestCase):
+    def test_good_audit_evidence_passes(self):
+        report = evaluate_audit_evidence(good_audits())
+        self.assertTrue(report["passed"])
+        self.assertEqual(report["failures"], [])
+
+    def test_missing_audit_section_fails_closed(self):
+        audits = good_audits()
+        del audits["story"]
+        report = evaluate_audit_evidence(audits)
+        self.assertFalse(report["passed"])
+        self.assertIn("story", report["failures"])
+
+    def test_picture_and_audio_thresholds_are_enforced(self):
+        audits = good_audits()
+        audits["picture"]["failed_shots"] = 1
+        audits["audio"]["true_peak_dbtp"] = -0.2
+        failures = evaluate_audit_evidence(audits)["failures"]
+        self.assertIn("picture", failures)
+        self.assertIn("audio", failures)
+
+    def test_story_and_provenance_fail_closed(self):
+        audits = good_audits()
+        audits["story"]["blind_viewer_pass"] = False
+        audits["provenance"]["complete"] = False
+        failures = evaluate_audit_evidence(audits)["failures"]
+        self.assertIn("story", failures)
+        self.assertIn("provenance", failures)
+
+    def test_custom_phone_text_policy_and_require_gate(self):
+        audits = good_audits()
+        policy = MediaAuditPolicy(min_text_height_px=40)
+        with self.assertRaisesRegex(MediaPreflightError, "picture"):
+            require_audit_preflight(audits, policy)
 
 
 if __name__ == "__main__":
