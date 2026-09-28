@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hal.agent-world-brain-response.v0",
+  "title": "HAL Agent World Brain Response v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "request_id",
+    "episode_id",
+    "tick",
+    "slot_id",
+    "action",
+    "diagnostics"
+  ],
+  "properties": {
+    "protocol_version": {
+      "const": "hal.agent_world.brain_bridge.v0"
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "episode_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "slot_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "action": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "diagnostics": {
+      "type": "object"
+    }
+  }
+}
