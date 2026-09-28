@@ -12,6 +12,8 @@ HAL already has WorkGraph, acceptance receipts, revenue truth, provider health, 
 
 The lens intentionally rewards system impact, dependency unblocking, compounding value, strategy alignment, evidence, monetization, reuse, and urgency. Effort and risk reduce the score.
 
+It also emits a bounded **focus set**. By default only the three highest-ranked unblocked items are placed in focus; remaining unblocked items are explicitly deferred, and blocked items are kept separate. This is a projection only: it does not pause, release, cancel, or mutate any WorkGraph task.
+
 Unsupported confidence is capped:
 - `proof > 2` requires evidence references.
 - `strategy_alignment > 2` requires strategy references.
@@ -46,9 +48,13 @@ Ratings are 0-5. Effort is 1-5.
 ## Run
 
 ```bash
-python -m examples.leverage_lens.leverage_lens tasks.json
+python -m examples.leverage_lens.leverage_lens tasks.json --wip-limit 3
 python -m unittest -v examples.leverage_lens.test_leverage_lens
 python -m py_compile examples/leverage_lens/leverage_lens.py
 ```
 
 Use the score to structure a review, not to replace judgment. Keep multiple outcome metrics; do not turn the number itself into the goal.
+
+## WIP rule
+
+The focus set exists to resist plan proliferation. A high-scoring task can still remain deferred when the bounded WIP limit is full. Promotion into actual execution remains a human/WorkGraph decision.
