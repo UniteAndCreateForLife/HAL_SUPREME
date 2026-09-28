@@ -27,6 +27,6 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Run leverage lens tests
-        run: python -m unittest -v examples.leverage_lens.test_leverage_lens
+        run: python -m unittest discover -v examples/leverage_lens
       - name: Compile
-        run: python -m py_compile examples/leverage_lens/leverage_lens.py examples/leverage_lens/test_leverage_lens.py
+        run: python -m py_compile examples/leverage_lens/*.py
