@@ -1,0 +1,10 @@
+{
+  "mcp_servers": {
+    "hal-agent-world": {
+      "transport": "streamable_http",
+      "url": "${HAL_AGENT_WORLD_MCP_URL}",
+      "enabled": true,
+      "mode": "required"
+    }
+  }
+}
