@@ -6,6 +6,7 @@ from examples.leverage_lens.leverage_lens import (
     build_projection,
     rank_tasks,
     score_task,
+    select_focus,
 )
 
 
@@ -83,6 +84,32 @@ class LeverageLensTests(unittest.TestCase):
         projection = build_projection([task("x")])
         self.assertEqual(projection["authority"], AUTHORITY)
         self.assertEqual(projection["schema"], "hal.leverage_lens.v1")
+
+    def test_focus_set_enforces_wip_limit(self):
+        focus = select_focus([task("a"), task("b"), task("c"), task("d")], wip_limit=2)
+        self.assertEqual(len(focus["focus"]), 2)
+        self.assertEqual(len(focus["deferred"]), 2)
+        self.assertTrue(focus["over_capacity"])
+
+    def test_blocked_items_never_consume_focus_capacity(self):
+        focus = select_focus(
+            [task("blocked", human_blocked=True, impact=5), task("ready")],
+            wip_limit=1,
+        )
+        self.assertEqual([row["id"] for row in focus["focus"]], ["ready"])
+        self.assertEqual([row["id"] for row in focus["blocked"]], ["blocked"])
+
+    def test_focus_selection_is_deterministic(self):
+        one = select_focus([task("b"), task("a"), task("c")], wip_limit=2)
+        two = select_focus([task("c"), task("b"), task("a")], wip_limit=2)
+        self.assertEqual(
+            [row["id"] for row in one["focus"]],
+            [row["id"] for row in two["focus"]],
+        )
+
+    def test_invalid_wip_limit_fails_closed(self):
+        with self.assertRaises(LeverageInputError):
+            select_focus([task("a")], wip_limit=0)
 
 
 if __name__ == "__main__":
