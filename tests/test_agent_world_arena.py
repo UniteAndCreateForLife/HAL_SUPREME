@@ -14,12 +14,27 @@ from examples.agent_world_arena import (
     assign_providers,
     build_arena,
 )
+from examples.agent_world_arena.baselines import greedy_resource_policy
 
 
 class AgentWorldArenaTests(unittest.TestCase):
     def test_action_contract_rejects_unbounded_motion(self) -> None:
         with self.assertRaises(ValueError):
             Action("move", dx=4, dy=0).validate()
+
+
+    def test_greedy_baseline_uses_visible_world_state_only(self) -> None:
+        arena = Arena(ArenaConfig(max_ticks=3), episode_id="baseline")
+        arena.register_agent("bot", "scripted", position=(0, 0))
+        arena.add_resource("near", (1, 0), value=2)
+        arena.add_resource("far-high", (2, 0), value=5)
+
+        action = greedy_resource_policy(arena.observe("bot"))
+        self.assertEqual(action, Action("move", dx=1))
+
+        arena.step({"bot": action})
+        action = greedy_resource_policy(arena.observe("bot"))
+        self.assertEqual(action, Action("move", dx=1))
 
     def test_same_episode_replays_to_same_state_hash(self) -> None:
         def run_once() -> str:
