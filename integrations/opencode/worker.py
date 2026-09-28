@@ -88,10 +88,13 @@ class OpenCodeClient:
             raise OpenCodeSecurityError("credentials must not be embedded in the OpenCode base URL")
         if parsed.path not in {"", "/"} or parsed.params or parsed.query or parsed.fragment:
             raise OpenCodeSecurityError("OpenCode base URL must not contain a path, query, or fragment")
-        if not allow_remote and not _is_loopback_host(parsed.hostname):
+        is_loopback = _is_loopback_host(parsed.hostname)
+        if not allow_remote and not is_loopback:
             raise OpenCodeSecurityError(
                 "remote OpenCode endpoints are disabled; use loopback or explicitly opt in with allow_remote=True"
             )
+        if allow_remote and not is_loopback and parsed.scheme != "https":
+            raise OpenCodeSecurityError("remote OpenCode endpoints require https")
         if timeout <= 0:
             raise ValueError("timeout must be positive")
         if max_response_bytes < 1:
