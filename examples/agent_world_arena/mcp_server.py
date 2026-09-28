@@ -10,22 +10,21 @@ def build_mcp_server(service: ArenaService | None = None):
     """Build the optional MCP surface around the dependency-free arena service."""
 
     try:
-        from mcp.server.fastmcp import FastMCP
+        from mcp.server import MCPServer
     except ImportError as exc:
         raise RuntimeError(
-            'The optional MCP server requires the current MCP Python SDK. '
-            'Install it in an isolated environment with: pip install "mcp[cli]"'
+            'The optional MCP server requires MCP Python SDK v2. '
+            'Install it in an isolated environment with: pip install "mcp>=2,<3"'
         ) from exc
 
     authority = service or ArenaService()
-    mcp = FastMCP(
+    mcp = MCPServer(
         "HAL Agent World",
         instructions=(
             "Provider-neutral multi-agent simulation authority. "
             "Models submit bounded actions; the arena owns world state. "
             "This development server exposes no provider credentials or host shell."
         ),
-        stateless_http=True,
     )
 
     @mcp.tool()
@@ -95,9 +94,20 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Run the local HAL Agent World MCP development server."
     )
+    parser.add_argument(
+        "--transport",
+        choices=("stdio", "streamable-http"),
+        default="streamable-http",
+    )
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8765)
     args = parser.parse_args()
+
+    mcp = build_mcp_server()
+
+    if args.transport == "stdio":
+        mcp.run(transport="stdio")
+        return 0
 
     if args.host not in {"127.0.0.1", "localhost", "::1"}:
         raise SystemExit(
@@ -105,11 +115,12 @@ def main() -> int:
             "in front of Agent World before exposing it remotely."
         )
 
-    mcp = build_mcp_server()
     mcp.run(
         transport="streamable-http",
         host=args.host,
         port=args.port,
+        stateless_http=True,
+        json_response=True,
     )
     return 0
 
