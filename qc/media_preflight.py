@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
@@ -124,6 +125,130 @@ def evaluate_probe(
             "require_audio": require_audio,
         },
     }
+
+
+@dataclass(frozen=True)
+class MediaAuditPolicy:
+    min_integrated_lufs: float = -18.0
+    max_integrated_lufs: float = -14.0
+    max_true_peak_dbtp: float = -1.0
+    min_dialogue_margin_db: float = 6.0
+    max_picture_failures: int = 0
+    min_text_height_px: float = 24.0
+
+
+def _finite_number(section: Mapping[str, Any], key: str) -> float | None:
+    value = section.get(key)
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    parsed = float(value)
+    if parsed != parsed or parsed in (float("inf"), float("-inf")):
+        return None
+    return parsed
+
+
+def evaluate_audit_evidence(
+    report: Mapping[str, Any],
+    policy: MediaAuditPolicy | None = None,
+) -> dict[str, Any]:
+    """Evaluate shift-left production audits without rendering or provider calls."""
+    policy = policy or MediaAuditPolicy()
+    checks: dict[str, dict[str, Any]] = {}
+
+    picture = report.get("picture")
+    if isinstance(picture, Mapping):
+        failed = _finite_number(picture, "failed_shots")
+        text_px = _finite_number(picture, "minimum_text_height_px")
+        picture_ok = (
+            failed is not None
+            and text_px is not None
+            and failed <= policy.max_picture_failures
+            and text_px >= policy.min_text_height_px
+        )
+        picture_reason = (
+            ""
+            if picture_ok
+            else "picture failures/text size exceed policy or evidence is invalid"
+        )
+        picture_evidence = dict(picture)
+    else:
+        picture_ok = False
+        picture_reason = "missing picture audit"
+        picture_evidence = {}
+    checks["picture"] = {
+        "passed": picture_ok,
+        "reason": picture_reason,
+        "evidence": picture_evidence,
+    }
+
+    audio = report.get("audio")
+    if isinstance(audio, Mapping):
+        lufs = _finite_number(audio, "integrated_lufs")
+        peak = _finite_number(audio, "true_peak_dbtp")
+        margin = _finite_number(audio, "minimum_dialogue_margin_db")
+        audio_ok = (
+            lufs is not None
+            and peak is not None
+            and margin is not None
+            and policy.min_integrated_lufs <= lufs <= policy.max_integrated_lufs
+            and peak <= policy.max_true_peak_dbtp
+            and margin >= policy.min_dialogue_margin_db
+        )
+        audio_reason = (
+            ""
+            if audio_ok
+            else "loudness/peak/dialogue margin exceed policy or evidence is invalid"
+        )
+        audio_evidence = dict(audio)
+    else:
+        audio_ok = False
+        audio_reason = "missing audio audit"
+        audio_evidence = {}
+    checks["audio"] = {
+        "passed": audio_ok,
+        "reason": audio_reason,
+        "evidence": audio_evidence,
+    }
+
+    story = report.get("story")
+    story_ok = isinstance(story, Mapping) and story.get("blind_viewer_pass") is True
+    checks["story"] = {
+        "passed": story_ok,
+        "reason": "" if story_ok else "blind-viewer story check did not pass",
+        "evidence": dict(story) if isinstance(story, Mapping) else {},
+    }
+
+    provenance = report.get("provenance")
+    provenance_ok = (
+        isinstance(provenance, Mapping) and provenance.get("complete") is True
+    )
+    checks["provenance"] = {
+        "passed": provenance_ok,
+        "reason": "" if provenance_ok else "provenance evidence is incomplete",
+        "evidence": dict(provenance) if isinstance(provenance, Mapping) else {},
+    }
+
+    failures = [name for name, check in checks.items() if not check["passed"]]
+    return {
+        "schema": "hal.media_audit_preflight.v1",
+        "authority": "DERIVED_ACCEPTANCE_EVIDENCE",
+        "passed": not failures,
+        "failures": failures,
+        "policy": asdict(policy),
+        "checks": checks,
+    }
+
+
+def require_audit_preflight(
+    report: Mapping[str, Any],
+    policy: MediaAuditPolicy | None = None,
+) -> dict[str, Any]:
+    evidence = evaluate_audit_evidence(report, policy)
+    if not evidence["passed"]:
+        raise MediaPreflightError(
+            "production audit preflight failed: " + ",".join(evidence["failures"])
+        )
+    return evidence
 
 
 def require_media_preflight(
