@@ -24,6 +24,8 @@ jobs:
           - autogen
           - langchain
           - crewai
+          - google-adk
+          - smolagents
 
     steps:
       - uses: actions/checkout@v4
@@ -70,6 +72,12 @@ jobs:
             crewai)
               python -m pip install "crewai-tools[mcp]"
               ;;
+            google-adk)
+              python -m pip install "google-adk"
+              ;;
+            smolagents)
+              python -m pip install "smolagents[mcp]"
+              ;;
             *)
               exit 2
               ;;
@@ -92,6 +100,12 @@ jobs:
               ;;
             crewai)
               python examples/agent_world_arena/integrations/crewai_stdio.py
+              ;;
+            google-adk)
+              python examples/agent_world_arena/integrations/google_adk_mcp.py
+              ;;
+            smolagents)
+              python examples/agent_world_arena/integrations/smolagents_mcp.py
               ;;
             *)
               exit 2
