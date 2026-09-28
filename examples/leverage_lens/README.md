@@ -1,0 +1,54 @@
+# HAL Leverage Lens
+
+A deterministic, read-only ranking projection for proposed HAL work.
+
+It does **not** create tasks, release WorkGraph items, mutate canonical state, spend money, deploy, merge, or publish. Its output is explicitly `DERIVED_NON_AUTHORITATIVE`.
+
+## Why it exists
+
+HAL already has WorkGraph, acceptance receipts, revenue truth, provider health, and several lane-specific dashboards. The leverage lens adds one shared question before work starts:
+
+> Which unblocked task most improves the whole system, with evidence, at acceptable effort and risk?
+
+The lens intentionally rewards system impact, dependency unblocking, compounding value, strategy alignment, evidence, monetization, reuse, and urgency. Effort and risk reduce the score.
+
+Unsupported confidence is capped:
+- `proof > 2` requires evidence references.
+- `strategy_alignment > 2` requires strategy references.
+- Human- or dependency-blocked work is always labeled `BLOCKED`, regardless of score.
+
+## Input
+
+Ratings are 0-5. Effort is 1-5.
+
+```json
+[
+  {
+    "id": "session-lifecycle",
+    "title": "Repair agent session lifecycle",
+    "impact": 5,
+    "unblock": 5,
+    "compounding": 5,
+    "strategy_alignment": 5,
+    "proof": 4,
+    "monetization": 3,
+    "reuse": 5,
+    "urgency": 4,
+    "effort": 3,
+    "risk": 3,
+    "evidence": ["failing-job-receipt"],
+    "strategy_refs": ["canonical-plan"],
+    "acceptance": ["bounded reproduction", "focused tests", "global gate"]
+  }
+]
+```
+
+## Run
+
+```bash
+python -m examples.leverage_lens.leverage_lens tasks.json
+python -m unittest -v examples.leverage_lens.test_leverage_lens
+python -m py_compile examples/leverage_lens/leverage_lens.py
+```
+
+Use the score to structure a review, not to replace judgment. Keep multiple outcome metrics; do not turn the number itself into the goal.
