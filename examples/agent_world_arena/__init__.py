@@ -2,6 +2,7 @@
 
 from .a2a_card import A2A_PROTOCOL_VERSION, build_agent_world_a2a_card
 from .adapters import AgentAdapter, ScriptedAdapter
+from .conformance import ConformanceReceipt, run_adapter_conformance
 from .http_action_adapter import OpenAICompatibleActionAdapter
 from .meta_muse import MetaMuseAdapter
 from .ollama_local import OllamaActionAdapter
@@ -26,6 +27,8 @@ __all__ = [
     "OllamaActionAdapter",
     "AgentAdapter",
     "ScriptedAdapter",
+    "ConformanceReceipt",
+    "run_adapter_conformance",
     "EpisodeRunner",
     "assign_providers",
     "build_arena",
