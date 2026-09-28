@@ -10,23 +10,27 @@ MAX_ACTION_METADATA_KEYS = 32
 
 
 def _reject_forbidden_keys(payload: Mapping[str, Any]) -> None:
-    forbidden_fragments = (
+    forbidden_names = {
         "authorization",
         "api_key",
         "apikey",
         "password",
         "secret",
-        "token",
+        "client_secret",
+        "access_token",
+        "refresh_token",
+        "bearer",
         "cookie",
         "credential",
-    )
+        "credentials",
+    }
     stack: list[tuple[str, Any]] = [("", payload)]
     while stack:
         path, value = stack.pop()
         if isinstance(value, Mapping):
             for key, child in value.items():
                 normalized = str(key).lower().replace("-", "_")
-                if any(fragment in normalized for fragment in forbidden_fragments):
+                if normalized in forbidden_names:
                     raise ValueError(f"credential-like field is forbidden: {path}{key}")
                 stack.append((f"{path}{key}.", child))
         elif isinstance(value, list):
