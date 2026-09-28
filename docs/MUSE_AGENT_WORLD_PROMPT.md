@@ -78,11 +78,15 @@ Design the fabric so it can connect cleanly to:
 - HAL local Ollama workers
 - OpenAI Agents SDK
 - Microsoft Agent Framework
+- Google ADK / Agents CLI
 - AutoGen
 - LangGraph / LangChain
 - CrewAI
+- Pydantic AI
+- Hugging Face smolagents / tiny-agents
 - LlamaIndex
-- AgentZero
+- Agent Zero
+- OpenHands
 - OpenCode and coding agents
 - Claude Code
 - ChatGPT
@@ -102,11 +106,15 @@ Work in this order unless the repository gives a concrete reason to change it:
    assumptions, secret leakage, and protocol-version mistakes.
 2. Strengthen `hal.agent_world.participant.v0` capability negotiation.
 3. Finish an A2A v1 discovery/interop layer for coarse-grained trial requests.
-4. Add small optional integration examples for:
+4. Maintain and verify optional integration examples for:
    - OpenAI Agents SDK consuming Agent World MCP
    - AutoGen `McpWorkbench`
    - CrewAI MCP
    - LangGraph/LangChain
+   - Google ADK `McpToolset`
+   - Hugging Face smolagents `MCPClient`
+   - Agent Zero MCP/A2A configuration
+   Then add Pydantic AI and OpenHands without coupling them into the core.
 5. Create a framework-independent interoperability test harness. External
    examples should prove they can discover tools, read an observation, submit a
    bounded action, wait for simultaneous commit, and retrieve replay evidence.
