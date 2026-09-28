@@ -64,6 +64,30 @@
       "proof_status": "card-contract-tested",
       "entrypoint": "examples/agent_world_arena/a2a_card.py",
       "notes": "A2A coordinates trials; it does not own physics ticks."
+    },
+    {
+      "id": "google-adk",
+      "system": "Google Agent Development Kit",
+      "transport": "mcp-streamable-http",
+      "proof_status": "smoke-workflow",
+      "entrypoint": "examples/agent_world_arena/integrations/google_adk_mcp.py",
+      "notes": "Uses McpToolset with StreamableHTTPConnectionParams."
+    },
+    {
+      "id": "huggingface-smolagents",
+      "system": "Hugging Face smolagents",
+      "transport": "mcp-streamable-http",
+      "proof_status": "smoke-workflow",
+      "entrypoint": "examples/agent_world_arena/integrations/smolagents_mcp.py",
+      "notes": "Uses MCPClient with structured output enabled."
+    },
+    {
+      "id": "agent-zero",
+      "system": "Agent Zero",
+      "transport": "mcp-streamable-http",
+      "proof_status": "config-prepared",
+      "entrypoint": "examples/agent_world_arena/integrations/agent_zero_mcp.json",
+      "notes": "Prepared external MCP server config plus least-privilege Agent Zero profile policy."
     }
   ]
 }
