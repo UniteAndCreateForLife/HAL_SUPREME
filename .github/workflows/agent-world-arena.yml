@@ -10,6 +10,8 @@ on:
       - "tests/test_agent_world_schemas.py"
       - "tests/test_agent_world_session.py"
       - "tests/test_agent_world_openai_compatible.py"
+      - "tests/test_agent_world_service.py"
+      - "tests/test_agent_world_service.py"
       - "tests/test_agent_world_openai_compatible.py"
       - "tests/test_agent_world_session.py"
       - "schemas/agent_world_*_v0.schema.json"
@@ -51,14 +53,17 @@ jobs:
             examples/agent_world_arena/meta_muse.py \
             examples/agent_world_arena/ollama_local.py \
             examples/agent_world_arena/runner.py \
+            examples/agent_world_arena/service.py \
+            examples/agent_world_arena/mcp_server.py \
             examples/agent_world_arena/session.py \
             tests/test_agent_world_arena.py \
             tests/test_agent_world_meta_muse.py \
             tests/test_agent_world_schemas.py \
             tests/test_agent_world_session.py \
             tests/test_agent_world_openai_compatible.py \
+            tests/test_agent_world_service.py \
             scripts/agent_world_meta_canary.py \
             scripts/agent_world_cross_provider_canary.py
 
       - name: Run Agent World contract tests
-        run: python -m unittest -v tests.test_agent_world_arena tests.test_agent_world_meta_muse tests.test_agent_world_schemas tests.test_agent_world_session tests.test_agent_world_openai_compatible
+        run: python -m unittest -v tests.test_agent_world_arena tests.test_agent_world_meta_muse tests.test_agent_world_schemas tests.test_agent_world_session tests.test_agent_world_openai_compatible tests.test_agent_world_service
