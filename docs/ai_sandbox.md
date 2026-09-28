@@ -90,17 +90,51 @@ provider into an impossible universal latency.
 
 Physics continues at the engine's normal rate regardless of provider latency.
 
+## Current evidence status
+
+External Muse/Godot sandbox reports now establish two separate evidence tracks:
+
+### Model-agent track
+
+A local Ollama `qwen2.5:0.5b` worker reportedly produced a genuine non-idle
+`move` action that the arena validated and dispatched through the same external
+brain contract used by the reference worker.
+
+Measured CPU latency ranged from roughly 2.6 seconds for simpler requests to
+about 11 seconds for the full game prompt. The proof therefore used a 25-second
+decision interval and 20-second deadline.
+
+Treat this as a provider-neutral **model-agent contract proof**, not a benchmark.
+
+### Realtime-code track
+
+The realtime bridge is not yet accepted. The current sandbox report identifies:
+
+- over-counted transport faults in baseline/corrupt cases;
+- reconnect timing races;
+- worker-swap binding/resume failure;
+- stable timeout quarantine in R9.
+
+Do not mask these with relaxed thresholds.
+
 ## Immediate next milestone
 
-Demonstrate the out-of-process JSON brain bridge in the existing Godot sandbox:
+Stabilize the realtime-code bridge before completing the MCP facade.
 
-1. one external reference brain;
-2. same sense/act semantics as the in-process brain;
-3. the world-owned decision deadline remains enforced (use the existing 2 ms
-   budget for the reference code-brain proof);
-4. brain failure falls back without killing the match;
-5. shared chat stays world-mediated and recorded;
-6. replay records request ID, slot, tick, action, latency, and fault class;
-7. a second external worker can be substituted without changing Godot scene logic.
+Required work:
 
-Once this works, attach local Ollama, then Muse, then additional frameworks to the same bridge contract.
+1. one terminal request outcome per request ID;
+2. transport retries/polls recorded separately from request faults;
+3. explicit slot lifecycle: UNBOUND -> ACTIVE -> QUARANTINED -> CLOSED -> ACTIVE;
+4. timeout closes/quarantines the old connection before rebinding;
+5. fresh binding generation/handshake after reconnect;
+6. worker swap uses the same close/rebind lifecycle instead of an ad-hoc path;
+7. R1-R9 pass under restored strict criteria;
+8. timing-sensitive cases pass repeatedly, not just once.
+
+Reference semantics are in `examples/agent_world_arena/bridge_lifecycle.py` and
+`docs/MUSE_REALTIME_BRIDGE_STABILIZATION.md`.
+
+After the realtime suite is stable, implement the Godot MCP facade for
+episode/status/replay administration while keeping high-frequency brain actions
+on the brain bridge.
