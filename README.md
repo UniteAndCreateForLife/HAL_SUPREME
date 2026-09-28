@@ -54,10 +54,17 @@ Only directories that exist in this repository are listed.
 - scripts/ — operator/developer tools, including the public-portfolio validator
 - tests/ — contract and routing tests
 - docs/ — architecture, runbooks, public work log and policy
+- .opencode/ — project-scoped OpenCode reviewer/verifier agents and HAL plan/fix/review/verify commands
 - .github/ — CI workflows
 
 This repository starts clean by design. Existing HAL code is migrated only after review, rather than bulk-importing historical filesystem debris.
 
+
+## Unified agent engineering fabric
+
+HAL now uses [AGENTS.md](AGENTS.md) as the canonical coding-agent contract, with a thin [CLAUDE.md](CLAUDE.md) compatibility layer and project-scoped OpenCode commands. The [agent engineering fabric](docs/AGENT_ENGINEERING_FABRIC.md) defines model-neutral task packets, independent review/verification, evidence-backed promotion gates, and the after-action loop that turns completed work into reusable system improvements.
+
+OpenCode operators can use `/hal-plan`, `/hal-fix`, `/hal-review`, and `/hal-verify`. Agent instruction surfaces are included in the public evidence/secret scan and trigger CI when changed.
 
 ## Livepeer Agent Creative MCP
 
