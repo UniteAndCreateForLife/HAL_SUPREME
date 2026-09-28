@@ -11,10 +11,16 @@ SCHEMA = "hal.plan_inventory.v1"
 AUTHORITY = "DERIVED_NON_AUTHORITATIVE"
 
 _FIELD_PATTERNS = {
-    "status": re.compile(r"^\s*(?:\*\*)?Status(?:\*\*)?\s*:\s*(.+?)\s*$", re.IGNORECASE),
-    "owner": re.compile(r"^\s*(?:\*\*)?Owner(?:\*\*)?\s*:\s*(.+?)\s*$", re.IGNORECASE),
+    "status": re.compile(
+        r"^\s*(?:\*\*)?Status\s*:(?:\*\*)?\s*(.+?)\s*$",
+        re.IGNORECASE,
+    ),
+    "owner": re.compile(
+        r"^\s*(?:\*\*)?Owner\s*:(?:\*\*)?\s*(.+?)\s*$",
+        re.IGNORECASE,
+    ),
     "workgraph": re.compile(
-        r"^\s*(?:\*\*)?(?:Canonical\s+)?WorkGraph(?:\s+task)?(?:\*\*)?\s*:\s*(.+?)\s*$",
+        r"^\s*(?:\*\*)?(?:Canonical\s+)?WorkGraph(?:\s+task)?\s*:(?:\*\*)?\s*(.+?)\s*$",
         re.IGNORECASE,
     ),
 }
@@ -54,7 +60,8 @@ def inspect_plan(path: Path, now: datetime | None = None) -> dict[str, Any]:
         "owner": metadata["owner"],
         "workgraph": metadata["workgraph"],
         "modified_utc": modified.isoformat(timespec="seconds"),
-        "age_days": round(age_days, 1),
+        "filesystem_mtime_age_days": round(age_days, 1),
+        "age_basis": "filesystem_mtime",
         "has_status": bool(metadata["status"]),
         "has_workgraph_link": bool(metadata["workgraph"]),
     }
@@ -77,7 +84,11 @@ def scan_plans(
     plans = [inspect_plan(path, now=now) for path in sorted(root.glob("*.md"))]
     missing_status = [plan["path"] for plan in plans if not plan["has_status"]]
     missing_workgraph = [plan["path"] for plan in plans if not plan["has_workgraph_link"]]
-    stale = [plan["path"] for plan in plans if plan["age_days"] >= stale_days]
+    stale = [
+        plan["path"]
+        for plan in plans
+        if plan["filesystem_mtime_age_days"] >= stale_days
+    ]
     warnings: list[str] = []
     if len(plans) > wip_limit:
         warnings.append(
@@ -91,14 +102,18 @@ def scan_plans(
         )
     if stale:
         warnings.append(
-            f"{len(stale)} active plans are at least {stale_days:g} days old"
+            f"{len(stale)} active-plan files have filesystem mtime age >= {stale_days:g} days"
         )
 
     return {
         "schema": SCHEMA,
         "authority": AUTHORITY,
         "root": root.as_posix(),
-        "policy": {"wip_limit": wip_limit, "stale_days": stale_days},
+        "policy": {
+            "wip_limit": wip_limit,
+            "filesystem_mtime_warning_days": stale_days,
+            "mtime_is_plan_age": False,
+        },
         "counts": {
             "plans": len(plans),
             "missing_status": len(missing_status),
