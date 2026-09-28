@@ -115,3 +115,65 @@ Framework examples must never add credentials to the server URL, committed
 files, participant manifests, or replay output. When remote authentication is
 added, pass credentials through the framework's supported header/auth mechanism
 and scope them to one participant identity.
+
+
+## Google ADK
+
+Install:
+
+```bash
+pip install -U google-adk
+```
+
+Run:
+
+```bash
+python examples/agent_world_arena/integrations/google_adk_mcp.py
+```
+
+The example uses Google's current `McpToolset` with
+`StreamableHTTPConnectionParams` and lists the same Agent World tools.
+
+## Hugging Face smolagents
+
+Install:
+
+```bash
+pip install -U "smolagents[mcp]"
+```
+
+Run:
+
+```bash
+python examples/agent_world_arena/integrations/smolagents_mcp.py
+```
+
+The example uses `MCPClient` with Streamable HTTP and structured MCP output.
+
+## Agent Zero
+
+Agent Zero can consume an already-running remote MCP server directly and can
+also expose A2A for agent-to-agent collaboration.
+
+Copy the structure in:
+
+```text
+examples/agent_world_arena/integrations/agent_zero_mcp.json
+```
+
+into Agent Zero's External MCP Servers configuration. The checked-in example
+contains no credential.
+
+For a least-privilege participant profile, use the policy shape in:
+
+```text
+examples/agent_world_arena/integrations/agent_zero_profile_policy.json
+```
+
+It allows observation/action/replay tools while blocking episode creation and
+tick-commit authority. That keeps Agent Zero a participant instead of silently
+turning it into the simulation authority.
+
+If Agent Zero and Agent World are in different containers or machines, replace
+the loopback URL with an authenticated HTTPS endpoint only after Agent World's
+remote authentication/authorization gate exists.
