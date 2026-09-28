@@ -1,0 +1,97 @@
+name: Muse Agent World MCP Compatibility
+
+on:
+  pull_request:
+    paths:
+      - "configs/muse/**"
+      - "scripts/configure_muse_agent_world.py"
+      - "scripts/verify_muse_agent_world_mcp.py"
+      - "tests/test_muse_agent_world_config.py"
+      - "examples/agent_world_arena/mcp_server.py"
+      - "docs/MUSE_AGENT_WORLD_MCP.md"
+      - ".github/workflows/muse-agent-world-mcp.yml"
+  workflow_dispatch:
+    inputs:
+      run_live:
+        description: "Run authenticated Muse -> Agent World MCP tool-call smoke"
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  muse-cli-structural:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Agent World MCP SDK
+        run: python -m pip install "mcp>=2,<3"
+
+      - name: Install Muse Code from Meta
+        run: |
+          curl -fsSL https://dev.meta.ai/install.sh | sh
+          MUSE_BIN="$(command -v muse || find "$HOME" -type f -name muse -perm -u+x -print -quit)"
+          test -n "$MUSE_BIN"
+          echo "$(dirname "$MUSE_BIN")" >> "$GITHUB_PATH"
+          "$MUSE_BIN" --version
+
+      - name: Verify Muse MCP CLI surface
+        run: |
+          muse --version
+          muse mcp --help
+
+      - name: Build isolated Muse settings
+        run: |
+          mkdir -p "$RUNNER_TEMP/muse-home/.config/muse"
+          python scripts/configure_muse_agent_world.py \
+            --settings "$RUNNER_TEMP/muse-home/.config/muse/settings.json" \
+            --apply
+          python -m json.tool "$RUNNER_TEMP/muse-home/.config/muse/settings.json"
+
+      - name: Verify Muse config helper tests
+        run: python -m unittest -v tests.test_muse_agent_world_config
+
+  live-mcp-smoke:
+    if: github.event_name == 'workflow_dispatch' && inputs.run_live
+    needs: muse-cli-structural
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      META_API_KEY: ${{ secrets.META_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Require explicit CI credential
+        run: |
+          if [ -z "$META_API_KEY" ]; then
+            echo "META_API_KEY repository secret is not configured; refusing live Muse call."
+            exit 2
+          fi
+
+      - name: Install Agent World MCP SDK
+        run: python -m pip install "mcp>=2,<3"
+
+      - name: Install Muse Code from Meta
+        run: |
+          curl -fsSL https://dev.meta.ai/install.sh | sh
+          MUSE_BIN="$(command -v muse || find "$HOME" -type f -name muse -perm -u+x -print -quit)"
+          test -n "$MUSE_BIN"
+          echo "$(dirname "$MUSE_BIN")" >> "$GITHUB_PATH"
+
+      - name: Configure required stdio Agent World MCP server
+        run: python scripts/configure_muse_agent_world.py --apply
+
+      - name: Run bounded authenticated Muse MCP proof
+        run: python scripts/verify_muse_agent_world_mcp.py --max-model-steps 3
