@@ -105,6 +105,7 @@ No provider account or paid compute is required for the reference tests.
 ## Implemented in this branch
 
 - deterministic scenario manifests and seeded provider-to-slot assignment;
+- simultaneous multi-provider session commits that are independent of request order;
 - scripted provider adapter interface and failure-isolating episode runner;
 - a first `resource-rush-v0` scenario;
 - a bounded Meta Muse adapter for Meta Model API using structured output;
