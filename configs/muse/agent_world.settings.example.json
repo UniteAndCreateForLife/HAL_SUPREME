@@ -1,8 +1,17 @@
 {
   "mcp_servers": {
     "hal-agent-world": {
-      "transport": "streamable_http",
-      "url": "${HAL_AGENT_WORLD_MCP_URL}",
+      "transport": "stdio",
+      "command": "${HAL_AGENT_WORLD_PYTHON}",
+      "args": [
+        "-m",
+        "examples.agent_world_arena.mcp_server",
+        "--transport",
+        "stdio"
+      ],
+      "env": {
+        "PYTHONPATH": "${HAL_SUPREME_ROOT}"
+      },
       "enabled": true,
       "mode": "required"
     }
