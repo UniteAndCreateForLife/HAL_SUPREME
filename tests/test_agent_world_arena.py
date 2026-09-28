@@ -34,6 +34,10 @@ class AgentWorldArenaTests(unittest.TestCase):
 
         arena.step({"bot": action})
         action = greedy_resource_policy(arena.observe("bot"))
+        self.assertEqual(action, Action("gather"))
+
+        arena.step({"bot": action})
+        action = greedy_resource_policy(arena.observe("bot"))
         self.assertEqual(action, Action("move", dx=1))
 
     def test_same_episode_replays_to_same_state_hash(self) -> None:
