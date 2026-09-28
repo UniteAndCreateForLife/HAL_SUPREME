@@ -58,3 +58,13 @@ Use the score to structure a review, not to replace judgment. Keep multiple outc
 ## WIP rule
 
 The focus set exists to resist plan proliferation. A high-scoring task can still remain deferred when the bounded WIP limit is full. Promotion into actual execution remains a human/WorkGraph decision.
+
+## Active-plan inventory
+
+Use `plan_inventory.py` to measure plan-document sprawl without editing anything:
+
+```bash
+python -m examples.leverage_lens.plan_inventory docs/exec-plans/active --wip-limit 5 --stale-days 21
+```
+
+It reports active-plan count, missing Status fields, missing WorkGraph linkage, age/staleness, and derived warnings. It never archives, renames, edits, or releases a plan/task.
