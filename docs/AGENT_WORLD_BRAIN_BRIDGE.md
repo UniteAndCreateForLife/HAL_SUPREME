@@ -94,3 +94,31 @@ The external brain never receives arbitrary host-execution authority through thi
 - `tests/test_agent_world_brain_bridge.py`
 
 The reference worker intentionally performs no model inference. It exists to prove framing, validation, timing evidence, and process isolation before a model adapter is attached.
+
+
+## Connection lifecycle hardening
+
+The Godot realtime transport must treat request outcome accounting separately
+from socket/poll activity.
+
+One request receives one terminal outcome. Repeated no-data polls, retries,
+drains, and reconnect attempts are transport events, not additional request
+faults.
+
+The reference per-slot connection lifecycle is:
+
+`UNBOUND -> ACTIVE -> QUARANTINED -> CLOSED -> ACTIVE(new generation)`
+
+A timed-out connection is quarantined and closed before any replacement may
+bind. A fresh bind increments the slot's connection generation. Responses from
+an old generation or for a non-outstanding request are rejected.
+
+Worker swap uses the same lifecycle. It is not a separate bypass path.
+
+Reference implementation:
+
+- `examples/agent_world_arena/bridge_lifecycle.py`
+- `tests/test_agent_world_bridge_lifecycle.py`
+
+Strict acceptance should require the timing-sensitive bridge suite to pass
+repeatedly under restored thresholds rather than relaxing fault bounds.
