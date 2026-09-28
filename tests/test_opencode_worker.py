@@ -73,6 +73,14 @@ class FakeOpenCodeHandler(BaseHTTPRequestHandler):
         body = self._body()
         self._record(body)
         if self.path == "/api/session":
+            directory = (
+                body.get("location", {}).get("directory")
+                if isinstance(body, dict) and isinstance(body.get("location"), dict)
+                else None
+            )
+            if directory == "/bad-protocol":
+                self._json(200, {"unexpected": True})
+                return
             self._json(
                 200,
                 {
@@ -192,7 +200,7 @@ class OpenCodeWorkerTests(unittest.TestCase):
 
     def test_unexpected_protocol_shape_fails_closed(self) -> None:
         with self.assertRaises(OpenCodeProtocolError):
-            self.client().create_session("/does/not/match/fake-route")
+            self.client().create_session("/bad-protocol")
 
 
 if __name__ == "__main__":
