@@ -1,0 +1,32 @@
+name: leverage-lens
+
+on:
+  push:
+    paths:
+      - "examples/leverage_lens/**"
+      - ".github/workflows/leverage-lens.yml"
+  pull_request:
+    paths:
+      - "examples/leverage_lens/**"
+      - ".github/workflows/leverage-lens.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  focused-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.12"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Run leverage lens tests
+        run: python -m unittest -v examples.leverage_lens.test_leverage_lens
+      - name: Compile
+        run: python -m py_compile examples/leverage_lens/leverage_lens.py examples/leverage_lens/test_leverage_lens.py
