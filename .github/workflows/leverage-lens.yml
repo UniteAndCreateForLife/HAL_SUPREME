@@ -29,4 +29,4 @@ jobs:
       - name: Run leverage lens tests
         run: python -m unittest discover -v examples/leverage_lens
       - name: Compile
-        run: python -m py_compile examples/leverage_lens/*.py
+        run: python -m compileall -q examples/leverage_lens
