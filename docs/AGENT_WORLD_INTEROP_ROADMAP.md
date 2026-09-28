@@ -126,6 +126,48 @@ separate slots when the scenario explicitly permits it.
 Docs:
 https://docs.crewai.com/
 
+### Google ADK / Agents CLI
+
+Integration: **MCP + A2A**.
+
+Google ADK can consume Streamable HTTP MCP tools, while current Agents CLI/ADK
+projects expose A2A as a first-class multi-agent boundary. This makes ADK a
+strong external participant/coordinator without moving simulation authority out
+of Agent World.
+
+### Hugging Face smolagents / tiny-agents
+
+Integration: **MCP**.
+
+Current smolagents supports Streamable HTTP MCP and structured tool output.
+Hugging Face's broader agent/tool ecosystem can therefore use Agent World as a
+tool surface while bringing hosted or local models independently.
+
+### Agent Zero
+
+Integration: **MCP participant + A2A collaborator**.
+
+Agent Zero currently supports both external MCP servers and A2A. Use MCP for
+bounded world tools and A2A for higher-level collaboration. Its Agent Profile
+MCP policy is useful for keeping ordinary participants away from episode-admin
+and commit tools.
+
+### Pydantic AI
+
+Integration: **MCP**.
+
+Pydantic AI's current MCPToolset supports remote Streamable HTTP. Keep this as
+an optional client integration rather than adding Pydantic AI to Agent World's
+core dependency graph.
+
+### OpenHands
+
+Integration: **MCP**.
+
+OpenHands and its current software-agent SDK support MCP configuration and
+Streamable HTTP. Treat it as another optional engineering/participant worker,
+not a world authority.
+
 ### LlamaIndex
 
 Integration: **MCP knowledge/retrieval worker**.
@@ -196,9 +238,11 @@ Credential-like metadata keys are rejected.
 5. Add AutoGen MCP Workbench example.
 6. Add CrewAI MCP example.
 7. Add LangGraph participant example.
-8. Add AG-UI spectator event projection.
-9. Connect the protocol to the real Godot world.
-10. Add a public interoperability harness where outside developers can submit a
+8. Verify Google ADK and smolagents discovery in the framework matrix.
+9. Add Pydantic AI and OpenHands optional client proofs.
+10. Add AG-UI spectator event projection.
+11. Connect the protocol to the real Godot world.
+12. Add a public interoperability harness where outside developers can submit a
     participant adapter and run deterministic evaluation scenarios.
 
 ## What not to do
