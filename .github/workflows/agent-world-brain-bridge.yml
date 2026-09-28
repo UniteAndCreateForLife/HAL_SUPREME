@@ -1,0 +1,46 @@
+name: Agent World Brain Bridge
+
+on:
+  push:
+    paths:
+      - "examples/agent_world_arena/brain_bridge.py"
+      - "examples/agent_world_arena/brain_bridge_stdio.py"
+      - "tests/test_agent_world_brain_bridge.py"
+      - "tests/test_agent_world_brain_bridge_stdio.py"
+      - "schemas/agent_world_brain_*_v0.schema.json"
+      - "docs/AGENT_WORLD_BRAIN_BRIDGE.md"
+      - "docs/ai_sandbox.md"
+      - ".github/workflows/agent-world-brain-bridge.yml"
+  pull_request:
+    paths:
+      - "examples/agent_world_arena/brain_bridge.py"
+      - "examples/agent_world_arena/brain_bridge_stdio.py"
+      - "tests/test_agent_world_brain_bridge.py"
+      - "tests/test_agent_world_brain_bridge_stdio.py"
+      - "schemas/agent_world_brain_*_v0.schema.json"
+      - "docs/AGENT_WORLD_BRAIN_BRIDGE.md"
+      - "docs/ai_sandbox.md"
+      - ".github/workflows/agent-world-brain-bridge.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  brain-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile bridge
+        run: |
+          python -m py_compile examples/agent_world_arena/brain_bridge.py
+          python -m py_compile examples/agent_world_arena/brain_bridge_stdio.py
+          python -m py_compile tests/test_agent_world_brain_bridge.py
+          python -m py_compile tests/test_agent_world_brain_bridge_stdio.py
+      - name: Run bridge tests
+        run: |
+          python -m unittest -v tests.test_agent_world_brain_bridge
+          python -m unittest -v tests.test_agent_world_brain_bridge_stdio
