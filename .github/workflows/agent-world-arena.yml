@@ -1,0 +1,110 @@
+name: Agent World Arena
+
+on:
+  push:
+    paths:
+      - "examples/agent_world_arena/**"
+      - "tests/test_agent_world_*.py"
+      - "tests/test_muse_agent_world_config.py"
+      - "schemas/agent_world_*_v0.schema.json"
+      - "scripts/agent_world_*.py"
+      - "scripts/configure_muse_agent_world.py"
+      - "scripts/verify_muse_agent_world_mcp.py"
+      - "configs/muse/**"
+      - "plugins/agent-world-mcp/**"
+      - "docs/AGENT_WORLD_*.md"
+      - "docs/META_MUSE_AGENT_WORLD_SETUP.md"
+      - "docs/MUSE_AGENT_WORLD_PROMPT.md"
+      - ".github/workflows/agent-world-arena.yml"
+  pull_request:
+    paths:
+      - "examples/agent_world_arena/**"
+      - "tests/test_agent_world_*.py"
+      - "tests/test_muse_agent_world_config.py"
+      - "schemas/agent_world_*_v0.schema.json"
+      - "scripts/agent_world_*.py"
+      - "scripts/configure_muse_agent_world.py"
+      - "scripts/verify_muse_agent_world_mcp.py"
+      - "configs/muse/**"
+      - "plugins/agent-world-mcp/**"
+      - "docs/AGENT_WORLD_*.md"
+      - "docs/META_MUSE_AGENT_WORLD_SETUP.md"
+      - "docs/MUSE_AGENT_WORLD_PROMPT.md"
+      - ".github/workflows/agent-world-arena.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  contract-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install MCP SDK v2
+        run: python -m pip install "mcp>=2,<3"
+
+      - name: Compile Agent World and Muse integration files
+        run: |
+          python -m py_compile \
+            examples/agent_world_arena/__init__.py \
+            examples/agent_world_arena/a2a_card.py \
+            examples/agent_world_arena/adapters.py \
+            examples/agent_world_arena/baselines.py \
+            examples/agent_world_arena/conformance.py \
+            examples/agent_world_arena/http_action_adapter.py \
+            examples/agent_world_arena/mcp_server.py \
+            examples/agent_world_arena/meta_muse.py \
+            examples/agent_world_arena/ollama_local.py \
+            examples/agent_world_arena/participant.py \
+            examples/agent_world_arena/protocol.py \
+            examples/agent_world_arena/runner.py \
+            examples/agent_world_arena/scenario.py \
+            examples/agent_world_arena/service.py \
+            examples/agent_world_arena/session.py \
+            examples/agent_world_arena/integrations/openai_agents_mcp.py \
+            examples/agent_world_arena/integrations/autogen_mcp.py \
+            examples/agent_world_arena/integrations/langchain_mcp.py \
+            examples/agent_world_arena/integrations/crewai_stdio.py \
+            examples/agent_world_arena/integrations/google_adk_mcp.py \
+            examples/agent_world_arena/integrations/smolagents_mcp.py \
+            scripts/agent_world_meta_canary.py \
+            scripts/agent_world_cross_provider_canary.py \
+            scripts/configure_muse_agent_world.py \
+            scripts/verify_muse_agent_world_mcp.py \
+            tests/test_agent_world_arena.py \
+            tests/test_agent_world_meta_muse.py \
+            tests/test_agent_world_schemas.py \
+            tests/test_agent_world_session.py \
+            tests/test_agent_world_openai_compatible.py \
+            tests/test_agent_world_service.py \
+            tests/test_agent_world_interop.py \
+            tests/test_agent_world_mcp_server.py \
+            tests/test_agent_world_conformance.py \
+            tests/test_muse_agent_world_config.py
+
+      - name: Run Agent World contract tests
+        run: |
+          python -m unittest -v \
+            tests.test_agent_world_arena \
+            tests.test_agent_world_meta_muse \
+            tests.test_agent_world_schemas \
+            tests.test_agent_world_session \
+            tests.test_agent_world_openai_compatible \
+            tests.test_agent_world_service \
+            tests.test_agent_world_interop \
+            tests.test_agent_world_mcp_server \
+            tests.test_agent_world_conformance \
+            tests.test_muse_agent_world_config
+
+      - name: Dry-run Muse settings merge
+        run: |
+          python scripts/configure_muse_agent_world.py \
+            --settings "$RUNNER_TEMP/muse-settings.json" \
+            > "$RUNNER_TEMP/muse-merged.json"
+          python -m json.tool "$RUNNER_TEMP/muse-merged.json" > /dev/null

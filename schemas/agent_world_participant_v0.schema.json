@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hal.agent-world-participant.v0",
+  "title": "HAL Agent World Participant v0",
+  "type": "object",
+  "required": [
+    "schema",
+    "participant_id",
+    "display_name",
+    "framework",
+    "transport",
+    "capabilities",
+    "protocol_versions",
+    "metadata"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "hal.agent_world.participant.v0"
+    },
+    "participant_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "framework": {
+      "type": "string",
+      "minLength": 1
+    },
+    "transport": {
+      "type": "string",
+      "enum": [
+        "scripted",
+        "local-python",
+        "openai-compatible",
+        "mcp",
+        "a2a"
+      ]
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "protocol_versions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "endpoint": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hal.agent-world-scenario.v0",
+  "title": "HAL Agent World Scenario v0",
+  "type": "object",
+  "required": [
+    "schema",
+    "scenario_id",
+    "seed",
+    "width",
+    "height",
+    "max_ticks",
+    "mode",
+    "slots",
+    "resources"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "hal.agent_world.scenario.v0"
+    },
+    "scenario_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "seed": {
+      "type": "integer"
+    },
+    "width": {
+      "type": "integer",
+      "minimum": 2
+    },
+    "height": {
+      "type": "integer",
+      "minimum": 2
+    },
+    "max_ticks": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "compete",
+        "cooperate",
+        "hybrid",
+        "sandbox"
+      ]
+    },
+    "slots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "slot_id",
+          "start"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "slot_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "start": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "integer",
+                "minimum": 0
+              },
+              {
+                "type": "integer",
+                "minimum": 0
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "team": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "role": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "resource_id",
+          "position",
+          "value"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "resource_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "position": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "integer",
+                "minimum": 0
+              },
+              {
+                "type": "integer",
+                "minimum": 0
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "value": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    }
+  }
+}

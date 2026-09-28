@@ -1,0 +1,24 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "hal-agent-world-mcp",
+  "version": "0.1.0",
+  "description": "Connect compatible agents to the local HAL Agent World MCP simulation authority for bounded multi-agent interoperability experiments.",
+  "author": {
+    "name": "UniteAndCreateForLife"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "HAL Agent World",
+        "shortDescription": "Provider-neutral multi-agent simulation tools",
+        "longDescription": "Use HAL Agent World to discover reviewed simulation episodes, read provider-neutral observations, submit bounded actions, inspect status, and retrieve replay evidence. The arena owns world state; external models remain replaceable participants.",
+        "developerName": "UniteAndCreateForLife",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Interactive"
+        ],
+        "defaultPrompt": "Inspect the HAL Agent World tool surface and help participate in or review a bounded interoperability trial. Treat the arena as authoritative, do not request credentials, and do not create or advance episodes unless the operator explicitly asks."
+      }
+    }
+  }
+}

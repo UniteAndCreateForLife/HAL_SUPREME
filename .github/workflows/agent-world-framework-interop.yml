@@ -1,0 +1,123 @@
+name: Agent World Framework Interop
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "examples/agent_world_arena/mcp_server.py"
+      - "examples/agent_world_arena/service.py"
+      - "examples/agent_world_arena/integrations/**"
+      - ".github/workflows/agent-world-framework-interop.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  framework-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        framework:
+          - openai-agents
+          - autogen
+          - langchain
+          - crewai
+          - google-adk
+          - smolagents
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build isolated Agent World MCP server environment
+        run: |
+          python -m venv .server-venv
+          .server-venv/bin/python -m pip install --upgrade pip
+          .server-venv/bin/python -m pip install "mcp>=2,<3"
+
+      - name: Start Agent World Streamable HTTP server
+        if: matrix.framework != 'crewai'
+        run: |
+          .server-venv/bin/python -m examples.agent_world_arena.mcp_server \
+            --transport streamable-http \
+            --host 127.0.0.1 \
+            --port 8765 > agent-world-server.log 2>&1 &
+          echo $! > agent-world-server.pid
+          for i in $(seq 1 30); do
+            if curl -s -o /dev/null http://127.0.0.1:8765/mcp; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat agent-world-server.log
+          exit 1
+
+      - name: Install framework client
+        run: |
+          case "${{ matrix.framework }}" in
+            openai-agents)
+              python -m pip install "openai-agents"
+              ;;
+            autogen)
+              python -m pip install "autogen-ext[mcp]"
+              ;;
+            langchain)
+              python -m pip install "langchain-mcp-adapters"
+              ;;
+            crewai)
+              python -m pip install "crewai-tools[mcp]"
+              ;;
+            google-adk)
+              python -m pip install "google-adk"
+              ;;
+            smolagents)
+              python -m pip install "smolagents[mcp]"
+              ;;
+            *)
+              exit 2
+              ;;
+          esac
+
+      - name: Discover Agent World tools through framework
+        env:
+          HAL_AGENT_WORLD_MCP_URL: http://127.0.0.1:8765/mcp
+          HAL_AGENT_WORLD_SERVER_PYTHON: ${{ github.workspace }}/.server-venv/bin/python
+        run: |
+          case "${{ matrix.framework }}" in
+            openai-agents)
+              python examples/agent_world_arena/integrations/openai_agents_mcp.py
+              ;;
+            autogen)
+              python examples/agent_world_arena/integrations/autogen_mcp.py
+              ;;
+            langchain)
+              python examples/agent_world_arena/integrations/langchain_mcp.py
+              ;;
+            crewai)
+              python examples/agent_world_arena/integrations/crewai_stdio.py
+              ;;
+            google-adk)
+              python examples/agent_world_arena/integrations/google_adk_mcp.py
+              ;;
+            smolagents)
+              python examples/agent_world_arena/integrations/smolagents_mcp.py
+              ;;
+            *)
+              exit 2
+              ;;
+          esac
+
+      - name: Stop HTTP server
+        if: always() && matrix.framework != 'crewai'
+        run: |
+          if [ -f agent-world-server.pid ]; then
+            kill "$(cat agent-world-server.pid)" || true
+          fi
+          if [ -f agent-world-server.log ]; then
+            tail -100 agent-world-server.log
+          fi

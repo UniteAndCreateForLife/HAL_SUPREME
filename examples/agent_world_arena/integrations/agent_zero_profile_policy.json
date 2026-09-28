@@ -1,0 +1,17 @@
+{
+  "mode": "custom",
+  "default": "allow",
+  "mcp_default": "block",
+  "allowed": [
+    "mcp:hal-agent-world:list_episodes",
+    "mcp:hal-agent-world:read_observation",
+    "mcp:hal-agent-world:submit_action",
+    "mcp:hal-agent-world:episode_status",
+    "mcp:hal-agent-world:episode_replay"
+  ],
+  "blocked": [
+    "mcp:hal-agent-world:create_episode",
+    "mcp:hal-agent-world:advance_episode",
+    "mcp:hal-agent-world:advance_episode_with_idle_timeout"
+  ]
+}

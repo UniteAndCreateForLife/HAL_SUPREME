@@ -1,0 +1,41 @@
+{
+  "schema": "hal.agent_world.scenario.v0",
+  "scenario_id": "resource-rush-v0",
+  "description": "Two agents start on opposite sides and compete or negotiate over shared resources.",
+  "seed": 1337,
+  "width": 7,
+  "height": 5,
+  "max_ticks": 25,
+  "mode": "hybrid",
+  "slots": [
+    {
+      "slot_id": "slot-a",
+      "start": [0, 2],
+      "team": null,
+      "role": "free-agent"
+    },
+    {
+      "slot_id": "slot-b",
+      "start": [6, 2],
+      "team": null,
+      "role": "free-agent"
+    }
+  ],
+  "resources": [
+    {
+      "resource_id": "center",
+      "position": [3, 2],
+      "value": 5
+    },
+    {
+      "resource_id": "north",
+      "position": [3, 0],
+      "value": 2
+    },
+    {
+      "resource_id": "south",
+      "position": [3, 4],
+      "value": 2
+    }
+  ]
+}

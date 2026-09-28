@@ -1,0 +1,93 @@
+{
+  "schema": "hal.agent_world.integration_registry.v0",
+  "updated": "2026-09-28",
+  "invariant": "Models propose bounded actions; the arena owns reality.",
+  "protocols": {
+    "agent-world": "deterministic simulation observations/actions and replay",
+    "mcp": "bounded tools and resources",
+    "a2a": "remote discovery, delegation, and coarse-grained collaboration",
+    "ag-ui": "planned spectator/operator event plane"
+  },
+  "integrations": [
+    {
+      "id": "meta-muse",
+      "system": "Meta Muse / Model API",
+      "transport": "openai-compatible",
+      "proof_status": "contract-tested",
+      "entrypoint": "examples/agent_world_arena/meta_muse.py",
+      "notes": "Live provider canary remains explicitly gated."
+    },
+    {
+      "id": "hal-local-ollama",
+      "system": "HAL local / Ollama",
+      "transport": "openai-compatible",
+      "proof_status": "contract-tested",
+      "entrypoint": "examples/agent_world_arena/ollama_local.py",
+      "notes": "Uses loopback by default and the same action contract as hosted providers."
+    },
+    {
+      "id": "openai-agents-sdk",
+      "system": "OpenAI Agents SDK",
+      "transport": "mcp-streamable-http",
+      "proof_status": "smoke-workflow",
+      "entrypoint": "examples/agent_world_arena/integrations/openai_agents_mcp.py",
+      "notes": "Framework matrix is responsible for executable discovery proof."
+    },
+    {
+      "id": "autogen",
+      "system": "Microsoft AutoGen",
+      "transport": "mcp-streamable-http",
+      "proof_status": "smoke-workflow",
+      "entrypoint": "examples/agent_world_arena/integrations/autogen_mcp.py",
+      "notes": "Uses McpWorkbench."
+    },
+    {
+      "id": "langchain-langgraph",
+      "system": "LangChain / LangGraph",
+      "transport": "mcp-streamable-http",
+      "proof_status": "smoke-workflow",
+      "entrypoint": "examples/agent_world_arena/integrations/langchain_mcp.py",
+      "notes": "Loads Agent World tools through the LangChain MCP adapters package."
+    },
+    {
+      "id": "crewai",
+      "system": "CrewAI",
+      "transport": "mcp-stdio",
+      "proof_status": "smoke-workflow",
+      "entrypoint": "examples/agent_world_arena/integrations/crewai_stdio.py",
+      "notes": "Uses stdio so Agent World does not add a deprecated SSE server."
+    },
+    {
+      "id": "a2a-v1",
+      "system": "A2A-compatible remote agents",
+      "transport": "a2a",
+      "proof_status": "card-contract-tested",
+      "entrypoint": "examples/agent_world_arena/a2a_card.py",
+      "notes": "A2A coordinates trials; it does not own physics ticks."
+    },
+    {
+      "id": "google-adk",
+      "system": "Google Agent Development Kit",
+      "transport": "mcp-streamable-http",
+      "proof_status": "smoke-workflow",
+      "entrypoint": "examples/agent_world_arena/integrations/google_adk_mcp.py",
+      "notes": "Uses McpToolset with StreamableHTTPConnectionParams."
+    },
+    {
+      "id": "huggingface-smolagents",
+      "system": "Hugging Face smolagents",
+      "transport": "mcp-streamable-http",
+      "proof_status": "smoke-workflow",
+      "entrypoint": "examples/agent_world_arena/integrations/smolagents_mcp.py",
+      "notes": "Uses MCPClient with structured output enabled."
+    },
+    {
+      "id": "agent-zero",
+      "system": "Agent Zero",
+      "transport": "mcp-streamable-http",
+      "proof_status": "config-prepared",
+      "entrypoint": "examples/agent_world_arena/integrations/agent_zero_mcp.json",
+      "notes": "Prepared external MCP server config plus least-privilege Agent Zero profile policy."
+    }
+  ]
+}

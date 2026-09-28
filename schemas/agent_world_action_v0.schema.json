@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hal.agent-world-action.v0",
+  "title": "HAL Agent World Action v0",
+  "type": "object",
+  "required": [
+    "kind",
+    "dx",
+    "dy",
+    "target",
+    "message"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "type": "string",
+      "enum": [
+        "idle",
+        "move",
+        "gather",
+        "say"
+      ]
+    },
+    "dx": {
+      "type": "integer",
+      "minimum": -1,
+      "maximum": 1
+    },
+    "dy": {
+      "type": "integer",
+      "minimum": -1,
+      "maximum": 1
+    },
+    "target": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 512
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "move"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "oneOf": [
+          {
+            "properties": {
+              "dx": {
+                "const": 1
+              },
+              "dy": {
+                "const": 0
+              }
+            }
+          },
+          {
+            "properties": {
+              "dx": {
+                "const": -1
+              },
+              "dy": {
+                "const": 0
+              }
+            }
+          },
+          {
+            "properties": {
+              "dx": {
+                "const": 0
+              },
+              "dy": {
+                "const": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "dx": {
+                "const": 0
+              },
+              "dy": {
+                "const": -1
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "say"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "type": "string",
+            "minLength": 1
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ]
+}
