@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import json
 import os
 from typing import Any, Mapping, Protocol
@@ -72,7 +72,7 @@ _ACTION_SCHEMA = {
 class MetaMuseAdapter:
     """Meta Model API adapter for Muse Spark using a strict action schema."""
 
-    api_key: str
+    api_key: str = field(repr=False)
     model: str = "muse-spark-1.3"
     base_url: str = "https://api.meta.ai/v1"
     timeout_seconds: float = 30.0
