@@ -8,17 +8,45 @@ import sys
 from typing import Any
 
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SETTINGS_PATH = Path.home() / ".config" / "muse" / "settings.json"
 SERVER_NAME = "hal-agent-world"
+DEFAULT_HTTP_URL = "http://127.0.0.1:8765/mcp"
 
 
-def desired_server_config() -> dict[str, Any]:
-    return {
-        "transport": "streamable_http",
-        "url": "${HAL_AGENT_WORLD_MCP_URL}",
-        "enabled": True,
-        "mode": "required",
-    }
+def desired_server_config(
+    *,
+    transport: str = "stdio",
+    python_executable: str | None = None,
+    repo_root: Path | None = None,
+    http_url: str = DEFAULT_HTTP_URL,
+) -> dict[str, Any]:
+    if transport == "stdio":
+        return {
+            "transport": "stdio",
+            "command": python_executable or sys.executable,
+            "args": [
+                "-m",
+                "examples.agent_world_arena.mcp_server",
+                "--transport",
+                "stdio",
+            ],
+            "env": {
+                "PYTHONPATH": str((repo_root or REPO_ROOT).resolve()),
+            },
+            "enabled": True,
+            "mode": "required",
+        }
+
+    if transport == "streamable_http":
+        return {
+            "transport": "streamable_http",
+            "url": http_url,
+            "enabled": True,
+            "mode": "required",
+        }
+
+    raise ValueError(f"unsupported Muse MCP transport: {transport}")
 
 
 def load_settings(path: Path) -> dict[str, Any]:
@@ -30,7 +58,11 @@ def load_settings(path: Path) -> dict[str, Any]:
     return payload
 
 
-def merged_settings(existing: dict[str, Any]) -> dict[str, Any]:
+def merged_settings(
+    existing: dict[str, Any],
+    *,
+    server_config: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     payload = dict(existing)
     servers = payload.get("mcp_servers", {})
     if servers is None:
@@ -39,7 +71,7 @@ def merged_settings(existing: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("mcp_servers must be a JSON object")
 
     merged_servers = dict(servers)
-    merged_servers[SERVER_NAME] = desired_server_config()
+    merged_servers[SERVER_NAME] = server_config or desired_server_config()
     payload["mcp_servers"] = merged_servers
     return payload
 
@@ -71,14 +103,32 @@ def main() -> int:
         help="Muse settings.json path.",
     )
     parser.add_argument(
+        "--transport",
+        choices=("stdio", "streamable_http"),
+        default="stdio",
+        help=(
+            "Local Muse should normally use stdio so Muse launches Agent World "
+            "directly. Streamable HTTP is available for an already-running server."
+        ),
+    )
+    parser.add_argument(
+        "--http-url",
+        default=DEFAULT_HTTP_URL,
+        help="Agent World MCP URL when --transport streamable_http is selected.",
+    )
+    parser.add_argument(
         "--apply",
         action="store_true",
         help="Write the merged settings. Without this flag the command is dry-run only.",
     )
     args = parser.parse_args()
 
+    config = desired_server_config(
+        transport=args.transport,
+        http_url=args.http_url,
+    )
     existing = load_settings(args.settings)
-    merged = merged_settings(existing)
+    merged = merged_settings(existing, server_config=config)
 
     if not args.apply:
         print(json.dumps(merged, indent=2))
@@ -92,10 +142,7 @@ def main() -> int:
     print(f"Updated Muse MCP settings: {args.settings}")
     if backup is not None:
         print(f"Backup: {backup}")
-    print(
-        "Set HAL_AGENT_WORLD_MCP_URL before starting Muse Code, for example "
-        "http://127.0.0.1:8765/mcp"
-    )
+    print(f"Muse Agent World MCP transport: {args.transport}")
     print("Inside Muse Code, run /mcp to inspect the live server/tool inventory.")
     return 0
 
