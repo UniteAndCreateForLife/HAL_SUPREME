@@ -12,7 +12,7 @@ from scripts.configure_muse_agent_world import (
     merged_settings,
     write_settings,
 )
-from scripts.verify_muse_agent_world_mcp import output_mentions_expected_tool
+from scripts.verify_muse_agent_world_mcp import jsonl_has_tool_call
 
 
 class MuseAgentWorldConfigTests(unittest.TestCase):
@@ -30,24 +30,31 @@ class MuseAgentWorldConfigTests(unittest.TestCase):
                 }
             },
         }
+        config = desired_server_config(
+            transport="stdio",
+            python_executable="python-test",
+            repo_root=Path("/repo"),
+        )
 
-        merged = merged_settings(existing)
+        merged = merged_settings(existing, server_config=config)
 
         self.assertEqual(merged["model"], "muse-spark-1.2")
         self.assertIn("existing-server", merged["mcp_servers"])
-        self.assertEqual(
-            merged["mcp_servers"][SERVER_NAME],
-            desired_server_config(),
-        )
+        self.assertEqual(merged["mcp_servers"][SERVER_NAME], config)
 
     def test_write_creates_backup_before_replacement(self) -> None:
         with TemporaryDirectory() as tmp:
             path = Path(tmp) / "settings.json"
             path.write_text('{"theme":"dark"}\n', encoding="utf-8")
+            config = desired_server_config(
+                transport="stdio",
+                python_executable="python-test",
+                repo_root=Path(tmp),
+            )
 
             backup = write_settings(
                 path,
-                {"theme": "dark", "mcp_servers": {SERVER_NAME: desired_server_config()}},
+                {"theme": "dark", "mcp_servers": {SERVER_NAME: config}},
             )
 
             self.assertIsNotNone(backup)
@@ -56,26 +63,51 @@ class MuseAgentWorldConfigTests(unittest.TestCase):
                 json.loads(backup.read_text(encoding="utf-8")),
                 {"theme": "dark"},
             )
-            self.assertIn(
-                SERVER_NAME,
-                load_settings(path)["mcp_servers"],
-            )
+            self.assertIn(SERVER_NAME, load_settings(path)["mcp_servers"])
 
-    def test_expected_muse_server_shape_matches_current_docs(self) -> None:
-        config = desired_server_config()
-        self.assertEqual(config["transport"], "streamable_http")
+    def test_stdio_shape_matches_current_muse_docs(self) -> None:
+        config = desired_server_config(
+            transport="stdio",
+            python_executable="C:/Python/python.exe",
+            repo_root=Path("C:/HAL_SUPREME"),
+        )
+        self.assertEqual(config["transport"], "stdio")
+        self.assertEqual(config["command"], "C:/Python/python.exe")
+        self.assertEqual(
+            config["args"],
+            [
+                "-m",
+                "examples.agent_world_arena.mcp_server",
+                "--transport",
+                "stdio",
+            ],
+        )
         self.assertTrue(config["enabled"])
         self.assertEqual(config["mode"], "required")
-        self.assertEqual(config["url"], "${HAL_AGENT_WORLD_MCP_URL}")
+        self.assertIn("PYTHONPATH", config["env"])
 
-    def test_smoke_output_requires_server_and_tool_evidence(self) -> None:
+    def test_streamable_http_shape_is_available(self) -> None:
+        config = desired_server_config(
+            transport="streamable_http",
+            http_url="http://127.0.0.1:9999/mcp",
+        )
+        self.assertEqual(config["transport"], "streamable_http")
+        self.assertEqual(config["url"], "http://127.0.0.1:9999/mcp")
+        self.assertNotIn("command", config)
+
+    def test_jsonl_probe_requires_tool_event_evidence(self) -> None:
         self.assertTrue(
-            output_mentions_expected_tool(
-                '{"server":"hal-agent-world","tool":"list_episodes"}'
+            jsonl_has_tool_call(
+                '{"type":"tool_call","name":"list_episodes","server":"hal-agent-world"}',
+                "list_episodes",
             )
         )
-        self.assertFalse(output_mentions_expected_tool("list_episodes"))
-        self.assertFalse(output_mentions_expected_tool("hal-agent-world"))
+        self.assertFalse(
+            jsonl_has_tool_call(
+                '{"type":"assistant","text":"I might call a tool"}',
+                "list_episodes",
+            )
+        )
 
 
 if __name__ == "__main__":
