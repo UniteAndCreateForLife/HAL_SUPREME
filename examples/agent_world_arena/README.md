@@ -27,14 +27,14 @@ rules, permissions, provenance and evaluation.
 
 ## v0 contract
 
-An adapter receives an \`Observation\` and returns exactly one bounded \`Action\`.
+An adapter receives an `Observation` and returns exactly one bounded `Action`.
 
 Implemented reference actions:
 
-- \`idle\`
-- \`move\` — one cardinal step
-- \`gather\` — collect a resource at the current position
-- \`say\` — send a bounded message to another agent or broadcast through the
+- `idle`
+- `move` — one cardinal step
+- `gather` — collect a resource at the current position
+- `say` — send a bounded message to another agent or broadcast through the
   arena authority
 
 The reference simulator is dependency-free Python. It provides deterministic
@@ -50,9 +50,9 @@ objects, cameras and richer tools.
 The same envelope can negotiate additional actions without changing provider
 identity:
 
-\`look\`, \`walk\`, \`run\`, \`jump\`, \`crouch\`, \`grab\`, \`drop\`, \`use\`,
-\`spawn\`, \`attach\`, \`build\`, \`drive\`, \`emote\`, \`speak\`, \`delegate\`,
-\`vote\`.
+`look`, `walk`, `run`, `jump`, `crouch`, `grab`, `drop`, `use`,
+`spawn`, `attach`, `build`, `drive`, `emote`, `speak`, `delegate`,
+`vote`.
 
 Godot should be authoritative for physics and world geometry. Provider adapters
 should never receive arbitrary shell access to the game host.
@@ -96,17 +96,24 @@ slot assignment across repeated episodes to remove that ordering advantage.
 
 ## Run the reference tests
 
-\`\`\`bash
+```bash
 python -m unittest -v tests.test_agent_world_arena
-\`\`\`
+```
 
 No provider account or paid compute is required for the reference tests.
+
+## Implemented in this branch
+
+- deterministic scenario manifests and seeded provider-to-slot assignment;
+- scripted provider adapter interface and failure-isolating episode runner;
+- a first `resource-rush-v0` scenario;
+- a bounded Meta Muse adapter for Meta Model API using structured output;
+- prompt-injection-aware provider instructions and secret-safe failure receipts.
 
 ## Next engineering slices
 
 - JSON Schema for observation/action/episode manifests;
-- provider adapter interface with timeout and budget enforcement;
-- episode runner with seeded slot randomization;
+- hard provider time/token/action budgets and cancellation;
 - Godot bridge over a bounded local transport;
 - 3D prop/object manipulation and construction tools;
 - skateboard body/controller benchmark as the first cinematic competition;
