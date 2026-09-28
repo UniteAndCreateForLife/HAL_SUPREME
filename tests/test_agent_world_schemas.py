@@ -9,6 +9,7 @@ SCHEMAS = {
     "action": REPO_ROOT / "schemas" / "agent_world_action_v0.schema.json",
     "observation": REPO_ROOT / "schemas" / "agent_world_observation_v0.schema.json",
     "scenario": REPO_ROOT / "schemas" / "agent_world_scenario_v0.schema.json",
+    "participant": REPO_ROOT / "schemas" / "agent_world_participant_v0.schema.json",
 }
 
 
@@ -39,6 +40,13 @@ class AgentWorldSchemaTests(unittest.TestCase):
             payload["properties"]["protocol_version"]["const"],
             "hal.agent_world.v0",
         )
+
+    def test_participant_schema_is_protocol_neutral(self) -> None:
+        payload = json.loads(SCHEMAS["participant"].read_text(encoding="utf-8"))
+        transports = set(payload["properties"]["transport"]["enum"])
+        self.assertIn("mcp", transports)
+        self.assertIn("a2a", transports)
+        self.assertIn("openai-compatible", transports)
 
     def test_scenario_schema_has_reproducibility_fields(self) -> None:
         payload = json.loads(SCHEMAS["scenario"].read_text(encoding="utf-8"))
