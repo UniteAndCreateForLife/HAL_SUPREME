@@ -57,7 +57,7 @@ jobs:
 
       - name: Install framework client
         run: |
-          case "\${{ matrix.framework }}" in
+          case "${{ matrix.framework }}" in
             openai-agents)
               python -m pip install "openai-agents"
               ;;
@@ -78,9 +78,9 @@ jobs:
       - name: Discover Agent World tools through framework
         env:
           HAL_AGENT_WORLD_MCP_URL: http://127.0.0.1:8765/mcp
-          HAL_AGENT_WORLD_SERVER_PYTHON: \${{ github.workspace }}/.server-venv/bin/python
+          HAL_AGENT_WORLD_SERVER_PYTHON: ${{ github.workspace }}/.server-venv/bin/python
         run: |
-          case "\${{ matrix.framework }}" in
+          case "${{ matrix.framework }}" in
             openai-agents)
               python examples/agent_world_arena/integrations/openai_agents_mcp.py
               ;;
