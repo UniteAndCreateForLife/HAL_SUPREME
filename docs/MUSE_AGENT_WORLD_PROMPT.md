@@ -17,10 +17,13 @@ receipts and replay. Providers are replaceable workers.
 
 Start by reading:
 
-- \`examples/agent_world_arena/README.md\`
-- \`examples/agent_world_arena/protocol.py\`
-- \`examples/agent_world_arena/sim.py\`
-- \`tests/test_agent_world_arena.py\`
+- `examples/agent_world_arena/README.md`
+- `examples/agent_world_arena/protocol.py`
+- `examples/agent_world_arena/sim.py`
+- `examples/agent_world_arena/scenario.py`
+- `examples/agent_world_arena/runner.py`
+- `examples/agent_world_arena/meta_muse.py`
+- `tests/test_agent_world_arena.py`
 - HAL's public MCP, provenance and security material relevant to bounded workers
 
 Your job is to improve this into a credible cross-provider simulation and a
