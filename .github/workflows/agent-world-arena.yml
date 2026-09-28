@@ -15,6 +15,10 @@ on:
       - "docs/AGENT_WORLD_*.md"
       - "docs/META_MUSE_AGENT_WORLD_SETUP.md"
       - "docs/MUSE_AGENT_WORLD_PROMPT.md"
+      - "docs/MUSE_AGENT_WORLD_MCP.md"
+      - "AGENTS.md"
+      - "docs/MUSE_AGENT_WORLD_MCP.md"
+      - "AGENTS.md"
       - ".github/workflows/agent-world-arena.yml"
   pull_request:
     paths:
