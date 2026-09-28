@@ -97,6 +97,20 @@ def validate_task_packet(payload: object) -> list[str]:
 
     errors: list[str] = []
 
+    for field in (
+        "schema",
+        "task_id",
+        "objective",
+        "scope",
+        "constraints",
+        "protected_actions",
+        "acceptance",
+        "status",
+        "verification",
+    ):
+        if field not in payload:
+            errors.append(f"missing required field: {field}")
+
     if payload.get("schema") != SCHEMA:
         errors.append(f"schema must be {SCHEMA}")
 
