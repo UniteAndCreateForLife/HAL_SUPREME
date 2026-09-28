@@ -12,6 +12,7 @@ from qc.media_preflight import (
     probe_media,
     require_audit_preflight,
     require_media_preflight,
+    require_production_preflight,
 )
 from qc.motion import MotionEvidenceError
 
@@ -187,6 +188,53 @@ class ProductionAuditPreflightTests(unittest.TestCase):
         policy = MediaAuditPolicy(min_text_height_px=40)
         with self.assertRaisesRegex(MediaPreflightError, "picture"):
             require_audit_preflight(audits, policy)
+
+
+    def test_production_preflight_composes_media_and_audits(self):
+        def runner(*args, **kwargs):
+            return subprocess.CompletedProcess(
+                args[0],
+                0,
+                stdout=json.dumps(probe_payload()),
+                stderr="",
+            )
+
+        def motion(_path):
+            return {"passed": True, "unique_frame_hashes": 12}
+
+        with tempfile.TemporaryDirectory() as tmp:
+            media = Path(tmp) / "candidate.mp4"
+            media.write_bytes(b"fixture")
+            result = require_production_preflight(
+                media,
+                good_audits(),
+                probe_runner=runner,
+                motion_checker=motion,
+            )
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["schema"], "hal.production_preflight.v1")
+
+    def test_production_preflight_refuses_good_media_with_bad_audits(self):
+        def runner(*args, **kwargs):
+            return subprocess.CompletedProcess(
+                args[0],
+                0,
+                stdout=json.dumps(probe_payload()),
+                stderr="",
+            )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            media = Path(tmp) / "candidate.mp4"
+            media.write_bytes(b"fixture")
+            audits = good_audits()
+            audits["story"]["blind_viewer_pass"] = False
+            with self.assertRaisesRegex(MediaPreflightError, "story"):
+                require_production_preflight(
+                    media,
+                    audits,
+                    probe_runner=runner,
+                    motion_checker=lambda _path: {"passed": True},
+                )
 
 
 if __name__ == "__main__":
