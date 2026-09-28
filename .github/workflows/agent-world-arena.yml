@@ -5,6 +5,8 @@ on:
     paths:
       - "examples/agent_world_arena/**"
       - "tests/test_agent_world_arena.py"
+      - "tests/test_agent_world_meta_muse.py"
+      - "tests/test_agent_world_meta_muse.py"
       - "docs/MUSE_AGENT_WORLD_PROMPT.md"
       - ".github/workflows/agent-world-arena.yml"
   pull_request:
@@ -34,7 +36,12 @@ jobs:
             examples/agent_world_arena/__init__.py \
             examples/agent_world_arena/protocol.py \
             examples/agent_world_arena/sim.py \
-            tests/test_agent_world_arena.py
+            examples/agent_world_arena/scenario.py \
+            examples/agent_world_arena/adapters.py \
+            examples/agent_world_arena/runner.py \
+            examples/agent_world_arena/meta_muse.py \
+            tests/test_agent_world_arena.py \
+            tests/test_agent_world_meta_muse.py
 
       - name: Run Agent World contract tests
-        run: python -m unittest -v tests.test_agent_world_arena
+        run: python -m unittest -v tests.test_agent_world_arena tests.test_agent_world_meta_muse
