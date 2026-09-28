@@ -1,5 +1,6 @@
-"""Provider-neutral HAL agent engineering fabric."""
+"""Provider-neutral HAL agent engineering fabric.
 
-from .contract import STATUS_ORDER, validate_task_packet
-
-__all__ = ["STATUS_ORDER", "validate_task_packet"]
+Import concrete contract helpers from services.agent_fabric.contract. Keeping the
+package initializer side-effect free also allows the contract module to run as a
+CLI without Python's runpy duplicate-import warning.
+"""
