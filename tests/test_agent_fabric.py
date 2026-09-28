@@ -115,6 +115,12 @@ class AgentFabricContractTests(unittest.TestCase):
         errors = validate_task_packet(packet)
         self.assertIn("unknown protected_actions: teleport", errors)
 
+    def test_required_empty_capability_lists_must_still_be_present(self) -> None:
+        packet = base_packet()
+        del packet["constraints"]
+        errors = validate_task_packet(packet)
+        self.assertIn("missing required field: constraints", errors)
+
 
 if __name__ == "__main__":
     unittest.main()
