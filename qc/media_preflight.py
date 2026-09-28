@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import subprocess
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -18,7 +19,7 @@ def _positive_float(value: Any, default: float = 0.0) -> float:
         parsed = float(value)
     except (TypeError, ValueError):
         return default
-    return parsed if parsed > 0 else default
+    return parsed if math.isfinite(parsed) and parsed > 0 else default
 
 
 def _ratio(value: Any) -> float:
@@ -33,7 +34,8 @@ def _ratio(value: Any) -> float:
         den = float(denominator)
     except ValueError:
         return 0.0
-    return num / den if den else 0.0
+    ratio = num / den if den else 0.0
+    return ratio if math.isfinite(ratio) and ratio > 0 else 0.0
 
 
 def probe_media(
@@ -95,8 +97,18 @@ def evaluate_probe(
     if not duration_s:
         duration_s = _positive_float(video.get("duration"))
 
-    width = int(video.get("width") or 0)
-    height = int(video.get("height") or 0)
+    try:
+        width = int(video.get("width") or 0)
+    except (TypeError, ValueError, OverflowError):
+        width = 0
+    try:
+        height = int(video.get("height") or 0)
+    except (TypeError, ValueError, OverflowError):
+        height = 0
+    if width < 0:
+        width = 0
+    if height < 0:
+        height = 0
     fps = _ratio(video.get("avg_frame_rate") or video.get("r_frame_rate"))
 
     checks = {
@@ -161,6 +173,7 @@ def evaluate_audit_evidence(
         text_px = _finite_number(picture, "minimum_text_height_px")
         picture_ok = (
             failed is not None
+            and failed >= 0
             and text_px is not None
             and failed <= policy.max_picture_failures
             and text_px >= policy.min_text_height_px
