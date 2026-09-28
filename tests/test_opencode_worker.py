@@ -132,6 +132,13 @@ class OpenCodeWorkerTests(unittest.TestCase):
         with self.assertRaises(OpenCodeSecurityError):
             OpenCodeClient(base_url="http://opencode:secret@127.0.0.1:4096")
 
+    def test_remote_opt_in_still_requires_tls(self) -> None:
+        with self.assertRaises(OpenCodeSecurityError):
+            OpenCodeClient(base_url="http://example.com:4096", allow_remote=True)
+
+        client = OpenCodeClient(base_url="https://example.com:4096", allow_remote=True)
+        self.assertEqual(client.base_url, "https://example.com:4096")
+
     def test_health_and_active_sessions_follow_v2_paths(self) -> None:
         client = self.client()
         self.assertTrue(client.health()["healthy"])
