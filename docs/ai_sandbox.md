@@ -33,7 +33,7 @@ These layers may reference one another, but none replaces the world authority.
 
 - identical bodies/physics for like-for-like competition;
 - identical observation/action contracts by role;
-- explicit think/action budgets;
+- explicit think/action budgets by competition class;
 - fault isolation;
 - randomized provider-to-slot assignment across repeated episodes;
 - deterministic seeds and replay;
@@ -69,13 +69,35 @@ Use precise proof levels: configured, connected, tool-discovery verified, action
 
 Never upgrade one label to another without evidence.
 
+## Decision-rate classes
+
+The existing 2 ms think budget is appropriate for an in-process or external
+code-brain league, but it is not a meaningful budget for hosted LLM providers.
+
+Keep one bridge contract and define scenario-level decision profiles instead:
+
+- **realtime-code** — millisecond-scale deadline (for example the existing 2 ms
+  budget), frequent decisions, deterministic local execution;
+- **model-agent** — slower bounded decision cadence with a larger wall-clock
+  deadline; the last accepted action or a deterministic motor controller remains
+  active between decision ticks;
+- **planner+motor** — the external model chooses goals/tricks/tasks at low
+  frequency while a common deterministic motor controller executes high-rate
+  physics actions.
+
+Fairness means equal profiles within a scored class, not forcing every kind of
+provider into an impossible universal latency.
+
+Physics continues at the engine's normal rate regardless of provider latency.
+
 ## Immediate next milestone
 
 Demonstrate the out-of-process JSON brain bridge in the existing Godot sandbox:
 
 1. one external reference brain;
 2. same sense/act semantics as the in-process brain;
-3. the world-owned think deadline remains enforced;
+3. the world-owned decision deadline remains enforced (use the existing 2 ms
+   budget for the reference code-brain proof);
 4. brain failure falls back without killing the match;
 5. shared chat stays world-mediated and recorded;
 6. replay records request ID, slot, tick, action, latency, and fault class;
