@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hal.agent-world-observation.v0",
+  "title": "HAL Agent World Observation v0",
+  "type": "object",
+  "required": [
+    "episode_id",
+    "tick",
+    "agent_id",
+    "position",
+    "energy",
+    "score",
+    "visible_resources",
+    "inbox",
+    "capabilities",
+    "protocol_version"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "episode_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tick": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "agent_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "position": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "integer"
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "energy": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "score": {
+      "type": "integer"
+    },
+    "visible_resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "resource_id",
+          "position",
+          "value"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "resource_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "position": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "value": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "inbox": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from",
+          "message",
+          "sent_tick"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "from": {
+            "type": "string",
+            "minLength": 1
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 512
+          },
+          "sent_tick": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "protocol_version": {
+      "const": "hal.agent_world.v0"
+    }
+  }
+}
