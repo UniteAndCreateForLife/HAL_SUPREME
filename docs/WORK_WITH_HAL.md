@@ -126,6 +126,8 @@ Limits:
 
 For an existing AI-agent system that works but is unreliable.
 
+**Starter scope:** $249 fixed for one bounded agent/workflow: failure map, 5–10 reproducible cases, retry/idempotency/validation review, evidence/hallucination controls, observability gaps, and a prioritized repair plan. A regression-harness milestone starts at $749; implementation is scoped only after the audit.
+
 Typical first deliverable:
 - architecture and failure map;
 - reproducible failure cases;
@@ -144,6 +146,8 @@ Relevant public evidence:
 
 For teams connecting agents to tools, internal services, or replaceable providers.
 
+**Starter scope:** $299 fixed for one tool/MCP contract review: capability/schema review, auth and read/write boundary, failure/retry behavior, approval points, and recommended tests. A bounded one-tool implementation is typically $600–$1,200 after the contract review.
+
 Typical deliverable:
 - tool/MCP contract;
 - authorization boundary;
@@ -160,6 +164,8 @@ Relevant public evidence:
 
 For AI systems that must separate source evidence from model inference.
 
+**Starter scope:** $299 fixed for one evidence-contract audit: claim/evidence matrix, citation defects, unsupported-claim rejection rules, and uncertainty/conflict handling. A reproducible validation harness is typically $900–$1,800 after the audit.
+
 Typical deliverable:
 - evidence contract;
 - citation validation;
@@ -174,6 +180,8 @@ Relevant public evidence:
 ### Private/local AI architecture
 
 For workflows that need local/open models, bounded cloud fallback, or provider independence.
+
+**Starter scope:** $399 fixed for one architecture review: local/cloud routing map, privacy/egress policy, provider abstraction, failure behavior, and operating recommendations. A validated local-first implementation slice is typically $1,200–$2,500 after the review.
 
 Typical deliverable:
 - routing architecture;
