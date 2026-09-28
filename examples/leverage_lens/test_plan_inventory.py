@@ -17,7 +17,7 @@ class PlanInventoryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             path = Path(td) / "plan.md"
             path.write_text(
-                "# Test Plan\n\nOwner: HAL\nStatus: active\nCanonical WorkGraph task: task_123\n",
+                "# Test Plan\n\n**Owner:** HAL\n**Status:** active\n**Canonical WorkGraph task:** task_123\n",
                 encoding="utf-8",
             )
             item = inspect_plan(
@@ -50,6 +50,8 @@ class PlanInventoryTests(unittest.TestCase):
             result = scan_plans(root, stale_days=21, now=now)
             self.assertEqual(result["counts"]["stale"], 1)
             self.assertEqual(result["stale"], [path.as_posix()])
+            self.assertFalse(result["policy"]["mtime_is_plan_age"])
+            self.assertEqual(result["plans"][0]["age_basis"], "filesystem_mtime")
 
     def test_invalid_policy_fails_closed(self):
         with tempfile.TemporaryDirectory() as td:
