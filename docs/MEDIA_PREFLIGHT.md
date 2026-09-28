@@ -60,3 +60,7 @@ The structural/motion gate answers “is this a real, decodable moving media art
 - provenance complete.
 
 Projects may use a stricter `MediaAuditPolicy`. Missing or malformed evidence fails closed. This is the shift-left gate described by the private production pipeline: defects should be found before a long/final render, not after it.
+
+## One production gate
+
+Call `require_production_preflight(media, audit_report)` at the full-render boundary. It composes the ffprobe/container checks, HAL temporal-motion gate, and production audit evidence into one fail-closed decision. A caller cannot treat a structurally valid video as production-ready when story/picture/audio/provenance evidence is missing or failing.
