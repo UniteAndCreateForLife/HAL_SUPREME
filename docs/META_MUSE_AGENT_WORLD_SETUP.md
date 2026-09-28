@@ -68,7 +68,7 @@ python -m unittest -v tests.test_agent_world_meta_muse
 The full Agent World contract suite is:
 
 ```powershell
-python -m unittest -v tests.test_agent_world_arena tests.test_agent_world_meta_muse tests.test_agent_world_schemas
+python -m unittest -v tests.test_agent_world_arena tests.test_agent_world_meta_muse tests.test_agent_world_schemas tests.test_agent_world_session tests.test_agent_world_openai_compatible
 ```
 
 ## Live trial gate
@@ -92,3 +92,44 @@ Model API is metered. Meta currently lists separate standard and contributor
 tiers; contributor-tier inputs may be used to improve Meta products. Choose the
 tier deliberately and do not treat public-preview access as unlimited free
 compute.
+
+## Local opponent: Ollama
+
+Agent World now has a provider-neutral OpenAI-compatible adapter plus a local
+Ollama profile. This lets the same scenario run a hosted Muse worker against a
+local HAL-controlled worker without changing world semantics.
+
+Set the local model privately:
+
+```powershell
+$env:HAL_AGENT_WORLD_LOCAL_MODEL = "<installed Ollama model>"
+```
+
+The default local endpoint is:
+
+```text
+http://127.0.0.1:11434/v1
+```
+
+Override it only when needed:
+
+```powershell
+$env:HAL_AGENT_WORLD_LOCAL_BASE_URL = "http://127.0.0.1:11434/v1"
+```
+
+The bounded cross-provider canary refuses to call providers unless `--live`
+is supplied:
+
+```powershell
+python scripts/agent_world_cross_provider_canary.py --max-steps 4
+```
+
+After the private Meta key and local model are configured and the live run is
+explicitly approved:
+
+```powershell
+python scripts/agent_world_cross_provider_canary.py --live --max-steps 4 --output evidence/private/agent_world_cross_provider_canary.json
+```
+
+The output path above is intentionally private/local. Do not commit provider
+credentials, raw private prompts, or private runtime metadata.
