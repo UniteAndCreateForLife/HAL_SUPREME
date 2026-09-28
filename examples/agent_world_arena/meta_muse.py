@@ -76,6 +76,8 @@ class MetaMuseAdapter:
     model: str = "muse-spark-1.3"
     base_url: str = "https://api.meta.ai/v1"
     timeout_seconds: float = 30.0
+    max_completion_tokens: int = 256
+    reasoning_effort: str = "low"
     transport: JSONTransport | None = None
 
     def __post_init__(self) -> None:
@@ -83,6 +85,10 @@ class MetaMuseAdapter:
             raise ValueError("Meta Model API key is required")
         if self.timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive")
+        if self.max_completion_tokens < 1:
+            raise ValueError("max_completion_tokens must be positive")
+        if self.reasoning_effort not in {"minimal", "low", "medium", "high", "xhigh"}:
+            raise ValueError("unsupported reasoning_effort")
         if self.transport is None:
             self.transport = UrllibJSONTransport()
         self.provider = ProviderDescriptor(
@@ -99,6 +105,8 @@ class MetaMuseAdapter:
         model: str = "muse-spark-1.3",
         base_url: str = "https://api.meta.ai/v1",
         timeout_seconds: float = 30.0,
+        max_completion_tokens: int = 256,
+        reasoning_effort: str = "low",
         transport: JSONTransport | None = None,
     ) -> "MetaMuseAdapter":
         api_key = os.environ.get("MODEL_API_KEY", "")
@@ -109,6 +117,8 @@ class MetaMuseAdapter:
             model=model,
             base_url=base_url,
             timeout_seconds=timeout_seconds,
+            max_completion_tokens=max_completion_tokens,
+            reasoning_effort=reasoning_effort,
             transport=transport,
         )
 
@@ -134,6 +144,8 @@ class MetaMuseAdapter:
                 },
             ],
             "response_format": _ACTION_SCHEMA,
+            "max_completion_tokens": self.max_completion_tokens,
+            "reasoning_effort": self.reasoning_effort,
         }
 
         assert self.transport is not None
