@@ -311,3 +311,38 @@ def require_media_preflight(
         "structural": structural,
         "motion": motion,
     }
+
+
+def require_production_preflight(
+    media: Path,
+    audit_report: Mapping[str, Any],
+    *,
+    audit_policy: MediaAuditPolicy | None = None,
+    min_duration_s: float = 0.25,
+    min_width: int = 320,
+    min_height: int = 180,
+    min_fps: float = 12.0,
+    require_audio: bool = True,
+    probe_runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+    motion_checker: Callable[[Path], dict[str, Any]] = require_temporal_motion,
+) -> dict[str, Any]:
+    """Require both media integrity/motion and production audit evidence."""
+    media_evidence = require_media_preflight(
+        media,
+        min_duration_s=min_duration_s,
+        min_width=min_width,
+        min_height=min_height,
+        min_fps=min_fps,
+        require_audio=require_audio,
+        probe_runner=probe_runner,
+        motion_checker=motion_checker,
+    )
+    audit_evidence = require_audit_preflight(audit_report, audit_policy)
+    return {
+        "schema": "hal.production_preflight.v1",
+        "authority": "DERIVED_ACCEPTANCE_EVIDENCE",
+        "media": str(Path(media)),
+        "passed": True,
+        "media_evidence": media_evidence,
+        "audit_evidence": audit_evidence,
+    }
