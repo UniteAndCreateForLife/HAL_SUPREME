@@ -1,0 +1,40 @@
+name: Agent World Arena
+
+on:
+  push:
+    paths:
+      - "examples/agent_world_arena/**"
+      - "tests/test_agent_world_arena.py"
+      - "docs/MUSE_AGENT_WORLD_PROMPT.md"
+      - ".github/workflows/agent-world-arena.yml"
+  pull_request:
+    paths:
+      - "examples/agent_world_arena/**"
+      - "tests/test_agent_world_arena.py"
+      - "docs/MUSE_AGENT_WORLD_PROMPT.md"
+      - ".github/workflows/agent-world-arena.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  contract-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile reference kernel
+        run: |
+          python -m py_compile \
+            examples/agent_world_arena/__init__.py \
+            examples/agent_world_arena/protocol.py \
+            examples/agent_world_arena/sim.py \
+            tests/test_agent_world_arena.py
+
+      - name: Run Agent World contract tests
+        run: python -m unittest -v tests.test_agent_world_arena
