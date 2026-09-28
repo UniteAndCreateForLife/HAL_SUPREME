@@ -6,34 +6,9 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
-import sys
-import time
-from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_URL = "http://127.0.0.1:8765/mcp"
-
-
-def wait_for_server(url: str, *, timeout_seconds: float = 20.0) -> None:
-    deadline = time.monotonic() + timeout_seconds
-    last_error: Exception | None = None
-
-    while time.monotonic() < deadline:
-        try:
-            request = Request(url, method="GET")
-            with urlopen(request, timeout=1.0):
-                return
-        except HTTPError as exc:
-            if 400 <= exc.code < 600:
-                return
-            last_error = exc
-        except (URLError, TimeoutError, OSError) as exc:
-            last_error = exc
-        time.sleep(0.25)
-
-    raise RuntimeError(f"Agent World MCP listener did not become reachable: {last_error}")
 
 
 def muse_binary() -> str:
@@ -53,10 +28,10 @@ def run_muse_probe(
     max_model_steps: int,
 ) -> subprocess.CompletedProcess[str]:
     prompt = (
-        "Use the MCP server named hal-agent-world. "
-        "Call its list_episodes tool exactly once. "
-        "Do not create or advance an episode. "
-        "Return a concise statement confirming the tool result."
+        "Use only the MCP server named hal-agent-world. "
+        "Discover its tools and invoke the read-only tool that lists current "
+        "Agent World episodes exactly once. Do not create, submit, advance, or "
+        "modify any episode. After the tool returns, report the number of episodes."
     )
     return subprocess.run(
         [
@@ -76,23 +51,30 @@ def run_muse_probe(
         stderr=subprocess.STDOUT,
         timeout=180,
         check=False,
+        env=os.environ.copy(),
     )
 
 
-def output_mentions_expected_tool(output: str) -> bool:
-    return "list_episodes" in output and "hal-agent-world" in output
+def jsonl_has_tool_call(output: str, tool_name: str) -> bool:
+    for line in output.splitlines():
+        try:
+            payload = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        rendered = json.dumps(payload, sort_keys=True).lower()
+        if tool_name.lower() in rendered and (
+            "tool" in rendered or "mcp" in rendered
+        ):
+            return True
+    return False
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
-            "End-to-end smoke test: local Agent World MCP server -> Muse Code -> "
-            "Agent World list_episodes tool."
+            "Authenticated Muse Code -> HAL Agent World MCP smoke test. "
+            "Muse should launch the required stdio MCP server from its settings."
         )
-    )
-    parser.add_argument(
-        "--url",
-        default=os.environ.get("HAL_AGENT_WORLD_MCP_URL", DEFAULT_URL),
     )
     parser.add_argument(
         "--max-model-steps",
@@ -101,75 +83,39 @@ def main() -> int:
         choices=range(1, 9),
         metavar="1..8",
     )
-    parser.add_argument(
-        "--no-start-server",
-        action="store_true",
-        help="Use an already-running Agent World MCP server.",
-    )
     args = parser.parse_args()
 
-    os.environ["HAL_AGENT_WORLD_MCP_URL"] = args.url
     muse = muse_binary()
+    result = run_muse_probe(
+        muse,
+        workspace=REPO_ROOT,
+        max_model_steps=args.max_model_steps,
+    )
+    print(result.stdout)
 
-    server: subprocess.Popen[str] | None = None
-    try:
-        if not args.no_start_server:
-            server = subprocess.Popen(
-                [
-                    sys.executable,
-                    "-m",
-                    "examples.agent_world_arena.mcp_server",
-                    "--transport",
-                    "streamable-http",
-                    "--host",
-                    "127.0.0.1",
-                    "--port",
-                    "8765",
-                ],
-                cwd=REPO_ROOT,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-            )
-        wait_for_server(args.url)
-
-        result = run_muse_probe(
-            muse,
-            workspace=REPO_ROOT,
-            max_model_steps=args.max_model_steps,
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"Muse MCP probe failed with exit code {result.returncode}"
         )
-        print(result.stdout)
-
-        if result.returncode != 0:
-            raise RuntimeError(
-                f"Muse MCP probe failed with exit code {result.returncode}"
-            )
-        if not output_mentions_expected_tool(result.stdout):
-            raise RuntimeError(
-                "Muse completed, but the JSONL transcript did not contain both "
-                "'hal-agent-world' and 'list_episodes'. Inspect the output above."
-            )
-
-        print(
-            json.dumps(
-                {
-                    "schema": "hal.agent_world.muse_mcp_smoke.v0",
-                    "status": "pass",
-                    "server": "hal-agent-world",
-                    "tool": "list_episodes",
-                    "url": args.url,
-                },
-                indent=2,
-            )
+    if not jsonl_has_tool_call(result.stdout, "list_episodes"):
+        raise RuntimeError(
+            "Muse completed, but no JSONL MCP/tool event referenced list_episodes. "
+            "Run /mcp interactively and inspect the transcript above."
         )
-        return 0
-    finally:
-        if server is not None and server.poll() is None:
-            server.terminate()
-            try:
-                server.wait(timeout=5)
-            except subprocess.TimeoutExpired:
-                server.kill()
+
+    print(
+        json.dumps(
+            {
+                "schema": "hal.agent_world.muse_mcp_smoke.v1",
+                "status": "pass",
+                "server": "hal-agent-world",
+                "tool": "list_episodes",
+                "transport": "stdio",
+            },
+            indent=2,
+        )
+    )
+    return 0
 
 
 if __name__ == "__main__":
