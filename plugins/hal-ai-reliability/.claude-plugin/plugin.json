@@ -1,0 +1,24 @@
+{
+  "name": "hal-ai-reliability",
+  "version": "0.1.0",
+  "description": "Evidence-driven workflows for auditing AI agents, MCP tools, citations, and local-first AI architecture.",
+  "author": {
+    "name": "UniteAndCreateForLife",
+    "url": "https://github.com/UniteAndCreateForLife"
+  },
+  "homepage": "https://github.com/UniteAndCreateForLife/HAL_SUPREME",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UniteAndCreateForLife/HAL_SUPREME.git",
+    "directory": "plugins/hal-ai-reliability"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "ai-agents",
+    "mcp",
+    "reliability",
+    "evaluation",
+    "citations",
+    "local-ai"
+  ]
+}
