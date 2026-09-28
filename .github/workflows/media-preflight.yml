@@ -1,0 +1,36 @@
+name: media-preflight
+
+on:
+  push:
+    paths:
+      - "qc/media_preflight.py"
+      - "tests/test_media_preflight.py"
+      - "docs/MEDIA_PREFLIGHT.md"
+      - ".github/workflows/media-preflight.yml"
+  pull_request:
+    paths:
+      - "qc/media_preflight.py"
+      - "tests/test_media_preflight.py"
+      - "docs/MEDIA_PREFLIGHT.md"
+      - ".github/workflows/media-preflight.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  focused-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.12"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Run media preflight tests
+        run: python -m unittest -v tests.test_media_preflight
+      - name: Compile
+        run: python -m py_compile qc/media_preflight.py tests/test_media_preflight.py
