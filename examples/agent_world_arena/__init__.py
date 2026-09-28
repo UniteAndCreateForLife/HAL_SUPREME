@@ -2,6 +2,7 @@
 
 from .a2a_card import A2A_PROTOCOL_VERSION, build_agent_world_a2a_card
 from .adapters import AgentAdapter, ScriptedAdapter
+from .brain_bridge import BrainRequest, BrainResponse, BRIDGE_PROTOCOL_VERSION
 from .conformance import ConformanceReceipt, run_adapter_conformance
 from .http_action_adapter import OpenAICompatibleActionAdapter
 from .meta_muse import MetaMuseAdapter
@@ -27,6 +28,9 @@ __all__ = [
     "OllamaActionAdapter",
     "AgentAdapter",
     "ScriptedAdapter",
+    "BrainRequest",
+    "BrainResponse",
+    "BRIDGE_PROTOCOL_VERSION",
     "ConformanceReceipt",
     "run_adapter_conformance",
     "EpisodeRunner",
