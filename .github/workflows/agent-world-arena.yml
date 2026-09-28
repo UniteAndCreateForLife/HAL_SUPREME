@@ -12,6 +12,8 @@ on:
       - "tests/test_agent_world_openai_compatible.py"
       - "tests/test_agent_world_service.py"
       - "tests/test_agent_world_interop.py"
+      - "tests/test_agent_world_mcp_server.py"
+      - "tests/test_agent_world_mcp_server.py"
       - "tests/test_agent_world_interop.py"
       - "tests/test_agent_world_service.py"
       - "tests/test_agent_world_openai_compatible.py"
@@ -42,6 +44,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install MCP SDK v2
+        run: python -m pip install "mcp>=2,<3"
+
       - name: Compile reference kernel
         run: |
           python -m py_compile \
@@ -59,6 +64,12 @@ jobs:
             examples/agent_world_arena/runner.py \
             examples/agent_world_arena/service.py \
             examples/agent_world_arena/mcp_server.py \
+            examples/agent_world_arena/a2a_card.py \
+            examples/agent_world_arena/participant.py \
+            examples/agent_world_arena/integrations/openai_agents_mcp.py \
+            examples/agent_world_arena/integrations/autogen_mcp.py \
+            examples/agent_world_arena/integrations/langchain_mcp.py \
+            examples/agent_world_arena/integrations/crewai_stdio.py \
             examples/agent_world_arena/session.py \
             tests/test_agent_world_arena.py \
             tests/test_agent_world_meta_muse.py \
@@ -67,8 +78,9 @@ jobs:
             tests/test_agent_world_openai_compatible.py \
             tests/test_agent_world_service.py \
             tests/test_agent_world_interop.py \
+            tests/test_agent_world_mcp_server.py \
             scripts/agent_world_meta_canary.py \
             scripts/agent_world_cross_provider_canary.py
 
       - name: Run Agent World contract tests
-        run: python -m unittest -v tests.test_agent_world_arena tests.test_agent_world_meta_muse tests.test_agent_world_schemas tests.test_agent_world_session tests.test_agent_world_openai_compatible tests.test_agent_world_service tests.test_agent_world_interop
+        run: python -m unittest -v tests.test_agent_world_arena tests.test_agent_world_meta_muse tests.test_agent_world_schemas tests.test_agent_world_session tests.test_agent_world_openai_compatible tests.test_agent_world_service tests.test_agent_world_interop tests.test_agent_world_mcp_server
