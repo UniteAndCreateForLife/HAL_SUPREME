@@ -6,6 +6,10 @@ on:
       - main
       - "codex/public-work-portfolio"
     paths:
+      - "AGENTS.md"
+      - "CLAUDE.md"
+      - ".opencode/**"
+      - "docs/AGENT_ENGINEERING_FABRIC.md"
       - "PORTFOLIO.md"
       - "README.md"
       - "case-studies/**"
@@ -22,6 +26,10 @@ on:
     branches:
       - main
     paths:
+      - "AGENTS.md"
+      - "CLAUDE.md"
+      - ".opencode/**"
+      - "docs/AGENT_ENGINEERING_FABRIC.md"
       - "PORTFOLIO.md"
       - "README.md"
       - "case-studies/**"

@@ -10,8 +10,12 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PORTFOLIO_PATH = REPO_ROOT / "portfolio" / "portfolio.json"
 PUBLIC_TEXT_PATHS = (
+    REPO_ROOT / "AGENTS.md",
+    REPO_ROOT / "CLAUDE.md",
+    REPO_ROOT / ".opencode",
     REPO_ROOT / "PORTFOLIO.md",
     REPO_ROOT / "case-studies",
+    REPO_ROOT / "docs" / "AGENT_ENGINEERING_FABRIC.md",
     REPO_ROOT / "docs" / "PUBLIC_WORK_LOG.md",
     REPO_ROOT / "docs" / "PUBLIC_WORK_POLICY.md",
     REPO_ROOT / "docs" / "WORK_WITH_HAL.md",
