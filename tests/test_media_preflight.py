@@ -169,6 +169,11 @@ class ProductionAuditPreflightTests(unittest.TestCase):
         self.assertIn("picture", failures)
         self.assertIn("audio", failures)
 
+    def test_negative_picture_failure_count_is_invalid(self):
+        audits = good_audits()
+        audits["picture"]["failed_shots"] = -1
+        self.assertIn("picture", evaluate_audit_evidence(audits)["failures"])
+
     def test_story_and_provenance_fail_closed(self):
         audits = good_audits()
         audits["story"]["blind_viewer_pass"] = False
