@@ -7,6 +7,8 @@ on:
       - "tests/test_agent_world_arena.py"
       - "tests/test_agent_world_meta_muse.py"
       - "tests/test_agent_world_meta_muse.py"
+      - "tests/test_agent_world_schemas.py"
+      - "schemas/agent_world_*_v0.schema.json"
       - "docs/MUSE_AGENT_WORLD_PROMPT.md"
       - ".github/workflows/agent-world-arena.yml"
   pull_request:
@@ -41,7 +43,8 @@ jobs:
             examples/agent_world_arena/runner.py \
             examples/agent_world_arena/meta_muse.py \
             tests/test_agent_world_arena.py \
-            tests/test_agent_world_meta_muse.py
+            tests/test_agent_world_meta_muse.py \
+            tests/test_agent_world_schemas.py
 
       - name: Run Agent World contract tests
-        run: python -m unittest -v tests.test_agent_world_arena tests.test_agent_world_meta_muse
+        run: python -m unittest -v tests.test_agent_world_arena tests.test_agent_world_meta_muse tests.test_agent_world_schemas
