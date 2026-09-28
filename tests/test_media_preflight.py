@@ -195,7 +195,7 @@ class ProductionAuditPreflightTests(unittest.TestCase):
             return subprocess.CompletedProcess(
                 args[0],
                 0,
-                stdout=json.dumps(probe_payload()),
+                stdout=json.dumps(good_probe()),
                 stderr="",
             )
 
@@ -219,7 +219,7 @@ class ProductionAuditPreflightTests(unittest.TestCase):
             return subprocess.CompletedProcess(
                 args[0],
                 0,
-                stdout=json.dumps(probe_payload()),
+                stdout=json.dumps(good_probe()),
                 stderr="",
             )
 
