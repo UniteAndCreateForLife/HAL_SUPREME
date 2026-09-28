@@ -42,13 +42,15 @@ jobs:
             examples/agent_world_arena/sim.py \
             examples/agent_world_arena/scenario.py \
             examples/agent_world_arena/adapters.py \
+            examples/agent_world_arena/baselines.py \
             examples/agent_world_arena/runner.py \
             examples/agent_world_arena/session.py \
             examples/agent_world_arena/meta_muse.py \
             tests/test_agent_world_arena.py \
             tests/test_agent_world_meta_muse.py \
             tests/test_agent_world_schemas.py \
-            tests/test_agent_world_session.py
+            tests/test_agent_world_session.py \
+            scripts/agent_world_meta_canary.py
 
       - name: Run Agent World contract tests
         run: python -m unittest -v tests.test_agent_world_arena tests.test_agent_world_meta_muse tests.test_agent_world_schemas tests.test_agent_world_session
