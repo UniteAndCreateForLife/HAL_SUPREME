@@ -72,6 +72,8 @@ class MetaMuseAdapterTests(unittest.TestCase):
             transport.calls[0]["headers"]["Authorization"],
             "Bearer test-secret",
         )
+        self.assertEqual(transport.calls[0]["payload"]["max_completion_tokens"], 256)
+        self.assertEqual(transport.calls[0]["payload"]["reasoning_effort"], "low")
 
     def test_secret_is_not_in_provider_descriptor_or_repr(self) -> None:
         adapter = MetaMuseAdapter(
