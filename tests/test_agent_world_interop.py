@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 import unittest
+from pathlib import Path
 
 from examples.agent_world_arena.a2a_card import (
     A2A_PROTOCOL_VERSION,
@@ -10,6 +12,9 @@ from examples.agent_world_arena.participant import (
     ParticipantManifest,
     negotiate_capabilities,
 )
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 class AgentWorldInteropTests(unittest.TestCase):
@@ -32,6 +37,23 @@ class AgentWorldInteropTests(unittest.TestCase):
             build_agent_world_a2a_card(
                 public_base_url="http://example.com",
             )
+
+    def test_portable_plugin_exposes_only_loopback_agent_world_mcp(self) -> None:
+        plugin = json.loads(
+            (REPO_ROOT / "plugins" / "agent-world-mcp" / "plugin.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        mcp = json.loads(
+            (REPO_ROOT / "plugins" / "agent-world-mcp" / "mcp.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(plugin["name"], "hal-agent-world-mcp")
+        server = mcp["mcpServers"]["hal-agent-world"]
+        self.assertEqual(server["type"], "streamable-http")
+        self.assertEqual(server["url"], "http://127.0.0.1:8765/mcp")
+        self.assertNotIn("headers", server)
 
     def test_participant_manifest_rejects_secret_like_metadata(self) -> None:
         participant = ParticipantManifest(
