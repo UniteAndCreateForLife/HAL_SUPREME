@@ -60,15 +60,16 @@ Adapters translate the common contract to a provider runtime.
 Current public branch:
 
 - deterministic scripted baseline;
-- Meta Muse / Meta Model API adapter;
+- reusable OpenAI-compatible action adapter;
+- Meta Muse / Meta Model API profile;
+- local Ollama / HAL-local profile;
 - common adapter protocol;
 - provider failure isolation;
-- seeded provider-to-slot randomization.
+- seeded provider-to-slot randomization;
+- explicit live-gated Muse-vs-local canary.
 
 Planned adapters:
 
-- HAL local models;
-- generic OpenAI-compatible endpoints;
 - local Muse Glimmer;
 - additional hosted providers;
 - coding-agent/MCP entrants.
@@ -167,8 +168,9 @@ persistent, provider-neutral world with reproducible evidence.
 
 The public development branch contains the deterministic core, scenario
 manifest, provider slot randomization, simultaneous-action session coordinator,
-JSON interoperability schemas, Meta Muse adapter, failure containment tests and
-a dedicated CI workflow.
+JSON interoperability schemas, a reusable OpenAI-compatible adapter, Meta Muse
+and local Ollama profiles, explicit live-gated canaries, failure containment
+tests and a dedicated CI workflow.
 
 No claim is made yet that a live Muse provider run or Godot 3D bridge has been
 completed. Those are the next proof gates.
