@@ -22,6 +22,8 @@ on:
       - "tests/test_agent_world_session.py"
       - "schemas/agent_world_*_v0.schema.json"
       - "scripts/agent_world_*.py"
+      - "plugins/agent-world-mcp/**"
+      - "plugins/agent-world-mcp/**"
       - "scripts/agent_world_*.py"
       - "docs/MUSE_AGENT_WORLD_PROMPT.md"
       - ".github/workflows/agent-world-arena.yml"
