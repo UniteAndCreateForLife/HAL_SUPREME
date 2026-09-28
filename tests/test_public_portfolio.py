@@ -7,6 +7,14 @@ from pathlib import Path
 from scripts.validate_public_portfolio import PORTFOLIO_PATH, REPO_ROOT, _iter_public_text_files, validate
 
 OFFER_PAGES = ("docs/WORK_WITH_HAL.md", "docs/samples/code-health-check-sample.md")
+AGENT_SURFACES = (
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".opencode/agents/hal-reviewer.md",
+    ".opencode/agents/hal-verifier.md",
+    ".opencode/commands/hal-fix.md",
+    "docs/AGENT_ENGINEERING_FABRIC.md",
+)
 
 
 class PublicPortfolioTests(unittest.TestCase):
@@ -18,6 +26,16 @@ class PublicPortfolioTests(unittest.TestCase):
     def test_offer_page_changes_trigger_the_workflow(self) -> None:
         workflow = (REPO_ROOT / ".github" / "workflows" / "public-portfolio.yml").read_text(encoding="utf-8")
         for trigger in ('"docs/WORK_WITH_HAL.md"', '"docs/samples/**"'):
+            self.assertEqual(workflow.count(trigger), 2, f"{trigger} must be in both push and pull_request paths")
+
+    def test_agent_instruction_surfaces_are_scanned(self) -> None:
+        scanned = {path.relative_to(REPO_ROOT).as_posix() for path in _iter_public_text_files()}
+        for page in AGENT_SURFACES:
+            self.assertIn(page, scanned)
+
+    def test_agent_surface_changes_trigger_the_workflow(self) -> None:
+        workflow = (REPO_ROOT / ".github" / "workflows" / "public-portfolio.yml").read_text(encoding="utf-8")
+        for trigger in ('"AGENTS.md"', '"CLAUDE.md"', '".opencode/**"', '"docs/AGENT_ENGINEERING_FABRIC.md"'):
             self.assertEqual(workflow.count(trigger), 2, f"{trigger} must be in both push and pull_request paths")
 
     def test_public_portfolio_passes_evidence_and_secret_gate(self) -> None:
