@@ -103,7 +103,33 @@ def rank_tasks(tasks: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
     )
 
 
-def build_projection(tasks: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
+def select_focus(
+    tasks: Iterable[Mapping[str, Any]], wip_limit: int = 3
+) -> dict[str, Any]:
+    """Return a bounded focus set without changing task state."""
+    if isinstance(wip_limit, bool) or not isinstance(wip_limit, int) or wip_limit < 1:
+        raise LeverageInputError("wip_limit must be an integer >= 1")
+    ranked = rank_tasks(tasks)
+    unblocked = [row for row in ranked if not row["blocked"]]
+    blocked = [row for row in ranked if row["blocked"]]
+    focus = unblocked[:wip_limit]
+    deferred = unblocked[wip_limit:]
+    return {
+        "wip_limit": wip_limit,
+        "candidate_count": len(ranked),
+        "unblocked_count": len(unblocked),
+        "blocked_count": len(blocked),
+        "over_capacity": len(unblocked) > wip_limit,
+        "focus": focus,
+        "deferred": deferred,
+        "blocked": blocked,
+    }
+
+
+def build_projection(
+    tasks: Iterable[Mapping[str, Any]], wip_limit: int = 3
+) -> dict[str, Any]:
+    task_list = list(tasks)
     return {
         "schema": SCHEMA,
         "authority": AUTHORITY,
@@ -112,7 +138,8 @@ def build_projection(tasks: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
             "execution_factor": "max(0.50, 1 - 0.07*effort - 0.03*risk)",
             "bands": {"NOW": ">=70", "NEXT": ">=50", "LATER": "<50", "BLOCKED": "human/dependency blocked"},
         },
-        "tasks": rank_tasks(tasks),
+        "tasks": rank_tasks(task_list),
+        "focus": select_focus(task_list, wip_limit=wip_limit),
     }
 
 
@@ -131,9 +158,15 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Rank proposed HAL work without mutating canonical state.")
     parser.add_argument("input", type=Path, help="JSON list of proposed tasks")
     parser.add_argument("--output", type=Path)
+    parser.add_argument(
+        "--wip-limit",
+        type=int,
+        default=3,
+        help="Maximum number of unblocked tasks in the derived focus set (default: 3)",
+    )
     args = parser.parse_args()
 
-    projection = build_projection(_load_tasks(args.input))
+    projection = build_projection(_load_tasks(args.input), wip_limit=args.wip_limit)
     encoded = json.dumps(projection, indent=2, sort_keys=True)
     if args.output:
         args.output.write_text(encoded + "\n", encoding="utf-8")
