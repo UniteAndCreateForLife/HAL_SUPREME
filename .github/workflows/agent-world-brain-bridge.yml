@@ -5,8 +5,14 @@ on:
     paths:
       - "examples/agent_world_arena/brain_bridge.py"
       - "examples/agent_world_arena/brain_bridge_stdio.py"
+      - "examples/agent_world_arena/brain_bridge_tcp.py"
+      - "examples/agent_world_arena/brain_bridge_ollama_worker.py"
+      - "examples/agent_world_arena/brain_bridge_tcp.py"
+      - "examples/agent_world_arena/brain_bridge_ollama_worker.py"
       - "tests/test_agent_world_brain_bridge.py"
       - "tests/test_agent_world_brain_bridge_stdio.py"
+      - "tests/test_agent_world_brain_bridge_ollama.py"
+      - "tests/test_agent_world_brain_bridge_ollama.py"
       - "schemas/agent_world_brain_*_v0.schema.json"
       - "docs/AGENT_WORLD_BRAIN_BRIDGE.md"
       - "docs/ai_sandbox.md"
@@ -38,9 +44,13 @@ jobs:
         run: |
           python -m py_compile examples/agent_world_arena/brain_bridge.py
           python -m py_compile examples/agent_world_arena/brain_bridge_stdio.py
+          python -m py_compile examples/agent_world_arena/brain_bridge_tcp.py
+          python -m py_compile examples/agent_world_arena/brain_bridge_ollama_worker.py
           python -m py_compile tests/test_agent_world_brain_bridge.py
           python -m py_compile tests/test_agent_world_brain_bridge_stdio.py
+          python -m py_compile tests/test_agent_world_brain_bridge_ollama.py
       - name: Run bridge tests
         run: |
           python -m unittest -v tests.test_agent_world_brain_bridge
           python -m unittest -v tests.test_agent_world_brain_bridge_stdio
+          python -m unittest -v tests.test_agent_world_brain_bridge_ollama
