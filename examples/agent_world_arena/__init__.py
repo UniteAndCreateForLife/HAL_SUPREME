@@ -1,7 +1,9 @@
 """Provider-neutral multi-agent simulation contracts for HAL Agent World Arena."""
 
 from .adapters import AgentAdapter, ScriptedAdapter
+from .http_action_adapter import OpenAICompatibleActionAdapter
 from .meta_muse import MetaMuseAdapter
+from .ollama_local import OllamaActionAdapter
 from .protocol import Action, Observation, ProviderDescriptor, PROTOCOL_VERSION
 from .runner import EpisodeRunner, assign_providers, build_arena
 from .scenario import AgentSlot, ResourceSpec, ScenarioManifest
@@ -14,6 +16,8 @@ __all__ = [
     "ProviderDescriptor",
     "PROTOCOL_VERSION",
     "MetaMuseAdapter",
+    "OpenAICompatibleActionAdapter",
+    "OllamaActionAdapter",
     "AgentAdapter",
     "ScriptedAdapter",
     "EpisodeRunner",
