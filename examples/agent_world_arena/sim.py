@@ -27,6 +27,12 @@ class ArenaConfig:
             raise ValueError("max_ticks and max_agents must be positive")
         if self.starting_energy < 0:
             raise ValueError("starting_energy cannot be negative")
+        if min(self.move_cost, self.gather_cost, self.say_cost) < 0:
+            raise ValueError("action costs cannot be negative")
+        if self.sight_radius < 0:
+            raise ValueError("sight_radius cannot be negative")
+        if self.max_message_chars < 1:
+            raise ValueError("max_message_chars must be positive")
         if self.mode not in {"compete", "cooperate", "hybrid", "sandbox"}:
             raise ValueError("unsupported arena mode")
 
@@ -111,8 +117,9 @@ class Arena:
                         "value": resource.value,
                     }
                 )
+        # Observation is intentionally pure. Reading the world must never mutate
+        # canonical simulation state or make replays depend on poll timing.
         inbox = tuple(dict(item) for item in agent.inbox)
-        agent.inbox.clear()
         return Observation(
             episode_id=self.episode_id,
             tick=self.tick,
