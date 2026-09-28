@@ -68,3 +68,7 @@ python -m examples.leverage_lens.plan_inventory docs/exec-plans/active --wip-lim
 ```
 
 It reports active-plan count, missing Status fields, missing WorkGraph linkage, age/staleness, and derived warnings. It never archives, renames, edits, or releases a plan/task.
+
+## Outcome feedback
+
+`outcome_metrics.py` closes the loop after work runs. It reports accepted rate, verification pass rate, session-visibility-loss rate, reusable-artifact rate, external-outcome rate, attempts/human-interventions/time per accepted run, and false-success count. The leverage score is an intake aid; these observed outcomes determine whether the system is actually improving.
