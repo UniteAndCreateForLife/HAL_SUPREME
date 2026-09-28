@@ -59,7 +59,7 @@ class AgentWorldConformanceTests(unittest.TestCase):
 
     def test_integration_registry_never_claims_live_proof_for_smoke_entries(self) -> None:
         payload = json.loads(REGISTRY.read_text(encoding="utf-8"))
-        allowed = {"contract-tested", "smoke-workflow", "card-contract-tested"}
+        allowed = {"contract-tested", "smoke-workflow", "card-contract-tested", "config-prepared"}
         for integration in payload["integrations"]:
             self.assertIn(integration["proof_status"], allowed)
             self.assertNotEqual(integration["proof_status"], "production-verified")
