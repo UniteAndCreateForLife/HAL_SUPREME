@@ -13,6 +13,8 @@ on:
       - "tests/test_agent_world_openai_compatible.py"
       - "tests/test_agent_world_session.py"
       - "schemas/agent_world_*_v0.schema.json"
+      - "scripts/agent_world_*.py"
+      - "scripts/agent_world_*.py"
       - "docs/MUSE_AGENT_WORLD_PROMPT.md"
       - ".github/workflows/agent-world-arena.yml"
   pull_request:
@@ -55,7 +57,8 @@ jobs:
             tests/test_agent_world_schemas.py \
             tests/test_agent_world_session.py \
             tests/test_agent_world_openai_compatible.py \
-            scripts/agent_world_meta_canary.py
+            scripts/agent_world_meta_canary.py \
+            scripts/agent_world_cross_provider_canary.py
 
       - name: Run Agent World contract tests
         run: python -m unittest -v tests.test_agent_world_arena tests.test_agent_world_meta_muse tests.test_agent_world_schemas tests.test_agent_world_session tests.test_agent_world_openai_compatible
