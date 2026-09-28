@@ -98,6 +98,28 @@ class AgentWorldBrainBridgeTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             response.validate_against(request)
 
+    def test_game_token_fields_are_allowed_when_they_are_not_credentials(self) -> None:
+        request = BrainRequest(
+            request_id="req-token-game",
+            episode_id="episode-1",
+            tick=0,
+            slot_id="slot-a",
+            deadline_ms=2,
+            allowed_actions=("idle",),
+            observation={"token_count": 4, "tokens": [{"entity_id": "game-token-1"}]},
+        )
+        request.validate()
+
+        response = BrainResponse(
+            request_id=request.request_id,
+            episode_id=request.episode_id,
+            tick=request.tick,
+            slot_id=request.slot_id,
+            action={"kind": "idle"},
+            diagnostics={"input_token_count": 120, "output_token_count": 8},
+        )
+        response.validate_against(request)
+
     def test_world_prompt_injection_text_is_data_not_schema(self) -> None:
         request = self.request()
         rendered = request.to_dict()
