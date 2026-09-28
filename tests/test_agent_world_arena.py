@@ -2,7 +2,18 @@ from __future__ import annotations
 
 import unittest
 
-from examples.agent_world_arena import Action, Arena, ArenaConfig
+from examples.agent_world_arena import (
+    Action,
+    AgentSlot,
+    Arena,
+    ArenaConfig,
+    EpisodeRunner,
+    ProviderDescriptor,
+    ScenarioManifest,
+    ScriptedAdapter,
+    assign_providers,
+    build_arena,
+)
 
 
 class AgentWorldArenaTests(unittest.TestCase):
@@ -21,6 +32,20 @@ class AgentWorldArenaTests(unittest.TestCase):
             return receipt["state_sha256"]
 
         self.assertEqual(run_once(), run_once())
+
+    def test_observation_is_pure_and_does_not_change_state(self) -> None:
+        arena = Arena(ArenaConfig(max_ticks=3), episode_id="pure-observe")
+        arena.register_agent("muse", "meta-muse", position=(0, 0))
+        arena.register_agent("hal", "hal", position=(1, 0))
+        arena.step({"muse": Action("say", target="hal", message="hello")})
+
+        before = arena.state_payload()
+        first = arena.observe("hal")
+        second = arena.observe("hal")
+        after = arena.state_payload()
+
+        self.assertEqual(first.inbox, second.inbox)
+        self.assertEqual(before, after)
 
     def test_agents_can_communicate_without_direct_provider_connections(self) -> None:
         arena = Arena(ArenaConfig(max_ticks=3), episode_id="comms")
@@ -57,6 +82,42 @@ class AgentWorldArenaTests(unittest.TestCase):
         self.assertEqual(arena.observe("a").inbox, ())
         self.assertEqual(arena.observe("b").inbox[0]["message"], "team up")
         self.assertEqual(arena.observe("c").inbox[0]["message"], "team up")
+
+    def test_provider_to_slot_assignment_is_reproducible(self) -> None:
+        providers = ["muse", "hal", "provider-c", "provider-d"]
+        slots = ["s0", "s1", "s2", "s3"]
+
+        first = assign_providers(providers, slots, seed=77)
+        second = assign_providers(list(reversed(providers)), slots, seed=77)
+
+        self.assertEqual(first, second)
+        self.assertEqual(set(first), set(slots))
+        self.assertEqual(set(first.values()), set(providers))
+
+    def test_runner_contains_provider_failures(self) -> None:
+        manifest = ScenarioManifest(
+            scenario_id="failure-boundary",
+            seed=1,
+            width=4,
+            height=4,
+            max_ticks=1,
+            mode="sandbox",
+            slots=(AgentSlot("slot-a", (0, 0)),),
+        )
+        arena, assignment = build_arena(manifest, ["provider-a"])
+        provider_id = assignment["slot-a"]
+
+        def broken_policy(_observation):
+            raise RuntimeError("SECRET SHOULD NOT LEAK")
+
+        adapter = ScriptedAdapter(
+            provider=ProviderDescriptor(provider_id=provider_id, model="test"),
+            policy=broken_policy,
+        )
+        receipt = EpisodeRunner(arena, {provider_id: adapter}).step()
+
+        self.assertEqual(receipt["adapter_status"][0]["status"], "fallback:RuntimeError")
+        self.assertNotIn("SECRET SHOULD NOT LEAK", str(receipt))
 
 
 if __name__ == "__main__":
