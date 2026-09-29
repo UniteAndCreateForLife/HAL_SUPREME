@@ -137,18 +137,36 @@ jobs:
           echo "8300bac8af019b57b8424410ea22ca9224459e0748cb3e9f90ddcfb4afb85bf2  /tmp/hal-capture-v3-override.tar.gz" | sha256sum --check
           tar -xzf /tmp/hal-capture-v3-override.tar.gz -C active_projects/HAL_CAPTURE_ANDROID
 
-      - name: Opt HAL Capture entry point into Media3 UnstableApi
+      - name: Apply Media3 opt-in boundary
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
-          p = Path("active_projects/HAL_CAPTURE_ANDROID/app/src/main/java/com/halsupreme/capture/MainActivity.java")
+          root = Path("active_projects/HAL_CAPTURE_ANDROID/app/src/main/java/com/halsupreme/capture")
+
+          p = root / "MainActivity.java"
           s = p.read_text()
-          if "import androidx.media3.common.util.UnstableApi;" not in s:
-              s = s.replace("import java.util.Locale;\n", "import androidx.media3.common.util.UnstableApi;\n\nimport java.util.Locale;\n")
-          if "@UnstableApi\npublic class MainActivity" not in s:
-              s = s.replace("public class MainActivity extends Activity {", "@UnstableApi\npublic class MainActivity extends Activity {")
+          s = s.replace("import androidx.media3.common.util.UnstableApi;\n\n", "")
+          s = s.replace("@UnstableApi\npublic class MainActivity", "public class MainActivity")
           p.write_text(s)
+
+          for name in ["StudioActivity.java", "StudioExporter.java"]:
+              p = root / name
+              s = p.read_text()
+              if "import androidx.annotation.OptIn;" not in s:
+                  s = s.replace(
+                      "import androidx.media3.common.util.UnstableApi;",
+                      "import androidx.annotation.OptIn;\nimport androidx.media3.common.util.UnstableApi;"
+                  )
+              s = s.replace(
+                  "@UnstableApi\npublic class StudioActivity",
+                  "@OptIn(markerClass = UnstableApi.class)\npublic class StudioActivity"
+              )
+              s = s.replace(
+                  "@UnstableApi\npublic final class StudioExporter",
+                  "@OptIn(markerClass = UnstableApi.class)\npublic final class StudioExporter"
+              )
+              p.write_text(s)
           PY
 
       - name: Set up JDK 17
