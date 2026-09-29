@@ -85,7 +85,7 @@ shot "01-home"
 
 # External proof recording. The app will simultaneously create its own internal recording.
 adb shell rm -f /sdcard/hal_capture_real_use.mp4
-adb shell screenrecord --bit-rate 8000000 --time-limit 105 /sdcard/hal_capture_real_use.mp4 >/tmp/hal-screenrecord.log 2>&1 &
+adb shell screenrecord --bit-rate 8000000 --time-limit 170 /sdcard/hal_capture_real_use.mp4 >/tmp/hal-screenrecord.log 2>&1 &
 SCREEN_PID=$!
 sleep 2
 
