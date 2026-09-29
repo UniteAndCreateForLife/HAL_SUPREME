@@ -1,0 +1,67 @@
+name: Local Node Profile CI
+
+on:
+  push:
+    branches: ["feat/local-compute-node-profile-v1"]
+    paths:
+      - "services/compute_router/local_node.py"
+      - "tests/test_local_node_profile.py"
+      - ".github/workflows/local-node-profile.yml"
+  pull_request:
+    paths:
+      - "services/compute_router/local_node.py"
+      - "tests/test_local_node_profile.py"
+      - ".github/workflows/local-node-profile.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  profile-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install lint tool
+        run: python -m pip install ruff==0.14.14
+
+      - name: Run deterministic local-node tests
+        run: python -m unittest tests.test_local_node_profile -v
+
+      - name: Static checks
+        run: |
+          python -m py_compile services/compute_router/local_node.py tests/test_local_node_profile.py
+          ruff check services/compute_router/local_node.py tests/test_local_node_profile.py
+
+      - name: Emit public-safe sample receipt
+        run: |
+          mkdir -p evidence/local-node-profile-ci
+          HAL_PROVIDER_LOCAL_ENABLED=true           HAL_LOCAL_NODE_CAPABILITIES=inference,coding           HAL_LOCAL_NODE_CPU_CORES=16           HAL_LOCAL_NODE_RAM_GIB=119           HAL_LOCAL_NODE_GPU_MODEL="example-gpu"           HAL_LOCAL_NODE_GPU_VRAM_GIB=8           python - <<'PY'
+          import json
+          from pathlib import Path
+          from services.compute_router.local_node import build_local_node_profile
+
+          receipt = build_local_node_profile()
+          assert receipt["enabled"] is True
+          assert receipt["owner_controlled"] is True
+          assert receipt["remote_dependency"] is False
+          assert receipt["budget_policy"] == "owned_compute_only"
+          assert all(value is False for value in receipt["disclosure"].values())
+          Path("evidence/local-node-profile-ci/profile.json").write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+          sha256sum evidence/local-node-profile-ci/profile.json > evidence/local-node-profile-ci/SHA256SUMS
+
+      - name: Upload source-bound evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: local-node-profile-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/local-node-profile-ci/
+          if-no-files-found: error
+          retention-days: 30
