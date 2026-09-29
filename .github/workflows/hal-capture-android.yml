@@ -114,6 +114,10 @@ jobs:
           p = root / "app/src/main/java/com/halsupreme/capture/RecordingService.java"
           s = p.read_text()
           s = s.replace(
+              "audioEncoder = new MixedAudioEncoder(projection, withDeviceAudio, withMic, audioTemp);",
+              "audioEncoder = new MixedAudioEncoder(getApplicationContext(), projection, withDeviceAudio, withMic, audioTemp);"
+          )
+          s = s.replace(
               '        nm.notify(NOTIFICATION_ID, buildNotification(paused ? "Recording paused" : "Recording screen + microphone", true));',
               '        String activeText = withMic ? "Recording screen + microphone" : "Recording screen";\n'
               '        nm.notify(NOTIFICATION_ID, buildNotification(paused ? "Recording paused" : activeText, true));'
