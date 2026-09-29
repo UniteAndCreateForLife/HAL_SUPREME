@@ -1,5 +1,5 @@
 name: HAL Capture Real Use Demo
-# proof revision 2: Studio render required
+# proof revision 3: keyboard-safe Smart Edit + 170s external proof
 
 on:
   workflow_dispatch:
