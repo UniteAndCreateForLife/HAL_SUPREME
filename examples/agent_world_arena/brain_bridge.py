@@ -12,6 +12,10 @@ MAX_ACTION_METADATA_KEYS = 32
 def _reject_forbidden_keys(payload: Mapping[str, Any]) -> None:
     forbidden_names = {
         "authorization",
+        "authorization_token",
+        "auth_token",
+        "id_token",
+        "session_token",
         "api_key",
         "apikey",
         "password",
