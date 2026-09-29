@@ -1,0 +1,99 @@
+name: HAL Capture Real Use Demo
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          ls -l /dev/kvm
+
+      - name: Reconstruct HAL Capture 0.3 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p active_projects/HAL_CAPTURE_ANDROID
+          cat active_projects/HAL_CAPTURE_ANDROID_BUNDLE/part*.b64 | base64 --decode > /tmp/base.tar.gz
+          echo "6c4ebb3828b5e1ab7f328a870da05dade3a85b9f3503a642711e41c54697b60b  /tmp/base.tar.gz" | sha256sum --check
+          tar -xzf /tmp/base.tar.gz -C active_projects/HAL_CAPTURE_ANDROID
+          cat active_projects/HAL_CAPTURE_ANDROID_OVERRIDE_V2/part*.b64 | base64 --decode > /tmp/v2.tar.gz
+          echo "82b860fc078ff1c30b4905ca50f98eadac905cbe3468f52ad946e657c1982c43  /tmp/v2.tar.gz" | sha256sum --check
+          tar -xzf /tmp/v2.tar.gz -C active_projects/HAL_CAPTURE_ANDROID
+          cat active_projects/HAL_CAPTURE_ANDROID_OVERRIDE_V3/part*.b64 | base64 --decode > /tmp/v3.tar.gz
+          echo "8300bac8af019b57b8424410ea22ca9224459e0748cb3e9f90ddcfb4afb85bf2  /tmp/v3.tar.gz" | sha256sum --check
+          tar -xzf /tmp/v3.tar.gz -C active_projects/HAL_CAPTURE_ANDROID
+
+      - name: Apply release-tested patch boundary
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          root=Path("active_projects/HAL_CAPTURE_ANDROID/app/src/main/java/com/halsupreme/capture")
+          p=root/"MediaTools.java"; s=p.read_text()
+          s=s.replace("                    info.flags = extractor.getSampleFlags();\n                    muxer.writeSampleData(outTrack, buffer, info);",
+          "                    int sampleFlags = extractor.getSampleFlags();\n                    info.flags = 0;\n                    if ((sampleFlags & MediaExtractor.SAMPLE_FLAG_SYNC) != 0) {\n                        info.flags |= MediaCodec.BUFFER_FLAG_KEY_FRAME;\n                    }\n                    if ((sampleFlags & MediaExtractor.SAMPLE_FLAG_PARTIAL_FRAME) != 0) {\n                        info.flags |= MediaCodec.BUFFER_FLAG_PARTIAL_FRAME;\n                    }\n                    muxer.writeSampleData(outTrack, buffer, info);")
+          p.write_text(s)
+          p=root/"MainActivity.java"; s=p.read_text()
+          s=s.replace("        if (Build.VERSION.SDK_INT >= 33) registerReceiver(receiver, f, Context.RECEIVER_NOT_EXPORTED);\n        else registerReceiver(receiver, f);",
+                      "        registerReceiver(receiver, f, Context.RECEIVER_NOT_EXPORTED);")
+          p.write_text(s)
+          for name in ["StudioActivity.java","StudioExporter.java"]:
+              p=root/name; s=p.read_text()
+              if "import androidx.annotation.OptIn;" not in s:
+                  s=s.replace("import androidx.media3.common.util.UnstableApi;",
+                              "import androidx.annotation.OptIn;\nimport androidx.media3.common.util.UnstableApi;")
+              s=s.replace("@UnstableApi\npublic class StudioActivity","@OptIn(markerClass = UnstableApi.class)\npublic class StudioActivity")
+              s=s.replace("@UnstableApi\npublic final class StudioExporter","@OptIn(markerClass = UnstableApi.class)\npublic final class StudioExporter")
+              p.write_text(s)
+          gp=Path("active_projects/HAL_CAPTURE_ANDROID/gradle.properties")
+          gp.write_text(gp.read_text().replace("android.useAndroidX=false\n",""))
+          PY
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: '9.6.0'
+
+      - name: Build demo APK
+        working-directory: active_projects/HAL_CAPTURE_ANDROID
+        run: gradle :app:assembleDebug
+
+      - name: Run actual app and record proof
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          cores: 2
+          ram-size: 4096M
+          heap-size: 512M
+          disk-size: 6000M
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: bash active_projects/HAL_CAPTURE_DEMO/run_demo.sh
+
+      - name: Upload real-use proof
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: hal-capture-real-use-demo
+          path: active_projects/HAL_CAPTURE_DEMO/output
+          if-no-files-found: warn
+          retention-days: 14
