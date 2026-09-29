@@ -9,6 +9,7 @@ on:
       - 'active_projects/HAL_CAPTURE_ANDROID_BUNDLE/**'
       - 'active_projects/HAL_CAPTURE_ANDROID_OVERRIDE_V2/**'
       - 'active_projects/HAL_CAPTURE_ANDROID_OVERRIDE_V3/**'
+      - 'active_projects/HAL_CAPTURE_ANDROID_OVERRIDE_V3_TESTS/**'
       - '.github/workflows/hal-capture-android.yml'
 
 permissions:
@@ -169,6 +170,14 @@ jobs:
               p.write_text(s)
           PY
 
+      - name: Apply Studio regression tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 --decode active_projects/HAL_CAPTURE_ANDROID_OVERRIDE_V3_TESTS/tests.b64 > /tmp/hal-capture-v3-tests.tar.gz
+          echo "51de8a347bcc47ee40f1d1706c76d3838aac41781839f16def85f257f1748798  /tmp/hal-capture-v3-tests.tar.gz" | sha256sum --check
+          tar -xzf /tmp/hal-capture-v3-tests.tar.gz -C active_projects/HAL_CAPTURE_ANDROID
+
       - name: Set up JDK 17
         uses: actions/setup-java@v5
         with:
@@ -192,6 +201,10 @@ jobs:
       - name: Build debug APK
         working-directory: active_projects/HAL_CAPTURE_ANDROID
         run: gradle :app:assembleDebug --stacktrace
+
+      - name: Unit tests
+        working-directory: active_projects/HAL_CAPTURE_ANDROID
+        run: gradle :app:testDebugUnitTest
 
       - name: Lint
         working-directory: active_projects/HAL_CAPTURE_ANDROID
