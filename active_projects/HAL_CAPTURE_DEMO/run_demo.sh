@@ -160,18 +160,21 @@ if [[ -s /tmp/edit_xy ]]; then
   sleep 1
   wait_tap "PLAN EDIT"
   sleep 2
+  # Dismiss the software keyboard so the lower export controls can scroll into view.
+  adb shell input keyevent 4 || true
+  sleep 1
 fi
 shot "07-smart-plan"
 
-# Render the planned edit.
-for _ in $(seq 1 5); do
+# Render the planned edit. This proof must fail if an edited file is not actually produced.
+for _ in $(seq 1 8); do
   if find_center "RENDER EDIT" >/dev/null 2>&1; then break; fi
   scroll_down
 done
 wait_tap "RENDER EDIT"
 sleep 2
 shot "08-rendering"
-wait_text "Render complete" || true
+wait_text "Render complete"
 sleep 2
 shot "09-render-complete"
 
@@ -190,5 +193,7 @@ adb pull /sdcard/hal_capture_real_use.mp4 "$OUT_DIR/hal_capture_real_use.mp4"
 
 # Capture app state and media inventory as proof receipts.
 adb shell dumpsys package "$PKG" > "$OUT_DIR/package.txt"
-adb shell content query --uri content://media/external/video/media --projection _id:_display_name:relative_path:duration > "$OUT_DIR/media_inventory.txt" || true
+adb shell content query --uri content://media/external/video/media --projection _id:_display_name:relative_path:duration > "$OUT_DIR/media_inventory.txt"
+grep -q "Movies/HAL Capture/Edits" "$OUT_DIR/media_inventory.txt"
+grep -q "HAL_Studio_" "$OUT_DIR/media_inventory.txt"
 ls -lh "$OUT_DIR/hal_capture_real_use.mp4"
