@@ -1,0 +1,42 @@
+name: Agent World native transport proof
+on:
+  push:
+    branches: [agent-world-nonblocking-transport-proof-20260929]
+    paths:
+      - 'examples/agent_world_arena/godot_transport/**'
+      - '.github/workflows/agent-world-native-transport.yml'
+permissions:
+  contents: read
+jobs:
+  native-transport:
+    if: github.event.repository.private == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Download and verify Godot 4.7.2
+        run: |
+          curl --fail --location --max-time 120 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          echo 'cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  /tmp/godot.zip' | sha256sum --check --strict
+          unzip -q /tmp/godot.zip -d /tmp/hal-godot
+          chmod +x /tmp/hal-godot/Godot_v4.7.2-stable_linux.x86_64
+      - name: Native component tests (20 repeats, no model)
+        run: |
+          set -o pipefail
+          /tmp/hal-godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path examples/agent_world_arena/godot_transport --script res://test_partial_frame_pump.gd 2>&1 | tee /tmp/native-proof.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          text=Path('/tmp/native-proof.log').read_text()
+          if 'SCRIPT ERROR' in text or 'Parse Error' in text:
+              raise SystemExit('Godot script error')
+          rows=[json.loads(line) for line in text.splitlines() if line.startswith('{')]
+          receipts=[r for r in rows if r.get('schema')=='hal.godot.transport_tests.v1']
+          if len(receipts)!=1 or receipts[0]['failures'] or receipts[0]['assertions']!=500:
+              raise SystemExit('Missing or failing exact native receipt')
+          print('ACCEPTED: 500 standalone transport assertions; no live-model or external R1-R9 claim')
+          PY
+      - name: Existing Agent World Python regression suite
+        run: python -m unittest discover -s tests -p 'test_agent_world*.py' -v

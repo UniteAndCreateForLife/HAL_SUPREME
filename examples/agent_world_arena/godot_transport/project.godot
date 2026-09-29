@@ -1,0 +1,7 @@
+config_version=5
+[application]
+config/name="HAL Agent World transport regression harness"
+[rendering]
+renderer/rendering_method="gl_compatibility"
+[physics]
+common/physics_ticks_per_second=60
