@@ -1,4 +1,5 @@
 name: HAL Capture Real Use Demo
+# proof revision 2: Studio render required
 
 on:
   workflow_dispatch:
