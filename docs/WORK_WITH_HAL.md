@@ -120,6 +120,18 @@ Limits:
 - real text messages are not built yet: sending by SMS needs your own SMS provider account (you pay its fees), and that connection is built as part of the job; email is the alternative;
 - no deposits or payments, no medical or legal records, no integration with an existing booking system.
 
+## Choose the smallest useful first engagement
+
+If the main problem is **agent failures, retries, false success, or weak observability**, start with the **$249 Agent Reliability Audit**.
+
+If the main problem is **connecting an agent to a tool, API, MCP server, or replaceable provider**, start with the **$299 MCP / Tool Contract Review**.
+
+If the main problem is **unsupported claims, weak citations, conflicting sources, or unverifiable AI output**, start with the **$299 Evidence Contract Audit**.
+
+If the main problem is **privacy, local/open models, provider lock-in, or cloud-egress policy**, start with the **$399 Private / Local AI Architecture Review**.
+
+Each starter engagement is intentionally bounded. Larger implementation work is quoted only after the first slice establishes the failure mode, contract, evidence rule, or architecture boundary.
+
 ## Strong-fit paid engineering
 
 ### Agent reliability audit
