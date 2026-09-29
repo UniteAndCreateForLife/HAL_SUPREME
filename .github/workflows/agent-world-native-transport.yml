@@ -3,7 +3,13 @@ on:
   push:
     branches: [agent-world-nonblocking-transport-proof-20260929]
     paths:
+      - 'examples/agent_world_arena/**'
+      - 'tests/test_agent_world*.py'
+      - '.github/workflows/agent-world-native-transport.yml'
+  pull_request:
+    paths:
       - 'examples/agent_world_arena/godot_transport/**'
+      - 'tests/test_agent_world_credential_aliases.py'
       - '.github/workflows/agent-world-native-transport.yml'
 permissions:
   contents: read
@@ -16,6 +22,10 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
+      - name: Install existing project's MCP test dependency
+        run: |
+          python -m venv /tmp/hal-native-venv
+          /tmp/hal-native-venv/bin/python -m pip install 'mcp>=2,<3'
       - name: Download and verify Godot 4.7.2
         run: |
           curl --fail --location --max-time 120 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
@@ -36,7 +46,25 @@ jobs:
           receipts=[r for r in rows if r.get('schema')=='hal.godot.transport_tests.v1']
           if len(receipts)!=1 or receipts[0]['failures'] or receipts[0]['assertions']!=500:
               raise SystemExit('Missing or failing exact native receipt')
-          print('ACCEPTED: 500 standalone transport assertions; no live-model or external R1-R9 claim')
+          print('ACCEPTED: 500 standalone transport assertions; not external R1-R9')
           PY
-      - name: Existing Agent World Python regression suite
-        run: python -m unittest discover -s tests -p 'test_agent_world*.py' -v
+      - name: Actual loopback TCP plus moving physics body (no model)
+        run: |
+          set -o pipefail
+          /tmp/hal-godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path examples/agent_world_arena/godot_transport --script res://test_loopback_physics.gd 2>&1 | tee /tmp/physics-proof.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          text=Path('/tmp/physics-proof.log').read_text()
+          if 'SCRIPT ERROR' in text or 'Parse Error' in text:
+              raise SystemExit('Godot script error')
+          rows=[json.loads(line) for line in text.splitlines() if line.startswith('{')]
+          receipts=[r for r in rows if r.get('schema')=='hal.godot.loopback_physics.v1']
+          if len(receipts)!=1 or receipts[0].get('passed') is not True:
+              raise SystemExit('Missing or failing loopback physics receipt')
+          print('ACCEPTED: actual TCP plus physics; scripted delayed peer; no AI model')
+          PY
+      - name: All discovered Agent World Python tests and Muse settings tests
+        run: |
+          /tmp/hal-native-venv/bin/python -m unittest discover -s tests -p 'test_agent_world*.py' -v
+          /tmp/hal-native-venv/bin/python -m unittest -v tests.test_muse_agent_world_config
