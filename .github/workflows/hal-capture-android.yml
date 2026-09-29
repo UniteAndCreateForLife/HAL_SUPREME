@@ -59,6 +59,11 @@ jobs:
           p = root / "app/src/main/java/com/halsupreme/capture/MainActivity.java"
           s = p.read_text()
           s = s.replace(
+              "        if (Build.VERSION.SDK_INT >= 33) registerReceiver(receiver, f, Context.RECEIVER_NOT_EXPORTED);\n"
+              "        else registerReceiver(receiver, f);",
+              "        registerReceiver(receiver, f, Context.RECEIVER_NOT_EXPORTED);"
+          )
+          s = s.replace(
               '                new AlertDialog.Builder(this)\n'
               '                        .setTitle("Microphone not granted")\n'
               '                        .setMessage("This alpha currently records screen + microphone. Grant microphone permission to make a recording, or use Android Settings to enable it later.")\n'
