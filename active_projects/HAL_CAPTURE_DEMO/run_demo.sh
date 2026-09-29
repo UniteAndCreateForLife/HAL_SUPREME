@@ -196,4 +196,11 @@ adb shell dumpsys package "$PKG" > "$OUT_DIR/package.txt"
 adb shell content query --uri content://media/external/video/media --projection _id:_display_name:relative_path:duration > "$OUT_DIR/media_inventory.txt"
 grep -q "Movies/HAL Capture/Edits" "$OUT_DIR/media_inventory.txt"
 grep -q "HAL_Studio_" "$OUT_DIR/media_inventory.txt"
+
+# Pull the files HAL Capture itself created so QA can inspect the real outputs,
+# not only the external proof recording.
+mkdir -p "$OUT_DIR/app_media"
+adb pull "/sdcard/Movies/HAL Capture" "$OUT_DIR/app_media/" || true
+find "$OUT_DIR/app_media" -type f -maxdepth 4 -print -exec ls -lh {} \;
+
 ls -lh "$OUT_DIR/hal_capture_real_use.mp4"
