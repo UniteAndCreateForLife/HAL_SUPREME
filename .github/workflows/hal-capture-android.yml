@@ -32,6 +32,63 @@ jobs:
           test -f active_projects/HAL_CAPTURE_ANDROID/settings.gradle.kts
           test -f active_projects/HAL_CAPTURE_ANDROID/app/src/main/AndroidManifest.xml
 
+      - name: Apply alpha source fixes
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          root = Path("active_projects/HAL_CAPTURE_ANDROID")
+
+          p = root / "app/src/main/java/com/halsupreme/capture/MediaTools.java"
+          s = p.read_text()
+          s = s.replace(
+              "                    info.flags = extractor.getSampleFlags();\n                    muxer.writeSampleData(outTrack, buffer, info);",
+              "                    int sampleFlags = extractor.getSampleFlags();\n"
+              "                    info.flags = 0;\n"
+              "                    if ((sampleFlags & MediaExtractor.SAMPLE_FLAG_SYNC) != 0) {\n"
+              "                        info.flags |= MediaCodec.BUFFER_FLAG_KEY_FRAME;\n"
+              "                    }\n"
+              "                    if ((sampleFlags & MediaExtractor.SAMPLE_FLAG_PARTIAL_FRAME) != 0) {\n"
+              "                        info.flags |= MediaCodec.BUFFER_FLAG_PARTIAL_FRAME;\n"
+              "                    }\n"
+              "                    muxer.writeSampleData(outTrack, buffer, info);"
+          )
+          p.write_text(s)
+
+          p = root / "app/src/main/java/com/halsupreme/capture/MainActivity.java"
+          s = p.read_text()
+          s = s.replace(
+              '                new AlertDialog.Builder(this)\n'
+              '                        .setTitle("Microphone not granted")\n'
+              '                        .setMessage("This alpha currently records screen + microphone. Grant microphone permission to make a recording, or use Android Settings to enable it later.")\n'
+              '                        .setPositiveButton("Settings", (d,w) -> openAppSettings())\n'
+              '                        .setNegativeButton("Cancel", null).show();',
+              '                new AlertDialog.Builder(this)\n'
+              '                        .setTitle("Microphone not granted")\n'
+              '                        .setMessage("You can continue with screen-only recording, or open Settings to enable microphone access.")\n'
+              '                        .setPositiveButton("Record screen only", (d,w) -> {\n'
+              '                            if (micToggle != null) micToggle.setChecked(false);\n'
+              '                            launchProjectionConsent();\n'
+              '                        })\n'
+              '                        .setNeutralButton("Settings", (d,w) -> openAppSettings())\n'
+              '                        .setNegativeButton("Cancel", null).show();'
+          )
+          p.write_text(s)
+
+          p = root / "app/src/main/java/com/halsupreme/capture/RecordingService.java"
+          s = p.read_text()
+          s = s.replace(
+              '        nm.notify(NOTIFICATION_ID, buildNotification(paused ? "Recording paused" : "Recording screen + microphone", true));',
+              '        String activeText = withMic ? "Recording screen + microphone" : "Recording screen";\n'
+              '        nm.notify(NOTIFICATION_ID, buildNotification(paused ? "Recording paused" : activeText, true));'
+          )
+          p.write_text(s)
+
+          p = root / "gradle.properties"
+          p.write_text(p.read_text().replace("android.useAndroidX=false\n", ""))
+          PY
+
       - name: Set up JDK 17
         uses: actions/setup-java@v5
         with:
@@ -61,6 +118,7 @@ jobs:
         run: gradle :app:lintDebug
 
       - name: Upload APK
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: hal-capture-alpha-debug
