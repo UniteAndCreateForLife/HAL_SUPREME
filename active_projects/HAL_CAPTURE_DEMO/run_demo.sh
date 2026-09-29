@@ -158,11 +158,15 @@ if [[ -s /tmp/edit_xy ]]; then
   adb shell input tap $(cat /tmp/edit_xy)
   adb shell input text "make%sa%svertical%sshort%sbrighter%scinematic"
   sleep 1
-  wait_tap "PLAN EDIT"
-  sleep 2
-  # Dismiss the software keyboard so the lower export controls can scroll into view.
+  # The keyboard can resize Studio and push PLAN EDIT below the viewport.
   adb shell input keyevent 4 || true
   sleep 1
+  for _ in $(seq 1 3); do
+    if find_center "PLAN EDIT" >/dev/null 2>&1; then break; fi
+    scroll_down
+  done
+  wait_tap "PLAN EDIT"
+  sleep 2
 fi
 shot "07-smart-plan"
 
