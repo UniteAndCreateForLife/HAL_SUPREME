@@ -19,15 +19,42 @@ s=s.replace('preview=new VideoView(this);', 'preview=new VideoView(this);preview
 s=s.replace('restoreDraft();refresh();', 'restoreDraft();refresh();root.requestFocus();scroll.post(()->scroll.scrollTo(0,0));')
 assert 'setOrientation(1)' not in s and 'setOrientation(0)' not in s
 p.write_text(s)
-# Keep the actual Android 12+ splash screen consistent with the app's dark theme.
-res=root.parents[5]/'res'
-# Use the explicit path rather than depending on the source package depth.
+# Configure/start the AAC codec before the video clock starts. Actual AudioRecord
+# input and its worker still begin beside MediaRecorder.start, not during setup.
+p=root/'MixedAudioEncoder.java'
+s=p.read_text()
+old='''    public void start() throws Exception {
+        prepareCodec();
+        prepareInputs();
+
+        codec.start();
+'''
+new='''    /** Expensive codec/input setup belongs before the video recording clock. */
+    public void prepare() throws Exception {
+        if (codec != null) throw new IllegalStateException("Audio encoder already prepared");
+        prepareCodec();
+        prepareInputs();
+        codec.start();
+    }
+
+    public void start() throws Exception {
+        if (codec == null) prepare();
+'''
+assert s.count(old)==1, 'Audio start implementation changed; reconcile instead of skipping'
+p.write_text(s.replace(old,new))
+p=root/'RecordingService.java'
+s=p.read_text()
+old='audioEncoder = new MixedAudioEncoder(getApplicationContext(), projection, withDeviceAudio, withMic, audioTemp);'
+assert s.count(old)==1
+s=s.replace(old,old+'\n                audioEncoder.prepare();')
+p.write_text(s)
+# Keep the Android 12+ splash screen consistent with the app's dark theme.
 res=Path('active_projects/HAL_CAPTURE_ANDROID/app/src/main/res')
 v31=res/'values-v31';v31.mkdir(exist_ok=True)
 style=(res/'values/styles.xml').read_text()
 style=style.replace('</style>', '<item name="android:windowSplashScreenBackground">#090A0F</item>\n        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_hal</item>\n    </style>')
 (v31/'styles.xml').write_text(style)
-# Match exact system approval labels; never confuse the explanatory title with a button.
+# Match exact system approval labels; never confuse explanatory text with a button.
 p=Path('active_projects/HAL_CAPTURE_V04_DEMO/demo_test.py')
 s=p.read_text()
 s=s.replace("adb('shell','am','start','-n',component);time.sleep(1.2)", "adb('shell','am','start','-W','-n',component);time.sleep(2.0)")
@@ -43,5 +70,13 @@ s=s.replace("adb('shell','input','keyevent','KEYCODE_BACK');tap('PLAN EDIT'", "h
 s=s.replace("edit_field(fields[1],'3');adb('shell','input','keyevent','KEYCODE_BACK');tap('Apply'", "edit_field(fields[1],'3');hide_keyboard();tap('Apply'")
 s=s.replace("screenshot('12_timeline_empty');tap('ADD LATEST'", "top();screenshot('12_timeline_empty');tap('ADD LATEST'")
 s=s.replace("event('single_editor_start');start_activity", "check('capture_available_for_single_editor',bool(prefs().get('latest_uri')));event('single_editor_start');start_activity")
+# Stream-end alignment is a smoke test, not a claim of physical microphone sync.
+old="    check('capture_has_audio',any(s['codec_type']=='audio' for s in d['streams']))\n"
+new=old+'''    vd=float(next(s for s in d['streams'] if s['codec_type']=='video')['duration'])
+    ad=float(next(s for s in d['streams'] if s['codec_type']=='audio')['duration'])
+    check('capture_audio_duration_alignment',abs(vd-ad)<0.75,f'video={vd:.3f}s audio={ad:.3f}s gap={abs(vd-ad):.3f}s')
+'''
+assert s.count(old)==1
+s=s.replace(old,new)
 p.write_text(s)
-print('Applied explicit alpha hardening changes')
+print('Applied explicit alpha hardening changes, including audio startup alignment')
