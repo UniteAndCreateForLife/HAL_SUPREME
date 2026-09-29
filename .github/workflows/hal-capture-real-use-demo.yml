@@ -2,6 +2,12 @@ name: HAL Capture Real Use Demo
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - hal-capture-native-v1
+    paths:
+      - 'active_projects/HAL_CAPTURE_DEMO/**'
+      - '.github/workflows/hal-capture-real-use-demo.yml'
 
 permissions:
   contents: read
