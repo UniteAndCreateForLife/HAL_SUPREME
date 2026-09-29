@@ -3,6 +3,20 @@ import demo_test as t
 import subprocess, time, json, traceback
 from pathlib import Path
 
+# Android's selector defaults to one app. Choose full display using the real
+# system UI before accepting. This does not bypass the system consent dialog.
+original_tap=t.tap
+def consent_aware_tap(text,scroll=False,exact=False):
+    if text=='Start' and exact:
+        screen=t.tree()
+        if any(n.get('text')=='A single app' for n in screen.iter('node')):
+            original_tap('A single app',exact=True)
+            original_tap('Entire screen',exact=True)
+            time.sleep(.5)
+            t.screenshot('02c_entire_screen_selected')
+    return original_tap(text,scroll,exact)
+t.tap=consent_aware_tap
+
 process=None
 try:
     t.adb('install','-r','active_projects/HAL_CAPTURE_ANDROID/app/build/outputs/apk/debug/app-debug.apk',timeout=90)
