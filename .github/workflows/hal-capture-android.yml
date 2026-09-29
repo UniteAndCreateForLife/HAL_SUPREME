@@ -88,6 +88,29 @@ jobs:
           )
           p.write_text(s)
 
+          p = root / "app/src/main/java/com/halsupreme/capture/MixedAudioEncoder.java"
+          s = p.read_text()
+          s = s.replace(
+              "package com.halsupreme.capture;\n\nimport android.media.AudioAttributes;",
+              "package com.halsupreme.capture;\n\nimport android.Manifest;\nimport android.content.Context;\nimport android.content.pm.PackageManager;\nimport android.media.AudioAttributes;"
+          )
+          s = s.replace(
+              "    private final MediaProjection projection;\n",
+              "    private final Context context;\n    private final MediaProjection projection;\n"
+          )
+          s = s.replace(
+              "    public MixedAudioEncoder(MediaProjection projection, boolean capturePlayback, boolean captureMic, File outputFile) {\n        this.projection = projection;",
+              "    public MixedAudioEncoder(Context context, MediaProjection projection, boolean capturePlayback, boolean captureMic, File outputFile) {\n        this.context = context.getApplicationContext();\n        this.projection = projection;"
+          )
+          s = s.replace(
+              "    private void prepareInputs() {\n",
+              "    private void prepareInputs() {\n"
+              "        if (context.checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {\n"
+              "            throw new SecurityException(\"RECORD_AUDIO permission is required for selected audio capture sources\");\n"
+              "        }\n"
+          )
+          p.write_text(s)
+
           p = root / "app/src/main/java/com/halsupreme/capture/RecordingService.java"
           s = p.read_text()
           s = s.replace(
