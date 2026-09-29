@@ -7,6 +7,7 @@ on:
       - hal-capture-native-v1
     paths:
       - 'active_projects/HAL_CAPTURE_ANDROID_BUNDLE/**'
+      - 'active_projects/HAL_CAPTURE_ANDROID_OVERRIDE_V2/**'
       - '.github/workflows/hal-capture-android.yml'
 
 permissions:
@@ -29,6 +30,12 @@ jobs:
           cat active_projects/HAL_CAPTURE_ANDROID_BUNDLE/part*.b64 | base64 --decode > /tmp/hal-capture-native-v1.tar.gz
           echo "6c4ebb3828b5e1ab7f328a870da05dade3a85b9f3503a642711e41c54697b60b  /tmp/hal-capture-native-v1.tar.gz" | sha256sum --check
           tar -xzf /tmp/hal-capture-native-v1.tar.gz -C active_projects/HAL_CAPTURE_ANDROID
+
+          # Layer the 0.2 native-audio implementation over the audited 0.1 base.
+          cat active_projects/HAL_CAPTURE_ANDROID_OVERRIDE_V2/part*.b64 | base64 --decode > /tmp/hal-capture-v2-override.tar.gz
+          echo "82b860fc078ff1c30b4905ca50f98eadac905cbe3468f52ad946e657c1982c43  /tmp/hal-capture-v2-override.tar.gz" | sha256sum --check
+          tar -xzf /tmp/hal-capture-v2-override.tar.gz -C active_projects/HAL_CAPTURE_ANDROID
+
           test -f active_projects/HAL_CAPTURE_ANDROID/settings.gradle.kts
           test -f active_projects/HAL_CAPTURE_ANDROID/app/src/main/AndroidManifest.xml
 
@@ -126,7 +133,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hal-capture-alpha-debug
+          name: hal-capture-alpha-0.2-debug
           path: active_projects/HAL_CAPTURE_ANDROID/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
