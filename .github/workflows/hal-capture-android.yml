@@ -1,0 +1,66 @@
+name: HAL Capture Android Alpha
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - hal-capture-native-v1
+    paths:
+      - 'active_projects/HAL_CAPTURE_ANDROID_BUNDLE/**'
+      - '.github/workflows/hal-capture-android.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Reconstruct audited source bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p active_projects/HAL_CAPTURE_ANDROID
+          cat active_projects/HAL_CAPTURE_ANDROID_BUNDLE/part*.b64 | base64 --decode > /tmp/hal-capture-native-v1.tar.gz
+          echo "6c4ebb3828b5e1ab7f328a870da05dade3a85b9f3503a642711e41c54697b60b  /tmp/hal-capture-native-v1.tar.gz" | sha256sum --check
+          tar -xzf /tmp/hal-capture-native-v1.tar.gz -C active_projects/HAL_CAPTURE_ANDROID
+          test -f active_projects/HAL_CAPTURE_ANDROID/settings.gradle.kts
+          test -f active_projects/HAL_CAPTURE_ANDROID/app/src/main/AndroidManifest.xml
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle 9.6.0
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.6.0'
+
+      - name: Install Android SDK 36
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager 'platforms;android-36' 'build-tools;36.0.0' 'platform-tools'
+
+      - name: Build debug APK
+        working-directory: active_projects/HAL_CAPTURE_ANDROID
+        run: gradle :app:assembleDebug --stacktrace
+
+      - name: Lint
+        working-directory: active_projects/HAL_CAPTURE_ANDROID
+        run: gradle :app:lintDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: hal-capture-alpha-debug
+          path: active_projects/HAL_CAPTURE_ANDROID/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
