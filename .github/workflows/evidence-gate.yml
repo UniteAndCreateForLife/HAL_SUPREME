@@ -19,6 +19,7 @@ on:
       - "scripts/record_evidence_replay.mjs"
       - "scripts/record_browser_plan.mjs"
       - "tests/test_evidence_runtime.py"
+      - "tests/test_evidence_replay.py"
       - "tests/test_evidence_collector.py"
       - "services/evidence_collector.py"
       - "docs/HEADLESS_EVIDENCE_CAPTURE.md"
@@ -39,6 +40,7 @@ on:
       - "scripts/record_evidence_replay.mjs"
       - "scripts/record_browser_plan.mjs"
       - "tests/test_evidence_runtime.py"
+      - "tests/test_evidence_replay.py"
       - "tests/test_evidence_collector.py"
       - "services/evidence_collector.py"
       - "docs/HEADLESS_EVIDENCE_CAPTURE.md"
@@ -88,7 +90,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Unit tests
-        run: python -m unittest -v tests.test_evidence_runtime tests.test_evidence_collector
+        run: python -m unittest -v tests.test_evidence_runtime tests.test_evidence_collector tests.test_evidence_replay
       - name: Compile Python capture tools
         run: >-
           python -m py_compile
