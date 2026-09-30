@@ -208,6 +208,10 @@ Typical deliverable:
 - local-first failure behavior;
 - validation and operating runbook.
 
+Relevant public evidence:
+- [Private / Local AI Architecture Review acceptance checklist](PRIVATE_LOCAL_AI_REVIEW_CHECKLIST.md)
+- [Claude Code + HAL MCP Fabric case study](../case-studies/CLAUDE_HAL_MCP_FABRIC_2026-09-24.md)
+
 ## Research and open-source collaboration
 
 HAL is also interested in non-commercial collaboration around:
