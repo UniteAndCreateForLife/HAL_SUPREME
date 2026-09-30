@@ -3,8 +3,29 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import re
 from pathlib import Path
 from typing import Any
+
+
+_PRIVATE_PATH_KEYS = {"source_path", "session_dir", "cwd"}
+_WINDOWS_PATH = re.compile(r"(?i)\b[A-Z]:\\(?:Users|Documents and Settings)\\[^\\\s]+")
+_UNIX_HOME_PATH = re.compile(r"/(?:home|Users)/[^/\s]+")
+
+
+def _sanitize_replay(value: Any, key: str | None = None) -> Any:
+    if isinstance(value, dict):
+        return {str(k): _sanitize_replay(v, str(k)) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_sanitize_replay(item) for item in value]
+    if isinstance(value, str):
+        if key in _PRIVATE_PATH_KEYS:
+            name = Path(value).name
+            return f"[LOCAL_PATH]/{name}" if name else "[LOCAL_PATH]"
+        text = _WINDOWS_PATH.sub("[LOCAL_HOME]", value)
+        text = _UNIX_HOME_PATH.sub("[LOCAL_HOME]", text)
+        return text
+    return value
 
 
 def _load_events(path: Path) -> list[dict[str, Any]]:
@@ -240,12 +261,16 @@ def main() -> int:
     parser.add_argument("session_dir", type=Path)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--full", action="store_true", help="Show every raw event instead of a condensed replay.")
+    parser.add_argument("--show-local-paths", action="store_true", help="Do not mask local filesystem paths in the replay.")
     args = parser.parse_args()
 
     session_dir = args.session_dir.expanduser().resolve()
     manifest = json.loads((session_dir / "manifest.json").read_text(encoding="utf-8"))
     raw_events = _load_events(session_dir / "events.jsonl")
     events = raw_events if args.full else _condense(raw_events)
+    if not args.show_local_paths:
+        events = [_sanitize_replay(event) for event in events]
+        manifest = _sanitize_replay(manifest)
     for event in events:
         event["display_ms"] = _display_ms(str(event.get("kind") or ""))
 
