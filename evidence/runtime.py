@@ -9,7 +9,7 @@ import shutil
 import time
 import uuid
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
@@ -139,14 +139,19 @@ class EvidenceSession:
         self.artifact_dir.mkdir(parents=True, exist_ok=True)
         self.title = title
         self.source = source
-        self._started_monotonic = time.monotonic()
+        self._started_at_utc = datetime.now(timezone.utc)
 
         if existing:
             manifest = json.loads(self.manifest_path.read_text(encoding="utf-8"))
             self.session_id = str(manifest["session_id"])
             self.title = str(manifest.get("title") or title)
             self.source = str(manifest.get("source") or source)
-            self._started_monotonic = time.monotonic() - float(manifest.get("elapsed_seconds") or 0.0)
+            started_at = manifest.get("started_at")
+            if started_at:
+                self._started_at_utc = datetime.fromisoformat(str(started_at))
+            else:
+                elapsed = float(manifest.get("elapsed_seconds") or 0.0)
+                self._started_at_utc = datetime.now(timezone.utc) - timedelta(seconds=elapsed)
         else:
             self._write_manifest(status="recording")
             self.emit("session.start", message=title, data={"source": source})
@@ -183,7 +188,11 @@ class EvidenceSession:
             "session_dir": str(self.session_dir),
             "events_file": "events.jsonl",
             "artifact_dir": "artifacts",
-            "elapsed_seconds": max(0.0, time.monotonic() - self._started_monotonic),
+            "started_at": self._started_at_utc.isoformat(),
+            "elapsed_seconds": max(
+                0.0,
+                (datetime.now(timezone.utc) - self._started_at_utc).total_seconds(),
+            ),
             "updated_at": datetime.now(timezone.utc).isoformat(),
             **redact(extra),
         }
@@ -204,7 +213,7 @@ class EvidenceSession:
             "schema_version": SCHEMA_VERSION,
             "session_id": self.session_id,
             "ts_utc": now.isoformat(),
-            "elapsed_ms": int(max(0.0, time.monotonic() - self._started_monotonic) * 1000),
+            "elapsed_ms": int(max(0.0, (now - self._started_at_utc).total_seconds()) * 1000),
             "kind": str(kind),
             "source": self.source,
             "phase": phase,
