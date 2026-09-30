@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import time
@@ -8,6 +9,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Mapping
 
+from evidence.runtime import EvidenceSession
 from .base import RenderRequest, RenderResult, Renderer
 from .workflow_template import WorkflowBindings, WorkflowTemplate
 
@@ -114,8 +116,39 @@ class ComfyUIWanRenderer(Renderer):
 
     def render(self, request: RenderRequest) -> RenderResult:
         workflow = self._bound_workflow(request)
+        evidence = EvidenceSession.from_env()
+        workflow_hash = hashlib.sha256(
+            json.dumps(workflow, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        if evidence is not None:
+            evidence.emit(
+                "renderer.request",
+                phase="render",
+                message=f"{self.renderer_id}:{request.shot_id}",
+                data={
+                    "renderer_id": self.renderer_id,
+                    "provider_id": self.provider_id,
+                    "model_id": self.model_id,
+                    "task_id": request.task_id,
+                    "shot_id": request.shot_id,
+                    "prompt": request.prompt,
+                    "width": request.width,
+                    "height": request.height,
+                    "fps": request.fps,
+                    "frames": request.frames,
+                    "seed": request.seed,
+                    "workflow_sha256": workflow_hash,
+                },
+            )
         queued = self._json("/prompt", {"prompt": workflow})
         prompt_id = queued["prompt_id"]
+        if evidence is not None:
+            evidence.emit(
+                "renderer.queued",
+                phase="render",
+                message=str(prompt_id),
+                data={"prompt_id": prompt_id, "workflow_sha256": workflow_hash},
+            )
         deadline = time.monotonic() + float(request.metadata.get("render_timeout_s", 900))
         preferred_node = request.metadata.get("comfy_output_node")
         while time.monotonic() < deadline:
@@ -125,7 +158,28 @@ class ComfyUIWanRenderer(Renderer):
                 candidates = self._candidates(record, str(preferred_node) if preferred_node is not None else None)
                 if candidates:
                     item = candidates[0]
+                    if evidence is not None:
+                        evidence.emit(
+                            "renderer.output_ready",
+                            phase="render",
+                            message=str(item.get("filename") or "output"),
+                            data={"prompt_id": prompt_id, "raw_output": item},
+                        )
                     artifact_path = self._download_candidate(item, request)
+                    if evidence is not None:
+                        try:
+                            evidence.register_artifact(
+                                artifact_path,
+                                role="render_candidate",
+                                copy_into_session=False,
+                            )
+                        except Exception as exc:
+                            evidence.emit(
+                                "artifact.register_failed",
+                                phase="collect",
+                                message=str(artifact_path),
+                                data={"error": str(exc), "prompt_id": prompt_id},
+                            )
                     return RenderResult(
                         renderer_id=self.renderer_id,
                         provider_id=self.provider_id,
@@ -135,4 +189,11 @@ class ComfyUIWanRenderer(Renderer):
                         metadata={"prompt_id": prompt_id, "raw_output": item},
                     )
             time.sleep(1.0)
+        if evidence is not None:
+            evidence.emit(
+                "renderer.timeout",
+                phase="render",
+                message=str(prompt_id),
+                data={"prompt_id": prompt_id},
+            )
         raise TimeoutError(f"ComfyUI render timed out: {prompt_id}")
