@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://halsupreme.com/schemas/browser_capture_plan.schema.json",
+  "title": "HAL Browser Capture Plan",
+  "type": "object",
+  "required": [
+    "actions"
+  ],
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "viewport": {
+      "type": "object",
+      "required": [
+        "width",
+        "height"
+      ],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 320
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 240
+        }
+      },
+      "additionalProperties": false
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "goto",
+              "click",
+              "fill",
+              "press",
+              "wait",
+              "waitFor",
+              "screenshot"
+            ]
+          },
+          "url": {
+            "type": "string"
+          },
+          "selector": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "ms": {
+            "type": "number",
+            "minimum": 0
+          },
+          "timeoutMs": {
+            "type": "number",
+            "minimum": 0
+          },
+          "waitUntil": {
+            "enum": [
+              "load",
+              "domcontentloaded",
+              "networkidle",
+              "commit"
+            ]
+          },
+          "state": {
+            "enum": [
+              "attached",
+              "detached",
+              "visible",
+              "hidden"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "fullPage": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
