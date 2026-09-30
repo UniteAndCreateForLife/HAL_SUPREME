@@ -2,13 +2,15 @@ from __future__ import annotations
 
 import json
 import shlex
+import shutil
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-SETTINGS = ROOT / ".claude" / "settings.local.json"
+SETTINGS = Path.home() / ".claude" / "settings.json"
 MIRROR = ROOT / "scripts" / "claude_session_mirror.py"
 HOOK_MARKER = "claude_session_mirror.py"
 
@@ -25,8 +27,8 @@ def load_settings() -> dict[str, Any]:
 def command_string() -> str:
     python = Path(sys.executable).resolve()
     if sys.platform.startswith("win"):
-        return subprocess.list2cmdline([str(python), str(MIRROR), "hook"])
-    return shlex.join([str(python), str(MIRROR), "hook"])
+        return subprocess.list2cmdline([str(python), str(MIRROR), "hook", "--project-substring", "HAL_SUPREME"])
+    return shlex.join([str(python), str(MIRROR), "hook", "--project-substring", "HAL_SUPREME"])
 
 
 def ensure_event(hooks: dict[str, Any], event: str, command: str, timeout: int = 8) -> None:
@@ -51,6 +53,11 @@ def ensure_event(hooks: dict[str, Any], event: str, command: str, timeout: int =
 
 def main() -> int:
     SETTINGS.parent.mkdir(parents=True, exist_ok=True)
+    if SETTINGS.is_file():
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        backup = SETTINGS.with_name(f"settings.before-hal-session-mirror.{stamp}.json")
+        shutil.copy2(SETTINGS, backup)
+        print(f"SETTINGS_BACKUP={backup}")
     settings = load_settings()
     hooks = settings.setdefault("hooks", {})
     if not isinstance(hooks, dict):
@@ -72,7 +79,8 @@ def main() -> int:
 
     print(f"CLAUDE_SESSION_MIRROR_INSTALLED={SETTINGS}")
     print(f"MIRROR_INDEX={ROOT / 'data' / 'runtime' / 'claude_session_mirror' / 'latest_sessions.md'}")
-    print("Existing Claude sessions may need /hooks, a settings reload, or a new turn before the hook fires.")
+    print("User-level hooks installed for HAL_SUPREME sessions.")
+    print("Existing Claude sessions may need /hooks, a settings reload, or one new turn before the hook fires.")
     return 0
 
 
