@@ -152,6 +152,16 @@ class EvidenceSession:
             self.emit("session.start", message=title, data={"source": source})
 
     @classmethod
+    def from_env(cls) -> "EvidenceSession | None":
+        value = os.environ.get("HAL_EVIDENCE_SESSION_DIR")
+        if not value:
+            return None
+        session_dir = Path(value).expanduser().resolve()
+        if not (session_dir / "manifest.json").is_file():
+            return None
+        return cls.open_existing(session_dir)
+
+    @classmethod
     def open_existing(cls, session_dir: Path) -> "EvidenceSession":
         session_dir = Path(session_dir)
         manifest = json.loads((session_dir / "manifest.json").read_text(encoding="utf-8"))
