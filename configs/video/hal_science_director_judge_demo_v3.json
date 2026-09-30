@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "project_id": "hal_science_director_judge_demo_v3",
+  "title": "HAL Science Director — AI That Checks Its Own Work",
+  "editorial_mode": "evidence_first",
+  "target": {
+    "duration_seconds": 80,
+    "width": 1920,
+    "height": 1080,
+    "fps": 24,
+    "audio_hz": 48000,
+    "master_video_codec": "h264",
+    "master_audio_codec": "aac"
+  },
+  "source_requirements": {
+    "real_product_capture_required": true,
+    "synthetic_proof_ui_forbidden": true,
+    "synthetic_terminal_forbidden": true,
+    "existing_motion_asset": "hackathons/livepeer-agent-science-director/public/HAL_SCIENCE_DIRECTOR_JUDGE_DEMO_V2.mp4",
+    "new_capture_needed": "One clean real HAL Science Director run from operator brief through judge correction"
+  },
+  "shots": [
+    {
+      "id": "S01_HOOK",
+      "start_s": 0,
+      "duration_s": 5,
+      "purpose": "Immediate thesis",
+      "source_class": "accepted_science_visual",
+      "must_be_real": true,
+      "overlay": "AI can generate almost anything. But can it tell when it is wrong?",
+      "acceptance": [
+        "motion is genuine",
+        "no generic stock imagery",
+        "title readable within first 2 seconds"
+      ]
+    },
+    {
+      "id": "S02_BRIEF",
+      "start_s": 5,
+      "duration_s": 8,
+      "purpose": "Show operator intent",
+      "source_class": "real_product_screen_capture",
+      "must_be_real": true,
+      "overlay": "1. DEFINE THE CLAIM",
+      "acceptance": [
+        "request text readable",
+        "no simulated cursor or fake UI"
+      ]
+    },
+    {
+      "id": "S03_PLAN",
+      "start_s": 13,
+      "duration_s": 11,
+      "purpose": "Show Livepeer/HAL planning constraints",
+      "source_class": "real_product_screen_capture",
+      "must_be_real": true,
+      "overlay": "2. PLAN + GUARDRAILS",
+      "acceptance": [
+        "observable claim visible",
+        "accuracy constraints visible",
+        "no invented metrics"
+      ]
+    },
+    {
+      "id": "S04_GENERATE",
+      "start_s": 24,
+      "duration_s": 12,
+      "purpose": "Show generation and artifact",
+      "source_class": "real_product_capture_plus_generated_artifact",
+      "must_be_real": true,
+      "overlay": "3. GENERATE",
+      "acceptance": [
+        "generation result shown",
+        "provider/model label only if evidenced"
+      ]
+    },
+    {
+      "id": "S05_JUDGE",
+      "start_s": 36,
+      "duration_s": 14,
+      "purpose": "Core differentiator: attractive output is rejected",
+      "source_class": "real_product_screen_capture",
+      "must_be_real": true,
+      "overlay": "4. INDEPENDENT VISUAL REVIEW — 6/10 · REVISE",
+      "acceptance": [
+        "actual review text visible",
+        "ring-thickness/division/banding issues readable",
+        "no fabricated score"
+      ]
+    },
+    {
+      "id": "S06_CORRECT",
+      "start_s": 50,
+      "duration_s": 11,
+      "purpose": "Turn failure into next instruction",
+      "source_class": "real_product_screen_capture",
+      "must_be_real": true,
+      "overlay": "5. FAILURE → CORRECTION → NEXT RUN",
+      "acceptance": [
+        "correction visibly enters next iteration",
+        "causal flow is clear"
+      ]
+    },
+    {
+      "id": "S07_PROOF",
+      "start_s": 61,
+      "duration_s": 12,
+      "purpose": "Provenance and engineering evidence",
+      "source_class": "real_receipts_and_ci",
+      "must_be_real": true,
+      "overlay": "PLAN · ARTIFACT · REVIEW · SHA-256 · RECEIPT",
+      "acceptance": [
+        "receipt is real",
+        "hash is legible or visually abbreviated without changing it",
+        "tests/CI claim is current"
+      ]
+    },
+    {
+      "id": "S08_CLOSE",
+      "start_s": 73,
+      "duration_s": 7,
+      "purpose": "Brand and thesis",
+      "source_class": "motion_plus_titles",
+      "must_be_real": true,
+      "overlay": "GENERATION IS NOT ACCEPTANCE.  HAL SUPREME  ·  halsupreme.com",
+      "acceptance": [
+        "clean end card",
+        "no new unsupported claim"
+      ]
+    }
+  ],
+  "narration": [
+    "AI can generate almost anything. The harder problem is knowing when the result is wrong.",
+    "HAL Science Director makes the intended scientific claim explicit before generation.",
+    "A separate visual review examines the rendered artifact instead of trusting the generator.",
+    "When the result is attractive but scientifically weak, HAL rejects it and turns the visible failure into the next correction.",
+    "Every run can carry its plan, review, artifact lineage, and provenance receipt. Generation is not acceptance."
+  ],
+  "master_acceptance": [
+    "Every product claim is backed by visible real evidence.",
+    "No synthetic proof UI or fake terminal output.",
+    "No freeze span longer than 2.0 seconds unless explicitly approved as an editorial hold.",
+    "No unintended black span longer than 1.5 seconds.",
+    "1920x1080 minimum, 24 fps target, 48 kHz final audio.",
+    "Full decode, motion QC, technical QC, SHA-256, and review receipt pass before release."
+  ],
+  "derivatives": [
+    {
+      "name": "judge_master",
+      "aspect": "16:9",
+      "duration_s": 80
+    },
+    {
+      "name": "short",
+      "aspect": "9:16",
+      "duration_s": 58
+    }
+  ]
+}
