@@ -35,7 +35,7 @@ From the HAL_SUPREME repository:
 D:\Python312\python.exe scripts\install_claude_session_mirror.py
 ```
 
-The installer preserves existing `.claude/settings.local.json` content and adds hooks for:
+The installer updates the **user-level** Claude settings at `~/.claude/settings.json` so parallel Desktop/CLI worktrees all receive the same mirror hook. It creates a timestamped backup before changing the file and adds hooks for:
 
 - `UserPromptSubmit`
 - `Stop`
@@ -68,6 +68,6 @@ All three are read-only.
 
 ## Current-session behavior
 
-After installation, a new user prompt and each normal Claude stop refresh the mirror automatically. Existing open Claude Code sessions may need to reload hooks/settings or receive one new turn before the new hook configuration fires.
+After installation, a new user prompt and each normal Claude stop refresh the mirror automatically. The hook is filtered to HAL_SUPREME sessions so unrelated Claude projects are not copied into the ChatGPT-facing mirror. Existing open Claude Code sessions may need `/hooks`, a settings reload, or one new turn before the new hook configuration fires.
 
 Do not put Claude account credentials, OAuth codes, passwords, or private connector URLs into prompts. The mirror is a continuity mechanism, not a secret store.
