@@ -1,0 +1,40 @@
+name: Claude Session Mirror
+
+on:
+  pull_request:
+    paths:
+      - "scripts/claude_session_mirror.py"
+      - "scripts/install_claude_session_mirror.py"
+      - "tests/test_claude_session_mirror.py"
+      - "docs/CLAUDE_SESSION_MIRROR.md"
+      - ".gitignore"
+      - ".github/workflows/claude-session-mirror.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "scripts/claude_session_mirror.py"
+      - "scripts/install_claude_session_mirror.py"
+      - "tests/test_claude_session_mirror.py"
+      - ".github/workflows/claude-session-mirror.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.12"]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Unit tests
+        run: python -m unittest -v tests.test_claude_session_mirror
+      - name: Compile
+        run: python -m py_compile scripts/claude_session_mirror.py scripts/install_claude_session_mirror.py tests/test_claude_session_mirror.py

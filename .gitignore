@@ -80,3 +80,7 @@ ComfyUI/temp/
 # Local HAL data
 VY_VAULT/
 hal_incremental.db*
+
+# Local Claude session mirror / private project settings
+.claude/settings.local.json
+data/runtime/claude_session_mirror/
