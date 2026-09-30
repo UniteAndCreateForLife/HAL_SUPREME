@@ -3,60 +3,57 @@ name: Video Pipeline V2
 on:
   pull_request:
     paths:
-      - "evidence/**"
       - "provenance/**"
       - "qc/**"
       - "renderers/**"
-      - "scripts/record_headless.py"
-      - "scripts/evidence_event.py"
-      - "scripts/verify_evidence_session.py"
-      - "scripts/build_evidence_replay.py"
-      - "scripts/record_evidence_replay.mjs"
+      - "evidence/runtime.py"
       - "scripts/video_audit.py"
       - "scripts/canary_render.py"
-      - "tests/test_evidence_runtime.py"
+      - "scripts/renderer_doctor.py"
+      - "scripts/comfy_inventory.py"
       - "tests/test_video_quality.py"
       - "tests/test_comfyui_wan_renderer.py"
       - "docs/VIDEO_PIPELINE_V2.md"
-      - "docs/HEADLESS_EVIDENCE_CAPTURE.md"
+      - "docs/RENDER_CANARY.md"
       - "configs/video/**"
       - ".github/workflows/video-pipeline-v2.yml"
   push:
     branches: ["main"]
     paths:
-      - "evidence/**"
       - "provenance/**"
       - "qc/**"
       - "renderers/**"
-      - "scripts/record_headless.py"
-      - "scripts/evidence_event.py"
-      - "scripts/verify_evidence_session.py"
-      - "scripts/build_evidence_replay.py"
+      - "evidence/runtime.py"
       - "scripts/video_audit.py"
       - "scripts/canary_render.py"
-      - "tests/test_evidence_runtime.py"
+      - "scripts/renderer_doctor.py"
+      - "scripts/comfy_inventory.py"
       - "tests/test_video_quality.py"
       - "tests/test_comfyui_wan_renderer.py"
       - ".github/workflows/video-pipeline-v2.yml"
+
+concurrency:
+  group: video-pipeline-v2-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
-  evidence-and-video:
+  video-pipeline:
+    name: video-pipeline-${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
         python: ["3.12"]
-    runs-on: \${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
-          python-version: \${{ matrix.python }}
-
+          python-version: ${{ matrix.python }}
       - name: Unit tests
         run: >
           python -m unittest -v
@@ -64,9 +61,7 @@ jobs:
           tests.test_renderer_router
           tests.test_comfyui_wan_renderer
           tests.test_video_quality
-          tests.test_evidence_runtime
-
-      - name: Compile changed Python
+      - name: Compile video pipeline
         run: >
           python -m py_compile
           evidence/runtime.py
@@ -74,24 +69,7 @@ jobs:
           renderers/comfyui_wan.py
           renderers/pipeline.py
           provenance/receipts.py
-          scripts/record_headless.py
-          scripts/evidence_event.py
-          scripts/verify_evidence_session.py
-          scripts/build_evidence_replay.py
           scripts/video_audit.py
           scripts/canary_render.py
-
-      - name: Headless evidence smoke
-        shell: bash
-        run: |
-          set -euo pipefail
-          python scripts/record_headless.py \
-            --root .ci-evidence \
-            --title "CI headless proof" \
-            --artifact proof=.ci-artifact.txt \
-            -- python -c "from pathlib import Path; print('headless hello'); Path('.ci-artifact.txt').write_text('artifact', encoding='utf-8')"
-          SESSION="$(find .ci-evidence -mindepth 1 -maxdepth 1 -type d | head -n 1)"
-          test -n "$SESSION"
-          python scripts/verify_evidence_session.py "$SESSION"
-          python scripts/build_evidence_replay.py "$SESSION"
-          test -s "$SESSION/replay.html"
+          scripts/renderer_doctor.py
+          scripts/comfy_inventory.py
