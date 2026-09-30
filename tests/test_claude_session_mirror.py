@@ -41,6 +41,20 @@ class ClaudeSessionMirrorTests(unittest.TestCase):
             index = load_index(root / "mirror")
             self.assertIn("session-1", index["sessions"])
 
+    def test_hook_payload_can_be_filtered_by_hal_path(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            source = root / "source.jsonl"
+            source.write_text('{"x":1}\n', encoding="utf-8")
+            payload = {
+                "session_id": "session-filter",
+                "transcript_path": str(source),
+                "cwd": str(root / "HAL_SUPREME-worktree"),
+                "hook_event_name": "Stop",
+            }
+            state = mirror_hook(payload, root / "mirror")
+            self.assertEqual(state["session_id"], "session-filter")
+
     def test_backfill_uses_recent_transcripts(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
