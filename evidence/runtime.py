@@ -23,6 +23,9 @@ _SECRET_PATTERNS = [
     re.compile(r"(?i)\bBearer\s+[A-Za-z0-9._~+/=-]+"),
     re.compile(r"\bsk-[A-Za-z0-9_-]{12,}\b"),
     re.compile(r"(?i)([?&](?:token|key|secret|code)=)[^&\s]+"),
+    re.compile(r"(?i)(--(?:token|api[-_]?key|password|secret)\s+)[^\s]+"),
+    re.compile(r"(?i)\b((?:TOKEN|API_KEY|APIKEY|PASSWORD|SECRET)=)[^\s]+"),
+    re.compile(r"\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{8,}\b"),
 ]
 
 
@@ -54,7 +57,7 @@ def redact(value: Any, key: str | None = None) -> Any:
     if isinstance(value, str):
         text = value
         for pattern in _SECRET_PATTERNS:
-            if pattern.pattern.startswith("(?i)([?&]"):
+            if pattern.groups:
                 text = pattern.sub(lambda m: m.group(1) + "[REDACTED]", text)
             else:
                 text = pattern.sub("[REDACTED]", text)
