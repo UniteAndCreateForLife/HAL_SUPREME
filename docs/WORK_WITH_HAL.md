@@ -191,7 +191,9 @@ Typical deliverable:
 - reproducible evaluation.
 
 Relevant public evidence:
+- [Evidence & Citation Validation Harness acceptance contract](EVIDENCE_CITATION_VALIDATION_ACCEPTANCE.md)
 - [HAL Campus Evidence Desk](../challenges/global-smart-campus-2026/)
+- [Revenue Truth Control Plane](../case-studies/REVENUE_TRUTH_CONTROL_PLANE_2026-09-24.md)
 
 ### Private/local AI architecture
 
