@@ -72,6 +72,22 @@ This pipeline turns HAL video work into a repeatable production system rather th
    - Update the pipeline only through tested changes.
    - Produce a sanitized review/case-study cut when appropriate.
 
+## Headless processes are first-class
+
+A technical proof does not require a visible desktop window.
+
+When a process is headless, route it through the HAL evidence recorder described in docs/HEADLESS_EVIDENCE_CAPTURE.md. Preserve the complete event/artifact record, verify its hash chain, and use a clearly labeled TELEMETRY REPLAY segment in the edit.
+
+Preferred evidence order:
+
+1. actual screen capture when a real UI exists;
+2. direct engine/browser render when the process can emit pixels headlessly;
+3. registered provider artifacts plus receipts;
+4. verified telemetry replay for invisible process state;
+5. generated illustration only for explanation, never as execution proof.
+
+The generic recorder also captures process metrics and NVIDIA GPU telemetry when available, making long headless renders visually explainable without fabricating a terminal or GUI.
+
 ## Current judge-demo strategy
 
 For HAL Science Director — AI That Checks Its Own Work, the strongest story is one real end-to-end failure/correction cycle:
