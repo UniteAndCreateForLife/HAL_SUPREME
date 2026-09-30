@@ -207,6 +207,7 @@ class EvidenceSession:
         message: str = "",
         phase: str | None = None,
         data: dict[str, Any] | None = None,
+        source: str | None = None,
     ) -> dict[str, Any]:
         now = datetime.now(timezone.utc)
         base = {
@@ -215,7 +216,7 @@ class EvidenceSession:
             "ts_utc": now.isoformat(),
             "elapsed_ms": int(max(0.0, (now - self._started_at_utc).total_seconds()) * 1000),
             "kind": str(kind),
-            "source": self.source,
+            "source": source or self.source,
             "phase": phase,
             "message": message,
             "data": data or {},
