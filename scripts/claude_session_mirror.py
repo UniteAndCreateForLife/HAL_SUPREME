@@ -226,7 +226,8 @@ def main() -> int:
     parser.add_argument("--root", type=Path, default=DEFAULT_MIRROR_ROOT)
     sub = parser.add_subparsers(dest="command", required=True)
 
-    sub.add_parser("hook", help="Read one Claude hook payload from stdin and mirror that session.")
+    h = sub.add_parser("hook", help="Read one Claude hook payload from stdin and mirror that session.")
+    h.add_argument("--project-substring", default="HAL_SUPREME")
 
     b = sub.add_parser("backfill", help="Mirror recent local Claude Code transcript files.")
     b.add_argument("--limit", type=int, default=10)
@@ -242,6 +243,12 @@ def main() -> int:
         payload = json.load(sys.stdin)
         if not isinstance(payload, dict):
             raise SystemExit("hook input must be a JSON object")
+        project_filter = (args.project_substring or "").lower().strip()
+        cwd = str(payload.get("cwd") or "")
+        transcript_path = str(payload.get("transcript_path") or "")
+        if project_filter and project_filter not in cwd.lower() and project_filter not in transcript_path.lower():
+            print(json.dumps({"ok": True, "skipped": "project_filter"}))
+            return 0
         state = mirror_hook(payload, root)
         print(json.dumps({"ok": True, "session_id": state["session_id"]}))
         return 0
