@@ -68,8 +68,7 @@ def redact(value: Any, key: str | None = None) -> Any:
 def _file_lock(path: Path) -> Iterator[None]:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a+b") as handle:
-        handle.seek(0)
-        if handle.tell() == 0:
+        if path.stat().st_size == 0:
             handle.write(b"0")
             handle.flush()
         if os.name == "nt":
@@ -100,10 +99,17 @@ def _tail_json(path: Path) -> dict[str, Any] | None:
         pos = handle.tell() - 1
         while pos >= 0:
             handle.seek(pos)
-            if handle.read(1) == b"\n" and pos < handle.tell() - 1:
+            byte = handle.read(1)
+            if byte not in {b"\n", b"\r"}:
                 break
             pos -= 1
-        handle.seek(max(pos + 1, 0))
+        while pos >= 0:
+            handle.seek(pos)
+            if handle.read(1) == b"\n":
+                pos += 1
+                break
+            pos -= 1
+        handle.seek(max(pos, 0))
         line = handle.readline().decode("utf-8").strip()
     if not line:
         return None
