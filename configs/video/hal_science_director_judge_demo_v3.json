@@ -17,7 +17,10 @@
     "synthetic_proof_ui_forbidden": true,
     "synthetic_terminal_forbidden": true,
     "existing_motion_asset": "hackathons/livepeer-agent-science-director/public/HAL_SCIENCE_DIRECTOR_JUDGE_DEMO_V2.mp4",
-    "new_capture_needed": "One clean real HAL Science Director run from operator brief through judge correction"
+    "new_capture_needed": "One clean real HAL Science Director run from operator brief through judge correction",
+    "headless_evidence_allowed": true,
+    "telemetry_replay_must_be_labeled": true,
+    "evidence_rule": "A headless process may be represented by a verified telemetry replay derived from its hash-chained HAL evidence session; do not fabricate a GUI."
   },
   "shots": [
     {
@@ -32,6 +35,10 @@
         "motion is genuine",
         "no generic stock imagery",
         "title readable within first 2 seconds"
+      ],
+      "allowed_evidence_classes": [
+        "PROVIDER_ARTIFACT",
+        "ENGINE_BROWSER_RENDER"
       ]
     },
     {
@@ -44,7 +51,12 @@
       "overlay": "1. DEFINE THE CLAIM",
       "acceptance": [
         "request text readable",
-        "no simulated cursor or fake UI"
+        "no simulated cursor or fake UI",
+        "if headless, use verified TELEMETRY REPLAY rather than a fabricated UI"
+      ],
+      "allowed_evidence_classes": [
+        "ACTUAL_SCREEN_CAPTURE",
+        "TELEMETRY_REPLAY"
       ]
     },
     {
@@ -58,7 +70,12 @@
       "acceptance": [
         "observable claim visible",
         "accuracy constraints visible",
-        "no invented metrics"
+        "no invented metrics",
+        "if headless, use verified TELEMETRY REPLAY rather than a fabricated UI"
+      ],
+      "allowed_evidence_classes": [
+        "ACTUAL_SCREEN_CAPTURE",
+        "TELEMETRY_REPLAY"
       ]
     },
     {
@@ -71,7 +88,13 @@
       "overlay": "3. GENERATE",
       "acceptance": [
         "generation result shown",
-        "provider/model label only if evidenced"
+        "provider/model label only if evidenced",
+        "show the real generated artifact or registered provider output"
+      ],
+      "allowed_evidence_classes": [
+        "PROVIDER_ARTIFACT",
+        "ENGINE_BROWSER_RENDER",
+        "TELEMETRY_REPLAY"
       ]
     },
     {
@@ -85,7 +108,12 @@
       "acceptance": [
         "actual review text visible",
         "ring-thickness/division/banding issues readable",
-        "no fabricated score"
+        "no fabricated score",
+        "if headless, use verified TELEMETRY REPLAY rather than a fabricated UI"
+      ],
+      "allowed_evidence_classes": [
+        "ACTUAL_SCREEN_CAPTURE",
+        "TELEMETRY_REPLAY"
       ]
     },
     {
@@ -98,7 +126,12 @@
       "overlay": "5. FAILURE → CORRECTION → NEXT RUN",
       "acceptance": [
         "correction visibly enters next iteration",
-        "causal flow is clear"
+        "causal flow is clear",
+        "if headless, use verified TELEMETRY REPLAY rather than a fabricated UI"
+      ],
+      "allowed_evidence_classes": [
+        "ACTUAL_SCREEN_CAPTURE",
+        "TELEMETRY_REPLAY"
       ]
     },
     {
@@ -112,7 +145,12 @@
       "acceptance": [
         "receipt is real",
         "hash is legible or visually abbreviated without changing it",
-        "tests/CI claim is current"
+        "tests/CI claim is current",
+        "if headless, use verified TELEMETRY REPLAY rather than a fabricated UI"
+      ],
+      "allowed_evidence_classes": [
+        "ACTUAL_SCREEN_CAPTURE",
+        "TELEMETRY_REPLAY"
       ]
     },
     {
@@ -126,6 +164,11 @@
       "acceptance": [
         "clean end card",
         "no new unsupported claim"
+      ],
+      "allowed_evidence_classes": [
+        "ACTUAL_SCREEN_CAPTURE",
+        "PROVIDER_ARTIFACT",
+        "TELEMETRY_REPLAY"
       ]
     }
   ],
@@ -137,6 +180,7 @@
     "Every run can carry its plan, review, artifact lineage, and provenance receipt. Generation is not acceptance."
   ],
   "master_acceptance": [
+    "Headless processes may use verified TELEMETRY REPLAY; no fabricated GUI is permitted.",
     "Every product claim is backed by visible real evidence.",
     "No synthetic proof UI or fake terminal output.",
     "No freeze span longer than 2.0 seconds unless explicitly approved as an editorial hold.",
