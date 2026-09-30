@@ -19,6 +19,8 @@ on:
       - "scripts/record_evidence_replay.mjs"
       - "scripts/record_browser_plan.mjs"
       - "tests/test_evidence_runtime.py"
+      - "tests/test_evidence_collector.py"
+      - "services/evidence_collector.py"
       - "docs/HEADLESS_EVIDENCE_CAPTURE.md"
   pull_request:
     paths:
@@ -37,6 +39,8 @@ on:
       - "scripts/record_evidence_replay.mjs"
       - "scripts/record_browser_plan.mjs"
       - "tests/test_evidence_runtime.py"
+      - "tests/test_evidence_collector.py"
+      - "services/evidence_collector.py"
       - "docs/HEADLESS_EVIDENCE_CAPTURE.md"
 
 concurrency:
@@ -84,7 +88,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Unit tests
-        run: python -m unittest -v tests.test_evidence_runtime
+        run: python -m unittest -v tests.test_evidence_runtime tests.test_evidence_collector
       - name: Compile Python capture tools
         run: >-
           python -m py_compile
@@ -94,6 +98,7 @@ jobs:
           scripts/evidence_event.py
           scripts/verify_evidence_session.py
           scripts/build_evidence_replay.py
+          services/evidence_collector.py
       - name: Check Node capture scripts
         run: |
           node --check scripts/record_evidence_replay.mjs
