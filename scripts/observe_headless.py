@@ -3,6 +3,8 @@ from __future__ import annotations
 import argparse
 import glob
 import os
+import shutil
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -49,6 +51,46 @@ def _sample(proc: Any) -> dict[str, Any]:
     return data
 
 
+def _sample_nvidia() -> list[dict[str, Any]] | None:
+    executable = shutil.which("nvidia-smi")
+    if executable is None:
+        return None
+    proc = subprocess.run(
+        [
+            executable,
+            "--query-gpu=index,name,utilization.gpu,utilization.memory,memory.used,memory.total,temperature.gpu,power.draw",
+            "--format=csv,noheader,nounits",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=5,
+    )
+    if proc.returncode != 0:
+        return []
+    result: list[dict[str, Any]] = []
+    for line in proc.stdout.splitlines():
+        parts = [part.strip() for part in line.split(",")]
+        if len(parts) != 8:
+            continue
+        def number(value: str) -> float | None:
+            try:
+                return float(value)
+            except ValueError:
+                return None
+        result.append({
+            "index": int(parts[0]),
+            "name": parts[1],
+            "gpu_util_percent": number(parts[2]),
+            "memory_util_percent": number(parts[3]),
+            "memory_used_mib": number(parts[4]),
+            "memory_total_mib": number(parts[5]),
+            "temperature_c": number(parts[6]),
+            "power_w": number(parts[7]),
+        })
+    return result
+
+
 def _tail(path: Path, position: int) -> tuple[int, list[str]]:
     if not path.is_file():
         return position, []
@@ -68,6 +110,8 @@ def main() -> int:
     parser.add_argument("--pid", required=True, type=int)
     parser.add_argument("--duration", type=float, help="Stop after N seconds; otherwise observe until process exit.")
     parser.add_argument("--interval", type=float, default=1.0)
+    parser.add_argument("--gpu-interval", type=float, default=2.0)
+    parser.add_argument("--no-gpu", action="store_true")
     parser.add_argument("--session", type=Path, help="Join an existing evidence session instead of creating one.")
     parser.add_argument("--root", type=Path, default=Path("evidence/runtime"))
     parser.add_argument("--title", default="HAL attached process observation")
@@ -120,6 +164,8 @@ def main() -> int:
         pass
 
     started = time.monotonic()
+    next_gpu = 0.0
+    gpu_notice_sent = False
     reason = "process_exit"
     while True:
         if args.duration is not None and time.monotonic() - started >= args.duration:
@@ -131,6 +177,20 @@ def main() -> int:
             if proc.status() == psutil.STATUS_ZOMBIE:
                 break
             session.emit("process.metric", phase="observe", data=_sample(proc))
+            now = time.monotonic()
+            if not args.no_gpu and now >= next_gpu:
+                gpu_metrics = _sample_nvidia()
+                if gpu_metrics is None:
+                    if not gpu_notice_sent:
+                        session.emit(
+                            "gpu.metric_unavailable",
+                            phase="observe",
+                            message="nvidia-smi not available",
+                        )
+                        gpu_notice_sent = True
+                elif gpu_metrics:
+                    session.emit("gpu.metric", phase="observe", data={"gpus": gpu_metrics})
+                next_gpu = now + max(0.5, args.gpu_interval)
         except psutil.Error as exc:
             session.emit(
                 "observer.process_unavailable",
