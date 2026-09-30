@@ -18,8 +18,9 @@ Every visual used in a HAL technical demo should be attributable to one of these
 
 1. **ACTUAL SCREEN CAPTURE** — pixels recorded from a real visible UI.
 2. **ENGINE / BROWSER RENDER** — pixels produced directly by a headless engine or browser.
-3. **TELEMETRY REPLAY** — a deterministic visualization of recorded events, logs, metrics, artifacts, and receipts.
-4. **GENERATED ILLUSTRATION** — synthetic explanatory media that must never be presented as proof of a real process.
+3. **PROVIDER ARTIFACT** — a real image, video, audio, or 3D artifact returned by a model/provider job and registered with provenance.
+4. **TELEMETRY REPLAY** — a deterministic visualization of recorded events, logs, metrics, artifacts, and receipts.
+5. **GENERATED ILLUSTRATION** — synthetic explanatory media that must never be presented as proof of a real process.
 
 This classification should be visible in review tooling and retained in the shot manifest.
 
