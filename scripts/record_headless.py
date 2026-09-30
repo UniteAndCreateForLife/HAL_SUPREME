@@ -5,6 +5,7 @@ import glob
 import os
 import queue
 import shlex
+import shutil
 import subprocess
 import sys
 import threading
@@ -66,6 +67,46 @@ def _sample_process(pid: int) -> dict[str, Any] | None:
         return {"pid": pid, "metric_error": type(exc).__name__}
 
 
+def _sample_nvidia() -> list[dict[str, Any]] | None:
+    executable = shutil.which("nvidia-smi")
+    if executable is None:
+        return None
+    proc = subprocess.run(
+        [
+            executable,
+            "--query-gpu=index,name,utilization.gpu,utilization.memory,memory.used,memory.total,temperature.gpu,power.draw",
+            "--format=csv,noheader,nounits",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=5,
+    )
+    if proc.returncode != 0:
+        return []
+    gpus: list[dict[str, Any]] = []
+    for line in proc.stdout.splitlines():
+        parts = [part.strip() for part in line.split(",")]
+        if len(parts) != 8:
+            continue
+        def number(value: str) -> float | None:
+            try:
+                return float(value)
+            except ValueError:
+                return None
+        gpus.append({
+            "index": int(parts[0]),
+            "name": parts[1],
+            "gpu_util_percent": number(parts[2]),
+            "memory_util_percent": number(parts[3]),
+            "memory_used_mib": number(parts[4]),
+            "memory_total_mib": number(parts[5]),
+            "temperature_c": number(parts[6]),
+            "power_w": number(parts[7]),
+        })
+    return gpus
+
+
 def _command_display(command: list[str]) -> str:
     if os.name == "nt":
         return subprocess.list2cmdline(command)
@@ -84,6 +125,8 @@ def main() -> int:
                         help="Register ROLE=GLOB after the command exits. Repeat as needed.")
     parser.add_argument("--metric-interval", type=float, default=1.0)
     parser.add_argument("--no-metrics", action="store_true")
+    parser.add_argument("--gpu-interval", type=float, default=2.0)
+    parser.add_argument("--no-gpu", action="store_true")
     parser.add_argument("command", nargs=argparse.REMAINDER)
     args = parser.parse_args()
 
@@ -143,7 +186,9 @@ def main() -> int:
 
     finished_readers = 0
     next_metric = 0.0
+    next_gpu = 0.0
     metric_notice_sent = False
+    gpu_notice_sent = False
     while finished_readers < 2 or proc.poll() is None:
         try:
             item = out_queue.get(timeout=0.1)
@@ -174,6 +219,20 @@ def main() -> int:
             else:
                 session.emit("process.metric", phase="observe", data=metrics)
             next_metric = now + max(0.25, args.metric_interval)
+
+        if not args.no_gpu and now >= next_gpu and proc.poll() is None:
+            gpu_metrics = _sample_nvidia()
+            if gpu_metrics is None:
+                if not gpu_notice_sent:
+                    session.emit(
+                        "gpu.metric_unavailable",
+                        phase="observe",
+                        message="nvidia-smi not available",
+                    )
+                    gpu_notice_sent = True
+            elif gpu_metrics:
+                session.emit("gpu.metric", phase="observe", data={"gpus": gpu_metrics})
+            next_gpu = now + max(0.5, args.gpu_interval)
 
     exit_code = proc.wait()
     for thread in threads:
