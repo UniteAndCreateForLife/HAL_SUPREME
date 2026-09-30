@@ -98,6 +98,18 @@ It records:
 
 The next ComfyUI adapter upgrade should consume its WebSocket stream so node progress and preview frames become additional evidence. ComfyUI's own examples expose execution messages through the WebSocket and binary preview frames during generation.
 
+## Local collector for non-Python services
+
+Long-lived local services do not need to spawn a Python helper for every event. Start the loopback-only collector against an active session:
+
+    python services/evidence_collector.py       --session evidence/runtime/<session>       --port 9912
+
+Then any local language/runtime can POST an event:
+
+    curl -X POST http://127.0.0.1:9912/v1/event       -H "Content-Type: application/json"       -d "{"kind":"agent.step","source":"my-worker","phase":"plan","message":"plan ready","data":{"step":1}}"
+
+The built-in collector deliberately refuses non-loopback hosts. Remote-worker ingestion should use an authenticated bridge rather than exposing this local collector directly.
+
 ## Browser / web agents
 
 For browser automation, do not synthesize a browser window after the fact.
