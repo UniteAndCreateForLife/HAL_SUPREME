@@ -4,7 +4,7 @@ import argparse
 import html
 import json
 import re
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any
 
 
@@ -20,7 +20,10 @@ def _sanitize_replay(value: Any, key: str | None = None) -> Any:
         return [_sanitize_replay(item) for item in value]
     if isinstance(value, str):
         if key in _PRIVATE_PATH_KEYS:
-            name = Path(value).name
+            if "\\" in value or re.match(r"^[A-Za-z]:", value):
+                name = PureWindowsPath(value).name
+            else:
+                name = PurePosixPath(value).name
             return f"[LOCAL_PATH]/{name}" if name else "[LOCAL_PATH]"
         text = _WINDOWS_PATH.sub("[LOCAL_HOME]", value)
         text = _UNIX_HOME_PATH.sub("[LOCAL_HOME]", text)
