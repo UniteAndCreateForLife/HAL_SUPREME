@@ -52,6 +52,18 @@ Example:
          --bindings configs/workflows/wan_bindings.json \
          --output-node 42
 
+## Attach to processes that are already running
+
+Some HAL services are already alive before a recording session begins. You cannot reliably recover another process's original stdout after the fact, but HAL can still attach an observer to the PID and record live process metrics plus any logs that service is already writing.
+
+Example:
+
+    python scripts/observe_headless.py       --pid 12345       --duration 120       --tail-log D:/HAL_SUPREME/logs/worker.log       --artifact output=artifacts/**/*.mp4
+
+This produces the same hash-chained evidence format as the launch wrapper. If the target service also emits semantic events through HAL_EVIDENCE_SESSION_DIR or the event CLI, the replay combines both sources.
+
+For long-lived services, the preferred design is to start them under the recorder or add native EvidenceSession/OpenTelemetry instrumentation so the system has semantic events from process start rather than only attach-time metrics.
+
 ## Semantic events from any process
 
 Python components can use EvidenceSession.from_env().
