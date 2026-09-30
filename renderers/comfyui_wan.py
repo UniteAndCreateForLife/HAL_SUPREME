@@ -47,7 +47,7 @@ class ComfyUIWanRenderer(Renderer):
     def capabilities(self) -> Mapping[str, Any]:
         return {
             "text_to_video": True,
-            "image_to_video": True,
+            "image_to_video": False,
             "video_to_video": False,
             "reference_identity": False,
             "control_video": False,
