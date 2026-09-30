@@ -6,6 +6,7 @@ from pathlib import Path
 
 from provenance.receipts import RenderReceipt
 from qc.motion import require_temporal_motion
+from qc.video import require_video_quality
 from .base import RenderRequest
 from .router import CapabilityRouter
 
@@ -22,7 +23,7 @@ def render_and_accept(
     router: CapabilityRouter,
     capability: str = "text_to_video",
 ) -> AcceptedRender:
-    """Render, normalize into HAL artifact storage, verify motion, then commit a receipt."""
+    """Render, normalize into HAL artifact storage, verify QC, then commit a receipt."""
     decision = router.choose(capability)
     result = decision.renderer.render(request)
 
@@ -37,6 +38,15 @@ def render_and_accept(
         shutil.copy2(source, target)
 
     motion = require_temporal_motion(target)
+    quality = None
+    policy = request.metadata.get("video_quality_policy")
+    if policy is not None:
+        if policy is True:
+            policy = {}
+        if not isinstance(policy, dict):
+            raise TypeError("RenderRequest.metadata['video_quality_policy'] must be a mapping, true, or omitted")
+        quality = require_video_quality(target, **policy)
+
     receipt = RenderReceipt.create(
         task_id=request.task_id,
         shot_id=request.shot_id,
@@ -45,6 +55,7 @@ def render_and_accept(
         model_id=result.model_id,
         artifact_path=target,
         motion_evidence=motion,
+        quality_evidence=quality,
         seed=result.seed,
     )
     receipt_path = artifact_dir / "render.receipt.json"
