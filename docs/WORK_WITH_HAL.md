@@ -150,6 +150,8 @@ Typical first deliverable:
 - prioritized implementation plan.
 
 Relevant public evidence:
+- [Agent Reliability Audit acceptance contract](AGENT_RELIABILITY_AUDIT_ACCEPTANCE.md)
+- [MCP / Connector Evaluation Rubric](MCP_CONNECTOR_EVALUATION_RUBRIC.md)
 - [HAL Campus Evidence Desk](../challenges/global-smart-campus-2026/)
 - [Revenue Truth Control Plane](../examples/revenue_truth/)
 - [Public portfolio](../PORTFOLIO.md)
@@ -169,6 +171,8 @@ Typical deliverable:
 - provider-neutral integration notes.
 
 Relevant public evidence:
+- [MCP interoperability acceptance checklist](MCP_INTEROPERABILITY_ACCEPTANCE.md)
+- [MCP / Connector Evaluation Rubric](MCP_CONNECTOR_EVALUATION_RUBRIC.md)
 - [Claude Code + HAL MCP Fabric case study](../case-studies/CLAUDE_HAL_MCP_FABRIC_2026-09-24.md)
 - [Livepeer MCP integration](LIVEPEER_CREATIVE_MCP.md)
 
