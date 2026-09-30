@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://halsupreme.com/schemas/youtube_publish_request.schema.json",
+  "title": "HAL YouTube Publish Request",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "publish_id",
+    "video_sha256",
+    "title",
+    "privacy",
+    "approval_required"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "publish_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "video_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "description_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "privacy": {
+      "enum": [
+        "private",
+        "unlisted",
+        "public"
+      ]
+    },
+    "category_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "made_for_kids": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 100
+    },
+    "approval_required": {
+      "const": true
+    },
+    "release_fingerprint": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "existing_youtube_video_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
