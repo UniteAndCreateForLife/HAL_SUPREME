@@ -14,7 +14,7 @@ from renderers.router import CapabilityRouter
 def main() -> int:
     parser = argparse.ArgumentParser(description="HAL genuine-motion renderer canary")
     parser.add_argument("--workflow", required=True, type=Path, help="Prepared ComfyUI API workflow JSON")
-    parser.add_argument("--bindings", type=Path, help="WorkflowBindings JSON for prompt/seed/size/frame injection")
+    parser.add_argument("--bindings", required=True, type=Path, help="WorkflowBindings JSON for prompt/seed/size/frame injection")
     parser.add_argument("--output-node", help="ComfyUI node ID that must contain the final artifact")
     parser.add_argument(
         "--prompt",
