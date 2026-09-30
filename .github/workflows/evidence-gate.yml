@@ -39,6 +39,10 @@ on:
       - "tests/test_evidence_runtime.py"
       - "docs/HEADLESS_EVIDENCE_CAPTURE.md"
 
+concurrency:
+  group: evidence-gate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
