@@ -19,6 +19,7 @@ def main() -> int:
     parser.add_argument("message", nargs="?", default="")
     parser.add_argument("--session", type=Path)
     parser.add_argument("--phase")
+    parser.add_argument("--source")
     parser.add_argument("--data-json", default="{}")
     parser.add_argument("--artifact", type=Path)
     parser.add_argument("--role", default="output")
@@ -48,7 +49,7 @@ def main() -> int:
         parser.error(f"--data-json is invalid JSON: {exc}")
     if not isinstance(data, dict):
         parser.error("--data-json must decode to an object")
-    event = session.emit(args.kind, message=args.message, phase=args.phase, data=data)
+    event = session.emit(args.kind, message=args.message, phase=args.phase, data=data, source=args.source)
     print(json.dumps(event, indent=2, sort_keys=True))
     return 0
 
