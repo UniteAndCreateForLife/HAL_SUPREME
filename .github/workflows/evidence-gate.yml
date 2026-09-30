@@ -12,6 +12,7 @@ on:
       - "schemas/evidence_event.schema.json"
       - "schemas/browser_capture_plan.schema.json"
       - "scripts/record_headless.py"
+      - "scripts/observe_headless.py"
       - "scripts/evidence_event.py"
       - "scripts/verify_evidence_session.py"
       - "scripts/build_evidence_replay.py"
@@ -29,6 +30,7 @@ on:
       - "schemas/evidence_event.schema.json"
       - "schemas/browser_capture_plan.schema.json"
       - "scripts/record_headless.py"
+      - "scripts/observe_headless.py"
       - "scripts/evidence_event.py"
       - "scripts/verify_evidence_session.py"
       - "scripts/build_evidence_replay.py"
@@ -84,6 +86,7 @@ jobs:
           python -m py_compile
           evidence/runtime.py
           scripts/record_headless.py
+          scripts/observe_headless.py
           scripts/evidence_event.py
           scripts/verify_evidence_session.py
           scripts/build_evidence_replay.py
