@@ -1,0 +1,256 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://halsupreme.com/schemas/cinematic_world_manifest.schema.json",
+  "title": "HAL Persistent Cinematic World Manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "world_id",
+    "authorities",
+    "assets",
+    "scenes",
+    "shots"
+  ],
+  "properties": {
+    "schema_version": {"const": "hal.cinematic-world/v1"},
+    "world_id": {"type": "string", "minLength": 1},
+    "authorities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["history", "work", "control", "routing", "stage"],
+      "properties": {
+        "history": {"const": "EventStore"},
+        "work": {"const": "WorkGraph"},
+        "control": {"const": "Supervisor"},
+        "routing": {"const": "ProviderMesh"},
+        "stage": {"const": "Godot"}
+      }
+    },
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/asset"}
+    },
+    "entities": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/entity"},
+      "default": []
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/scene"}
+    },
+    "shots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/shot"}
+    }
+  },
+  "$defs": {
+    "asset": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["asset_id", "kind", "artifact_ref"],
+      "properties": {
+        "asset_id": {"type": "string", "minLength": 1},
+        "kind": {
+          "enum": [
+            "character",
+            "wardrobe",
+            "prop",
+            "set",
+            "environment",
+            "vehicle",
+            "rig",
+            "material"
+          ]
+        },
+        "artifact_ref": {"type": "string", "minLength": 1},
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{64}$"
+        },
+        "source_lineage": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "semantic_tags": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "affordances": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "environment_profile": {
+          "$ref": "#/$defs/environment_profile"
+        }
+      }
+    },
+    "environment_profile": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "fidelity_target",
+        "source_mode",
+        "source_refs",
+        "visual_representation",
+        "visual_artifact_ref",
+        "collision_artifact_ref",
+        "geometry_confidence"
+      ],
+      "properties": {
+        "fidelity_target": {
+          "enum": ["blockout", "photoreal_from_capture", "generated_photoreal"]
+        },
+        "source_mode": {
+          "enum": [
+            "single_image",
+            "multi_image",
+            "video",
+            "panorama",
+            "photogrammetry",
+            "generated_multiview"
+          ]
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "visual_representation": {
+          "enum": ["gaussian_splat", "textured_mesh", "hybrid"]
+        },
+        "visual_artifact_ref": {"type": "string", "minLength": 1},
+        "collision_artifact_ref": {"type": "string", "minLength": 1},
+        "geometry_confidence": {
+          "enum": ["measured", "reconstructed", "inferred"]
+        },
+        "reconstruction_provider": {"type": "string"},
+        "capture_notes": {"type": "string"}
+      }
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["entity_id", "asset_id"],
+      "properties": {
+        "entity_id": {"type": "string", "minLength": 1},
+        "asset_id": {"type": "string", "minLength": 1},
+        "persistence": {
+          "enum": ["continuous", "scene", "shot"],
+          "default": "continuous"
+        }
+      }
+    },
+    "scene": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["scene_id", "set_asset_id"],
+      "properties": {
+        "scene_id": {"type": "string", "minLength": 1},
+        "set_asset_id": {"type": "string", "minLength": 1},
+        "anchors": {
+          "type": "object",
+          "additionalProperties": true,
+          "default": {}
+        },
+        "usd_stage_ref": {"type": "string"},
+        "godot_scene_ref": {"type": "string"},
+        "environment_policy": {
+          "enum": ["blockout", "photoreal_from_capture", "generated_photoreal"]
+        }
+      }
+    },
+    "placement": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["entity_id"],
+      "properties": {
+        "entity_id": {"type": "string", "minLength": 1},
+        "anchor": {"type": "string"},
+        "transform": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "position": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {"type": "number"}
+            },
+            "rotation_quat": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {"type": "number"}
+            },
+            "scale": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {"type": "number"}
+            }
+          }
+        }
+      }
+    },
+    "transition": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["to", "reason"],
+      "properties": {
+        "from": {},
+        "to": {},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "shot": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "shot_id",
+        "sequence_index",
+        "continuity_segment",
+        "scene_id",
+        "continuity_state"
+      ],
+      "properties": {
+        "shot_id": {"type": "string", "minLength": 1},
+        "sequence_index": {"type": "integer", "minimum": 0},
+        "previous_shot_id": {"type": ["string", "null"]},
+        "continuity_segment": {"type": "string", "minLength": 1},
+        "scene_id": {"type": "string", "minLength": 1},
+        "placements": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/placement"},
+          "default": []
+        },
+        "continuity_state": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "inherit_keys": {
+          "type": "array",
+          "items": {"type": "string"},
+          "uniqueItems": true,
+          "default": []
+        },
+        "transitions": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/transition"},
+          "default": {}
+        },
+        "camera_state": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "lighting_state": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    }
+  }
+}
