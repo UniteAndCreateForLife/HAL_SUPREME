@@ -1,0 +1,108 @@
+# HAL Nightmare Studio v3 — strict open-source production profile
+profile: nightmare_studio_v3_open_source
+
+policy:
+  strict_open_source: true
+  paid_apis_allowed: false
+  source_available_community_licenses_allowed: false
+  noncommercial_weights_allowed: false
+  dependency_audit_required: true
+
+hardware_profiles:
+  local_8gb:
+    target_vram_gb: 8
+    target_ram_gb: 64
+    engine: lightx2v_comfyui_gguf
+    one_heavy_gpu_job_at_a_time: true
+  large_gpu:
+    preferred_world_model: kandinsky-5-video-pro
+  frontier_cluster:
+    magi_2_preview_status: quarantined_dependency_audit
+
+master:
+  duration_seconds: 360
+  width: 1920
+  height: 1080
+  fps: 24
+  audio_sample_rate: 48000
+  shot_target_seconds: 5
+
+music:
+  primary_model: ace-step-1.5-xl-sft
+  fallback_model: heartmula-oss-3b-happy-new-year
+  structure:
+    core_section_seconds: 180
+    use_complete_for_extensions: true
+    use_repaint_for_transitions: true
+  target:
+    integrated_lufs: -10
+    true_peak_dbtp: -1
+  direction:
+    - dark_midtempo_bass
+    - idm_glitch_rhythm
+    - granular_vocal_processing
+    - cinematic_sub_bass
+    - original_sound_design
+  artist_imitation: false
+
+voice:
+  self_voice_model: seed-vc
+  require_authorization_receipt: true
+  generic_tts_may_impersonate_enrolled_voice: false
+
+video:
+  local_primary_world_model: wan2.2-ti2v-5b
+  local_secondary_world_model: kandinsky-5-video-lite
+  large_gpu_primary_world_model: kandinsky-5-video-pro
+  large_gpu_fallback_world_model: step-video-t2v
+  performance_model: wan2.2-s2v-14b
+  gesture_model: wan2.2-animate-14b
+  longform_sync_model: infinitetalk
+  multiperson_model: multitalk
+  local_engine:
+    framework: LightX2V
+    comfyui_gguf: true
+    cpu_offload: true
+    block_phase_offload: true
+    prefer_4step_distilled_wan: true
+  reusable_3d:
+    blender: true
+    godot: true
+  continuity:
+    reuse_canonical_characters: true
+    reuse_rigs: true
+    reuse_sets: true
+    reuse_props: true
+    reuse_materials: true
+    reuse_camera_profiles: true
+    do_not_reuse_flattened_rendered_footage: true
+
+frontier_candidates:
+  magi-2-preview:
+    status: blocked_in_strict_mode_pending_dependency_audit
+    reason: stable_audio_component_requires_license_review
+  minimax-h3:
+    status: blocked
+    reason: current_community_license_excludes_united_states
+  skyreels-v3:
+    status: blocked_in_strict_mode
+    reason: skywork_community_license
+  ltx-2.5:
+    status: blocked_in_strict_mode
+    reason: community_license
+
+post:
+  ffmpeg_master: true
+  preserve_48khz_audio: true
+  timestamped_outputs: true
+  never_overwrite_verified_master: true
+
+qc:
+  require_full_decode: true
+  require_real_temporal_motion: true
+  require_audio_present: true
+  require_exact_duration: true
+  require_resolution_match: true
+  require_sha256: true
+  require_model_license_receipt: true
+  require_dependency_license_receipt: true
