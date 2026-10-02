@@ -1,0 +1,22 @@
+{
+  "artifact": "public/HAL_SCIENCE_DIRECTOR_JUDGE_DEMO_V2.mp4",
+  "sha256": "62050dc0eaeafac6807fc07769558359eaf79b7c21263512c12aa38bbc029531",
+  "bytes": 13096085,
+  "duration_seconds": 25.0,
+  "resolution": "1920x1080",
+  "frame_rate": 30,
+  "video_codec": "h264",
+  "audio_codec": "aac",
+  "livepeer_job_id": "cjob_365726b5cbfc",
+  "livepeer_scene_count": 5,
+  "livepeer_scene_capability": "kling-o3-i2v",
+  "livepeer_quote_usd": 4.048,
+  "shot_strategy": "keyframe_then_animate",
+  "delivery_promise": "motion_led",
+  "finishing": {
+    "visual_generation": "Livepeer Agent Creative MCP",
+    "stitch_and_titles": "local deterministic ffmpeg",
+    "narration": "neutral Microsoft Edge TTS; not presented as the user's voice"
+  },
+  "disclosure": "Livepeer generated all five motion scenes. Livepeer's server-side stitch/TTS finishing became unavailable after scene generation because the keyless demo budget store was temporarily unavailable, so deterministic local finishing was used. No generated pseudo-label is presented as scientific evidence."
+}
