@@ -27,10 +27,22 @@ class RenderReceipt:
     motion_evidence: dict[str, Any]
     seed: int
     committed_at: str
+    quality_evidence: dict[str, Any] | None = None
 
     @classmethod
-    def create(cls, *, task_id: str, shot_id: str, renderer_id: str, provider_id: str,
-               model_id: str, artifact_path: Path, motion_evidence: dict[str, Any], seed: int) -> "RenderReceipt":
+    def create(
+        cls,
+        *,
+        task_id: str,
+        shot_id: str,
+        renderer_id: str,
+        provider_id: str,
+        model_id: str,
+        artifact_path: Path,
+        motion_evidence: dict[str, Any],
+        seed: int,
+        quality_evidence: dict[str, Any] | None = None,
+    ) -> "RenderReceipt":
         return cls(
             task_id=task_id,
             shot_id=shot_id,
@@ -41,6 +53,7 @@ class RenderReceipt:
             motion_evidence=motion_evidence,
             seed=seed,
             committed_at=datetime.now(timezone.utc).isoformat(),
+            quality_evidence=quality_evidence,
         )
 
     def write(self, path: Path) -> None:
