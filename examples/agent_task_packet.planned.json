@@ -1,0 +1,25 @@
+{
+  "schema": "hal.agent_task.v1",
+  "task_id": "example-agent-fabric",
+  "objective": "Demonstrate a provider-neutral HAL task packet that validates before implementation begins.",
+  "scope": [
+    "services/agent_fabric"
+  ],
+  "constraints": [
+    "public-safe",
+    "standard-library-only"
+  ],
+  "protected_actions": [
+    "merge"
+  ],
+  "acceptance": [
+    "The task packet validator returns ok=true."
+  ],
+  "status": "planned",
+  "revision": null,
+  "implementer": null,
+  "verification": [],
+  "review": null,
+  "receipt_sha256": null,
+  "promotion": null
+}

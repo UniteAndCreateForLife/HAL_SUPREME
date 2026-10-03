@@ -1,0 +1,52 @@
+name: Agent Engineering Fabric
+
+on:
+  push:
+    branches:
+      - main
+      - "feat/executable-agent-contract-20260927"
+    paths:
+      - "AGENTS.md"
+      - "CLAUDE.md"
+      - ".opencode/**"
+      - "docs/AGENT_ENGINEERING_FABRIC.md"
+      - "services/agent_fabric/**"
+      - "schemas/agent_task_packet.v1.json"
+      - "examples/agent_task_packet.planned.json"
+      - "tests/test_agent_fabric.py"
+      - ".github/workflows/agent-fabric.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "AGENTS.md"
+      - "CLAUDE.md"
+      - ".opencode/**"
+      - "docs/AGENT_ENGINEERING_FABRIC.md"
+      - "services/agent_fabric/**"
+      - "schemas/agent_task_packet.v1.json"
+      - "examples/agent_task_packet.planned.json"
+      - "tests/test_agent_fabric.py"
+      - ".github/workflows/agent-fabric.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Run agent fabric contract tests
+        run: python -m unittest -v tests.test_agent_fabric
+      - name: Validate example task packet
+        run: python -m services.agent_fabric.contract examples/agent_task_packet.planned.json
+      - name: Compile contract implementation
+        run: python -m py_compile services/agent_fabric/contract.py tests/test_agent_fabric.py
+      - name: Check diff whitespace
+        run: git diff --check origin/main...HEAD

@@ -63,6 +63,14 @@ Every substantial engineering task should be representable as:
 
 The packet is intentionally model-neutral so HAL can route it without rewriting the task for each provider.
 
+The machine-readable contract is [`schemas/agent_task_packet.v1.json`](../schemas/agent_task_packet.v1.json), with a standard-library validator in [`services/agent_fabric/contract.py`](../services/agent_fabric/contract.py). Validate a packet with:
+
+```bash
+python -m services.agent_fabric.contract examples/agent_task_packet.planned.json
+```
+
+The validator checks stage claims, revision-pinned focused/regression evidence, independent review, receipt digests, and explicit authorization before a protected promotion can be represented as `promoted`.
+
 ## Promotion gates
 
 A change moves forward only when its evidence matches the gate:
