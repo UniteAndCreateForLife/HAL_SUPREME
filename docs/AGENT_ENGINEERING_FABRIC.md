@@ -100,6 +100,14 @@ Project commands provide a consistent operator surface:
 
 The reviewer cannot edit or execute shell commands. The verifier cannot edit and can run only bounded repository inspection/test commands declared in its permissions.
 
+## Runtime worker adapters
+
+A provider can participate in the engineering fabric at runtime without becoming the control plane. The first concrete adapter is [`integrations/opencode/`](../integrations/opencode/README.md).
+
+The OpenCode adapter targets the V2 session API and defaults to a loopback-only HTTP boundary. It can create a session for an explicit workspace, admit a prompt, wait, read context, inspect active sessions, and interrupt execution. It deliberately does not expose shell execution or permission approval. That means HAL can delegate bounded coding work while preserving authority separation around higher-risk actions.
+
+Runtime adapters should follow the same rule: expose the minimum capability needed for the worker role, and make authority expansion an explicit reviewed change.
+
 ## Compounding loop
 
 Every completed work order should feed the same after-action cycle:

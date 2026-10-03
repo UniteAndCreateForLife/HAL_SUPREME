@@ -1,0 +1,34 @@
+name: OpenCode Worker Adapter
+
+on:
+  push:
+    branches:
+      - main
+      - "feat/opencode-worker-adapter-20260927"
+    paths:
+      - "integrations/opencode/**"
+      - "tests/test_opencode_worker.py"
+      - ".github/workflows/opencode-worker.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "integrations/opencode/**"
+      - "tests/test_opencode_worker.py"
+      - ".github/workflows/opencode-worker.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Test bounded OpenCode transport
+        run: python -m unittest -v tests.test_opencode_worker
+      - name: Compile adapter
+        run: python -m py_compile integrations/opencode/worker.py tests/test_opencode_worker.py
