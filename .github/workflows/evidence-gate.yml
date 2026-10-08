@@ -8,12 +8,46 @@ on:
       - "challenges/global-smart-campus-2026/mvp/live_model.py"
       - "challenges/global-smart-campus-2026/public_demo/parity/**"
       - ".github/workflows/evidence-gate.yml"
+      - "evidence/**"
+      - "schemas/evidence_event.schema.json"
+      - "schemas/browser_capture_plan.schema.json"
+      - "scripts/record_headless.py"
+      - "scripts/observe_headless.py"
+      - "scripts/evidence_event.py"
+      - "scripts/verify_evidence_session.py"
+      - "scripts/build_evidence_replay.py"
+      - "scripts/record_evidence_replay.mjs"
+      - "scripts/record_browser_plan.mjs"
+      - "tests/test_evidence_runtime.py"
+      - "tests/test_evidence_replay.py"
+      - "tests/test_evidence_collector.py"
+      - "services/evidence_collector.py"
+      - "docs/HEADLESS_EVIDENCE_CAPTURE.md"
   pull_request:
     paths:
       - "examples/evidence_gate/**"
       - "challenges/global-smart-campus-2026/mvp/live_model.py"
       - "challenges/global-smart-campus-2026/public_demo/parity/**"
       - ".github/workflows/evidence-gate.yml"
+      - "evidence/**"
+      - "schemas/evidence_event.schema.json"
+      - "schemas/browser_capture_plan.schema.json"
+      - "scripts/record_headless.py"
+      - "scripts/observe_headless.py"
+      - "scripts/evidence_event.py"
+      - "scripts/verify_evidence_session.py"
+      - "scripts/build_evidence_replay.py"
+      - "scripts/record_evidence_replay.mjs"
+      - "scripts/record_browser_plan.mjs"
+      - "tests/test_evidence_runtime.py"
+      - "tests/test_evidence_replay.py"
+      - "tests/test_evidence_collector.py"
+      - "services/evidence_collector.py"
+      - "docs/HEADLESS_EVIDENCE_CAPTURE.md"
+
+concurrency:
+  group: evidence-gate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -41,3 +75,47 @@ jobs:
         run: python -m unittest -v examples.evidence_gate.test_evidence_gate
       - name: Compile
         run: python -m py_compile examples/evidence_gate/evidence_gate.py examples/evidence_gate/test_evidence_gate.py
+
+  headless-evidence:
+    name: headless-evidence-${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Unit tests
+        run: python -m unittest -v tests.test_evidence_runtime tests.test_evidence_collector tests.test_evidence_replay
+      - name: Compile Python capture tools
+        run: >-
+          python -m py_compile
+          evidence/runtime.py
+          scripts/record_headless.py
+          scripts/observe_headless.py
+          scripts/evidence_event.py
+          scripts/verify_evidence_session.py
+          scripts/build_evidence_replay.py
+          services/evidence_collector.py
+      - name: Check Node capture scripts
+        run: |
+          node --check scripts/record_evidence_replay.mjs
+          node --check scripts/record_browser_plan.mjs
+      - name: Headless capture smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/record_headless.py \
+            --root .ci-evidence \
+            --title "CI headless proof" \
+            --artifact proof=.ci-artifact.txt \
+            -- python -c "from pathlib import Path; print('headless hello'); Path('.ci-artifact.txt').write_text('artifact', encoding='utf-8')"
+          SESSION="$(find .ci-evidence -mindepth 1 -maxdepth 1 -type d | head -n 1)"
+          test -n "$SESSION"
+          python scripts/verify_evidence_session.py "$SESSION"
+          python scripts/build_evidence_replay.py "$SESSION"
+          test -s "$SESSION/replay.html"

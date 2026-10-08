@@ -1,0 +1,75 @@
+name: Video Pipeline V2
+
+on:
+  pull_request:
+    paths:
+      - "provenance/**"
+      - "qc/**"
+      - "renderers/**"
+      - "evidence/runtime.py"
+      - "scripts/video_audit.py"
+      - "scripts/canary_render.py"
+      - "scripts/renderer_doctor.py"
+      - "scripts/comfy_inventory.py"
+      - "tests/test_video_quality.py"
+      - "tests/test_comfyui_wan_renderer.py"
+      - "docs/VIDEO_PIPELINE_V2.md"
+      - "docs/RENDER_CANARY.md"
+      - "configs/video/**"
+      - ".github/workflows/video-pipeline-v2.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "provenance/**"
+      - "qc/**"
+      - "renderers/**"
+      - "evidence/runtime.py"
+      - "scripts/video_audit.py"
+      - "scripts/canary_render.py"
+      - "scripts/renderer_doctor.py"
+      - "scripts/comfy_inventory.py"
+      - "tests/test_video_quality.py"
+      - "tests/test_comfyui_wan_renderer.py"
+      - ".github/workflows/video-pipeline-v2.yml"
+
+concurrency:
+  group: video-pipeline-v2-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  video-pipeline:
+    name: video-pipeline-${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.12"]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Unit tests
+        run: >
+          python -m unittest -v
+          tests.test_renderer_registry
+          tests.test_renderer_router
+          tests.test_comfyui_wan_renderer
+          tests.test_video_quality
+      - name: Compile video pipeline
+        run: >
+          python -m py_compile
+          evidence/runtime.py
+          qc/video.py
+          renderers/comfyui_wan.py
+          renderers/pipeline.py
+          provenance/receipts.py
+          scripts/video_audit.py
+          scripts/canary_render.py
+          scripts/renderer_doctor.py
+          scripts/comfy_inventory.py
