@@ -66,6 +66,8 @@ HAL now uses [AGENTS.md](AGENTS.md) as the canonical coding-agent contract, with
 
 OpenCode operators can use `/hal-plan`, `/hal-fix`, `/hal-review`, and `/hal-verify`. Agent instruction surfaces are included in the public evidence/secret scan and trigger CI when changed.
 
+The bounded [OpenCode runtime adapter](integrations/opencode/README.md) connects HAL to OpenCode's V2 session API over loopback by default. It exposes session/prompt/wait/context/interrupt operations while intentionally omitting shell execution and permission-approval APIs.
+
 ## Livepeer Agent Creative MCP
 
 HAL can use Livepeer Agent's creative MCP as a replaceable remote media worker for image, video, audio, multi-scene projects and finishing. ChatGPT and OpenCode can discover the provider's current tool schemas at runtime rather than pinning stale signatures. Provider mutations remain subject to explicit action and cost review.
