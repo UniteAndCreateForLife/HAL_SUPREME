@@ -132,6 +132,15 @@ If the main problem is **privacy, local/open models, provider lock-in, or cloud-
 
 Each starter engagement is intentionally bounded. Larger implementation work is quoted only after the first slice establishes the failure mode, contract, evidence rule, or architecture boundary.
 
+## Direct-buy Upwork packages
+
+Two existing public Project Catalog listings offer an alternative to arranging a custom engagement. These marketplace packages have their **own published deliverables, tiers, prices and terms**; review those on Upwork rather than assuming they are identical to the starter audits below.
+
+- [Purchase an AI Agent Reliability Audit on Upwork](https://www.upwork.com/services/product/development-it-an-ai-agent-reliability-audit-with-a-ranked-tested-fix-plan-2103485115448877888).
+- [Purchase a custom MCP / Tool Integration on Upwork](https://www.upwork.com/services/product/development-it-a-custom-mcp-server-so-claude-or-chatgpt-can-safely-use-your-api-2103489005452970082).
+
+The Evidence & Citation Validation and Private / Local AI Architecture offers continue through [HAL's private contact route](https://halsupreme.com); do not assume an Upwork direct-buy listing exists for those services.
+
 ## Strong-fit paid engineering
 
 ### Agent reliability audit
