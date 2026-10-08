@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://halsupreme.com/schemas/agent_task_packet.v1.json",
+  "title": "HAL Agent Task Packet v1",
+  "type": "object",
+  "required": [
+    "schema",
+    "task_id",
+    "objective",
+    "scope",
+    "constraints",
+    "protected_actions",
+    "acceptance",
+    "status",
+    "verification"
+  ],
+  "properties": {
+    "schema": {
+      "const": "hal.agent_task.v1"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]+$"
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "protected_actions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "merge",
+          "deploy",
+          "publish",
+          "spend",
+          "external_message",
+          "credential_change",
+          "identity_change",
+          "destructive_data_operation"
+        ]
+      }
+    },
+    "acceptance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "status": {
+      "enum": [
+        "planned",
+        "implementing",
+        "implemented",
+        "focused_verified",
+        "regression_verified",
+        "reviewed",
+        "promotion_ready",
+        "promoted"
+      ]
+    },
+    "revision": {
+      "type": ["string", "null"]
+    },
+    "implementer": {
+      "type": ["string", "null"]
+    },
+    "verification": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "command", "outcome", "revision", "worker"],
+        "properties": {
+          "kind": {
+            "enum": ["focused", "regression"]
+          },
+          "command": {
+            "type": "string",
+            "minLength": 1
+          },
+          "outcome": {
+            "enum": ["passed", "failed", "blocked"]
+          },
+          "revision": {
+            "type": "string",
+            "minLength": 1
+          },
+          "worker": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_sha256": {
+            "type": ["string", "null"],
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "review": {
+      "type": ["object", "null"],
+      "properties": {
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "outcome": {
+          "enum": ["passed", "failed", "blocked"]
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["reviewer", "outcome", "revision"],
+      "additionalProperties": false
+    },
+    "receipt_sha256": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "promotion": {
+      "type": ["object", "null"],
+      "properties": {
+        "action": {
+          "type": "string"
+        },
+        "authorized": {
+          "type": "boolean"
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "event_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["action", "authorized", "revision", "event_id"],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -68,3 +68,5 @@ A handoff should contain, at minimum:
 - unresolved risks and the next recommended action.
 
 A handoff is state transfer, not proof. The receiving worker must verify material claims before relying on them.
+
+For persisted machine-readable work, use `schemas/agent_task_packet.v1.json` and validate the packet with `python -m services.agent_fabric.contract <packet.json>` before relying on a claimed promotion stage.

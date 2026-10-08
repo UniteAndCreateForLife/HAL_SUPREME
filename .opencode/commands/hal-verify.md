@@ -7,4 +7,4 @@ Verify the current change against AGENTS.md and this requested scope, if supplie
 
 $ARGUMENTS
 
-Use focused checks first. Report evidence, not confidence.
+Use focused checks first. If a task packet path is supplied, also validate it with `python -m services.agent_fabric.contract <packet.json>`. Report evidence, not confidence.
